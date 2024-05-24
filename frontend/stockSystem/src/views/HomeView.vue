@@ -8,6 +8,7 @@ import {ElButton } from "element-plus";
   <router-link to="/InvestList"> turn to investList</router-link><br>
   <router-link to="/StockInfo"> turn to stockInfo</router-link><br>
   <router-link to="/UserInfo"> turn to userInfo</router-link><br>
+  <router-link to="/PurchasePage"> turn to PurchasePage</router-link><br>
 </template>
 
 <style>
