@@ -26,6 +26,10 @@ const router = createRouter({
     {
       path: '/purchasePage',
       component: ()=> import("../views/PurchasePage.vue")
+    },
+    {
+      path:'/classificationList',
+      component: () => import("../views/ClassificationList.vue")
     }
   ]
 })

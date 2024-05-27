@@ -1,9 +1,10 @@
 <script>
 import * as echarts from 'echarts';
+import {useRouter} from "vue-router";
 export default {
   data(){
     return{
-      Username:'null',
+      Username:'嘉实资源',
       value1:5,
       tableData:[
         {
@@ -37,25 +38,22 @@ export default {
     };
     StockChart.setOption(options)
   },
-
+  setup() {
+    const router = useRouter()
+    function goBack() {
+      router.push('/')
+    }
+    return {
+      goBack
+    }
+  }
 }
 </script>
 
 <template>
-  <el-header>
-    <el-row>
-      <el-col :span="16">
-        <el-page-header @back="goBack" content="基金交易系统"></el-page-header>
-      </el-col>
-      <el-col :span="8">
-        {{this.Username}}
-      </el-col>
-    </el-row>
-  </el-header>
-
   <el-main>
     <el-row>
-      <el-col :span="8">
+      <el-col :span="6">
         <div class="ai">
           <el-button type="text" @click="AIVisible=true">详情</el-button>
         </div>
@@ -72,8 +70,8 @@ export default {
           </el-card>
         </div>
       </el-col>
-      <el-col :span="10">
-        <div>当前基金：{{}}</div>
+      <el-col :span="12">
+        <div class="StockName">当前基金：{{Username}}</div>
         <div ref="stockInfoChart" id="stockInfoChart"></div>
       </el-col>
       <el-col :span="6">
@@ -86,16 +84,19 @@ export default {
                 label="排名"
                 prop="rank"
                 type="index"
-                width="80">
+                width="60">
             </el-table-column>
 
             <el-table-column
                 label="基金名"
                 prop="name"
-                width="250">
+                width="140">
             </el-table-column>
 
-            <el-table-column fixed="right" label="操作" width="120">
+            <el-table-column
+                fixed="right"
+                label="操作"
+                width="80">
               <template #default="scope">
                 <el-button
                     type="text"
@@ -122,17 +123,16 @@ export default {
     </el-card>
   </el-dialog>
   <el-dialog v-model="AIVisible"></el-dialog>
-  <router-link to="/">back</router-link>
 </template>
 
 <style>
 #stockInfoChart{
   width:500px;
-  height:500px;
+  height:400px;
   border:1px solid red;
 }
 .StockInfoTable{
-  width:300px;
+  width:280px;
   height:500px;
   border:1px solid red;
 }
@@ -140,10 +140,24 @@ export default {
   width:250px;
   height:200px;
   border:1px solid red;
+  margin-bottom: 20px;
 }
 .ref{
   width:250px;
-  height:300px;
+  height:350px;
   border:1px solid red;
+}
+.StockName{
+  font-weight: bold;
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.box-card{
+  width:230px;
+  margin-left:10px;
+}
+.card-header{
+  height:15px;
 }
 </style>
