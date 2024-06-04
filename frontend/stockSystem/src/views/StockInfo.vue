@@ -4,7 +4,7 @@ import {useRouter} from "vue-router";
 export default {
   data(){
     return{
-      Username:'嘉实资源',
+      Username:'汇丰晋信',
       value1:5,
       tableData:[
         {
@@ -29,7 +29,8 @@ export default {
         data:xData
       },
       yAxis:{
-        type:"value"
+        type:"value",
+        min: data[0] - 0.1
       },
       series:[{
         data,

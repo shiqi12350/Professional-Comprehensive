@@ -110,6 +110,7 @@ function goBack() {
   align-items: center;
   font-weight: bold;
   font-size: 16px;
+
 }
 .text {
   font-size: 14px;
@@ -129,5 +130,8 @@ function goBack() {
 }
 .navButton:hover {
   color:blue;
+}
+.UserFunc,.StockFunc,.DetailFunc {
+  margin-bottom: 10px;
 }
 </style>
