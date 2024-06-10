@@ -1,0 +1,30 @@
+server:
+  port: 14103
+  address: 0.0.0.0
+
+spring:
+
+  application:
+    name: TradeManagementMicroservices
+  cloud:
+    inetutils:
+      ignored-interfaces: 'VMware Virtual Ethernet Adapter for VMnet1,VMware Virtual Ethernet Adapter for VMnet8,vEthernet (WSL)'
+    nacos:
+      server-addr : 8.130.119.249:8848
+      discovery:
+        username: nacos
+        password: nacos
+        namespace: public
+        port: 14103
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://8.130.119.249:12100/fundSysDB?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: tjdx.2024
+
+
+
+  
+
+
