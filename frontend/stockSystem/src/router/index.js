@@ -30,6 +30,26 @@ const router = createRouter({
     {
       path:'/classificationList',
       component: () => import("../views/ClassificationList.vue")
+    },
+    {
+      path:'/StockInfo/dataCatalog_basicInfo',
+      component: () => import("../components/dataCatalog_basicInfo.vue")
+    },
+    {
+      path:'/StockInfo/dataCatalog_navHistory',
+      component: () => import("../components/dataCatalog_navHistory.vue")
+    },
+    {
+      path:'/StockInfo/RankInfo',
+      component: () => import("../components/RankInfo.vue")
+    },
+    {
+      path:'/StockInfo/AI_analysis',
+      component: () => import("../components/AI_analysis.vue")
+    },
+    {
+      path:'/StockInfo/UserFeedback',
+      component: () => import("../components/UserFeedback.vue")
     }
   ]
 })

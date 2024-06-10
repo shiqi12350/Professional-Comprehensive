@@ -1,75 +1,113 @@
 <script>
 import * as echarts from "echarts";
 import {useRouter} from "vue-router";
+import axios from "axios";
 
 export default{
+  methods:{
+    async getStockData(stockID){
+      const response = await axios.post(
+          "http://api.tushare.pro",
+          {
+            api_name: "fund_basic",
+            token: "91a073e655c1849334691d5f5c71a518ff5468891554887fad2afca0",
+            params:{"ts_code":stockID}
+          }
+      );
+      this.stockName = response.data.data.items[0][1]
+      this.fund_type = response.data.data.items[0][4]
+      this.list_date = response.data.data.items[0][7]
+      this.issue_date = response.data.data.items[0][8]
+      this.issue_amount = response.data.data.items[0][10]
+      this.min_amount = response.data.data.items[0][15]
+      this.purc_startdate = response.data.data.items[0][22]
+      this.redm_startdate = response.data.data.items[0][23]
+      console.log(response)
+      const response2 = await axios.post(
+          "http://api.tushare.pro",
+          {
+            api_name: "fund_share",
+            token: "91a073e655c1849334691d5f5c71a518ff5468891554887fad2afca0",
+            params:{"ts_code":stockID}
+          }
+      );
+      console.log(response2)
+    },
+    async getNavData(StockID){
+      const response = await axios.post(
+          "http://api.tushare.pro",
+          {
+            api_name: "fund_nav",
+            token: "91a073e655c1849334691d5f5c71a518ff5468891554887fad2afca0",
+            params:{"ts_code":StockID,}
+          }
+      );
+      for( let i = 6; i >=0 ; i--){
+        this.NavList.push({
+          nav_date:response.data.data.items[i][2],
+          total_netasset:response.data.data.items[i][8]
+        })
+      }
+      this.nav_date = this.NavList.map(item => {
+        return item.nav_date
+      })
+      this.total_netasset = this.NavList.map(item => {
+        return item.total_netasset
+      })
+      console.log(this.nav_date)
+      console.log(this.total_netasset)
+      this.initChart()
+    },
+    initChart(){
+      let NavChart = echarts.init(this.$refs.NavChart)
+      let xData = this.nav_date
+      let data = this.total_netasset
+      let options={
+        xAxis:{
+          type:"category",
+          data:xData
+        },
+        yAxis:{
+          type:"value",
+          scale:true
+        },
+        series:[{
+          data,
+          type:"line",
+        }]
+      };
+      NavChart.setOption(options)
+    }
+  },
   data(){
     return{
       userName:'',
-      stockName:'汇丰晋信',
       ifSubscribe:'开放申购',
       ifRedeem:'开放赎回',
-      stockCategory:'股票型',
-      stockScale:4.27,
-      establishmentDate:'2018-10-22',
-      custodian:'noname',
-      tableData:[
-        {
-          date:'4-13',
-          unitNetWorth:0.8353,
-          increaseRate:'0.47%',
-        },
-        {
-          date:'4-14',
-          unitNetWorth:0.8523,
-          increaseRate:'0.81%',
-        },
-        {
-          date:'4-15',
-          unitNetWorth:0.8499,
-          increaseRate:'1.92%',
-        },
-        {
-          date:'4-16',
-          unitNetWorth:0.8218,
-          increaseRate:'-3.31%',
-        },
-        {
-          date:'4-17',
-          unitNetWorth:0.8376,
-          increaseRate:'-0.28%',
-        },
-        {
-          date:'4-18',
-          unitNetWorth:0.8444,
-          increaseRate:'0.81%',
-        },
-        {
-          date:'4-19',
-          unitNetWorth:0.8460,
-          increaseRate:'0.19%',
-        }
-      ]
+      ts_code:"562340.SH",
+      stockName:'',
+      fund_type:'',
+      list_date:'',
+      issue_date:'',
+      issue_amount:'',
+      min_amount:'',
+      purc_startdate:'',
+      redm_startdate:'',
+      form:{
+        IDnumber:'',
+        tradeAmount:'',
+        cardID:'',
+        passWord:'',
+      },
+      investWay:'purchase',
+      NavList:[],
+      nav_date:[],
+      total_netasset:[],
     }
   },
   mounted(){
-    let StockChart = echarts.init(this.$refs.stockInfoChart)
-    let xData = ['5-14','5-15','5-16','5-17','5-18','5-19','5-20']
-    let data = [0.8460,0.8444,0.8376,0.8218,0.8499,0.8523,0.8353]
-    let options={
-      xAxis:{
-        type:"category",
-        data:xData
-      },
-      yAxis:{
-        type:"value"
-      },
-      series:[{
-        data,
-        type:"line"
-      }]
-    };
-    StockChart.setOption(options)
+    this.getStockData(this.ts_code)
+    this.getNavData(this.ts_code)
   },
   setup() {
     const router = useRouter()
@@ -87,159 +125,77 @@ export default{
   <el-container>
     <el-main>
       <el-row>
-        <el-col :span="16">
-          <div class="stockBriefInfo">
-            <div class="stockInfoTitle">当前基金：{{this.stockName}}</div>
-            <el-row>
-              <el-col :span="15">
-                <el-row class="netWorthInfo">
-                  <el-col :span="12">
-                    <div class="netWorthName">单位净值：</div>
-                    <div class="netWorthData">2.3882</div>
-                  </el-col>
-                  <el-col :span="12">
-                    <div class="netWorthName">累计净值：</div>
-                    <div class="netWorthData">2.4082</div>
-                  </el-col>
-                </el-row>
-              </el-col>
-              <el-col :span="9">
-                <el-descriptions
-                    :column="1">
-                  <el-descriptions-item label="类型">{{ this.stockCategory }}</el-descriptions-item>
-                  <el-descriptions-item label="规模">{{ this.stockScale }}</el-descriptions-item>
-                  <el-descriptions-item label="成立日">{{ this.establishmentDate }}</el-descriptions-item>
-                  <el-descriptions-item label="管理人">{{ this.custodian }}</el-descriptions-item>
-                </el-descriptions>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="5">
-                <div class="vagueTime">近一月</div>
-                <div class="vagueRate">11.23%</div>
-              </el-col>
-              <el-col :span="5">
-                <div class="vagueTime">近三月</div>
-                <div class="vagueRate">34.44%</div>
-              </el-col>
-              <el-col :span="5">
-                <div class="vagueTime">近一年</div>
-                <div class="vagueRate">14.08%</div>
-              </el-col>
-            </el-row>
-          </div>
+        <el-col :span="15"></el-col>
+        <el-col :span="6">
+          <el-input v-model="input" placeholder="请输入搜索的基金名称"></el-input>
         </el-col>
-        <el-col :span="8">
-          <div class="purchaseForm">
-            <el-row>
-                <el-col :span="8">
-                  <div class="state">交易状态:</div>
-                </el-col>
-                <el-col :span="8">
-                  <div class="openSubscribe">{{this.ifSubscribe}}</div>
-                </el-col>
-                <el-col :span="8">
-                  <div class="openRedeem">{{this.ifRedeem}}</div>
-                </el-col>
-            </el-row>
-            <el-row class="purchaseInput">
-              <el-col :span="5">
-                <div>金额：</div>
-              </el-col>
-              <el-col :span="12">
-                <el-input v-model="input" placeholder="请输入内容"></el-input>
-              </el-col>
-              <el-col :span="7">
-                <div>   元</div>
-              </el-col>
-            </el-row>
-            <el-row class="purchaseOperation">
-              <el-col :span="12">
-                <el-button type="danger">购买</el-button>
-              </el-col>
-              <el-col :span="12">
-                <el-button type="primary">定投</el-button>
-              </el-col>
-            </el-row>
-          </div>
+        <el-col :span="2">
+          <el-button>搜索</el-button>
         </el-col>
       </el-row>
+      <br>
       <el-row>
-        <el-col :span="15">
-          <div ref="stockInfoChart" id="stockInfoChart"></div>
+        <el-col :span="8">
+          <el-descriptions
+              :title="'当前基金名:' + stockName"
+              :column="2">
+            <el-descriptions-item label="基金代码">{{ this.ts_code}}</el-descriptions-item>
+            <el-descriptions-item label="投资类型">{{ this.fund_type}}</el-descriptions-item>
+            <el-descriptions-item label="上市时间">{{ this.list_date}}</el-descriptions-item>
+            <el-descriptions-item label="发行日期">{{ this.issue_date}}</el-descriptions-item>
+            <el-descriptions-item label="发行份额(亿)">{{ this.issue_amount}}</el-descriptions-item>
+            <el-descriptions-item label="起点金额(万元)">{{ this.min_amount}}</el-descriptions-item>
+            <el-descriptions-item label="日常申购起始日">{{ this.purc_startdate}}</el-descriptions-item>
+            <el-descriptions-item label="日常赎回起始日">{{ this.redm_startdate}}</el-descriptions-item>
+          </el-descriptions>
+          <div ref="NavChart" id="NavChart"></div>
         </el-col>
-        <el-col :span="9">
-          <el-table
-              :data="tableData">
-            <el-table-column prop="date" label="日期" > </el-table-column>
-            <el-table-column prop="unitNetWorth" label="单位净值" > </el-table-column>
-            <el-table-column prop="increaseRate" label="增长率" > </el-table-column>
-          </el-table>
+        <el-col :span="16">
+          <el-form class ="investForm"  ref="form" :model="form" label-width="350px">
+            <el-form-item label="交易人身份证号码">
+              <el-row>
+                  <el-input v-model="form.IDnumber"></el-input>
+              </el-row>
+            </el-form-item>
+            <el-form-item label="交易金额">
+              <el-row>
+                <el-input v-model="form.tradeAmount"></el-input>
+              </el-row>
+            </el-form-item>
+            <el-form-item label="交易银行卡号">
+              <el-row>
+                <el-input v-model="form.cardID"></el-input>
+              </el-row>
+            </el-form-item>
+            <el-form-item label="银行卡密码">
+              <el-row>
+                <el-input v-model="form.passWord"></el-input>
+              </el-row>
+            </el-form-item>
+            <el-form-item label="投资方式">
+              <el-radio v-model="investWay" label="purchase">购买</el-radio>
+              <el-radio v-model="investWay" label="invest">定投</el-radio>
+            </el-form-item>
+            <el-form-item v-if="investWay === 'invest'">
+              <el-input v-model="investPlan">定投的方法</el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" >创建订单</el-button>
+              <el-button>取消</el-button>
+            </el-form-item>
+          </el-form>
         </el-col>
       </el-row>
     </el-main>
   </el-container>
 </template>
 
-<style scoped>
-.stockBriefInfo{
-  width:600px;
-  height:230px;
-  border:1px solid red;
-  margin-bottom: 10px;
-}
-.purchaseForm{
-  width:350px;
-  height:230px;
-  border:1px solid red;
-}
-#stockInfoChart{
+<style>
+#NavChart{
   width:500px;
-  height:300px;
-  border:1px solid red;
+  height:350px;
 }
-.stockInfoTitle{
-  margin-left:30px;
-  font-size:30px;
-}
-.netWorthInfo{
-  margin-left:20px;
-  margin-top:40px;
-}
-.netWorthName{
-  font-size:20px;
-}
-.netWorthData{
-  margin-left:15px;
-  color:red;
-}
-.vagueTime{
-  margin-left:20px;
-  font-size:20px;
-}
-.vagueRate{
-  margin-left:25px;
-  margin-bottom:30px;
-  color:red;
-}
-.state{
-  margin-left:20px;
-  margin-top:10px;
-}
-.openSubscribe{
-  margin-top:10px;
-  color:red;
-}
-.openRedeem{
-  margin-top:10px;
-  color:blue;
-}
-.purchaseInput{
-  margin-top:30px;
-  margin-left:20px;
-}
-.purchaseOperation{
-  margin-top:20px;
-  margin-left:40px;
+.investForm{
+  margin-top:50px;
 }
 </style>

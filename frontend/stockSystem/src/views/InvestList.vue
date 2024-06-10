@@ -8,6 +8,7 @@
         tableData:[],
         currentPage: 1,
         input:'',
+        ts_code: '',
       }
     },
     setup() {
@@ -58,6 +59,31 @@
       handleCurrentChange(currentPage) {
         this.currentPage = currentPage
         this.getStockListByPage(currentPage)
+      },
+      async searchByTsCode(){
+        const response = await axios.post(
+            "http://api.tushare.pro",
+            {
+              api_name: "fund_basic",
+              token: "91a073e655c1849334691d5f5c71a518ff5468891554887fad2afca0",
+              params:{"ts_code": this.ts_code}
+            }
+        );
+        const fund = {
+          tsCode: response.data.data.items[0][0],
+          name: response.data.data.items[0][1],
+          management: response.data.data.items[0][2],
+          foundDate: response.data.data.items[0][5],
+          status: response.data.data.items[0][18],
+          investType: response.data.data.items[0][19]
+        }
+        this.tableData = [fund]
+      },
+      clearTsCode() {
+        this.ts_code = ''
+        this.tableData = []
+        console.log(this.currentPage)
+        this.getStockList(this.currentPage)
       }
     }
   }
@@ -69,10 +95,13 @@
         <el-row>
           <el-col :span="16"></el-col>
           <el-col :span="6">
-            <el-input v-model="input" placeholder="请输入搜索内容"></el-input>
+            <el-input v-model="ts_code" placeholder="请输入基金代码"></el-input>
           </el-col>
           <el-col :span="2">
-            <el-button>搜索</el-button>
+            <el-button
+                clearable:true
+                @click="searchByTsCode"
+                @clear="clearTsCode">搜索</el-button>
           </el-col>
         </el-row>
         <el-table
@@ -102,6 +131,6 @@
     </el-container>
   </template>
 
-  <style scoped>
+  <style>
 
   </style>

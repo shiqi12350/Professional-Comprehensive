@@ -1,46 +1,35 @@
 <script>
 import * as echarts from 'echarts';
 import {useRouter} from "vue-router";
+import axios from "axios";
 export default {
   data(){
     return{
-      Username:'汇丰晋信',
-      value1:5,
-      tableData:[
-        {
-          name: '嘉实资源'
-        },
-        {
-          name: '招商蓝筹'
-        }
-      ],
-      commentVisible:false,
-      AIVisible:false
-
+    }
+  },
+  methods:{
+    async getFundNav(){
+      console.log(1)
+      const response = await axios.post(
+          "http://api.tushare.pro",
+          {
+            api_name: "fund_nav",
+            token: "91a073e655c1849334691d5f5c71a518ff5468891554887fad2afca0",
+            params:{"ts_code":"021406.OF",
+                    "start_date":"20200101",
+                    "end_date":"20200107"}
+          }
+      )
+      console.log(2)
+      console.log(response)
     }
   },
   mounted(){
-    let StockChart = echarts.init(this.$refs.stockInfoChart)
-    let xData = ['5-14','5-15','5-16','5-17','5-18','5-19','5-20']
-    let data = [0.8460,0.8444,0.8376,0.8218,0.8499,0.8523,0.8353]
-    let options={
-      xAxis:{
-        type:"category",
-        data:xData
-      },
-      yAxis:{
-        type:"value",
-        min: data[0] - 0.1
-      },
-      series:[{
-        data,
-        type:"line"
-      }]
-    };
-    StockChart.setOption(options)
+    this.getFundNav()
   },
   setup() {
     const router = useRouter()
+    router.push('/StockInfo/dataCatalog_basicInfo')
     function goBack() {
       router.push('/')
     }
@@ -52,78 +41,26 @@ export default {
 </script>
 
 <template>
-  <el-main>
-    <el-row>
-      <el-col :span="6">
-        <div class="ai">
-          <el-button type="text" @click="AIVisible=true">详情</el-button>
-        </div>
-        <div class="ref">
-          <el-button type="text" @click="commentVisible=true">详情</el-button>
-          <el-card class="box-card">
-            <template #header>
-              <div class="card-header">
-                <span>用户1</span>
-                <el-rate v-model="value1"></el-rate>
-              </div>
-            </template>
-            <div>comment</div>
-          </el-card>
-        </div>
-      </el-col>
-      <el-col :span="12">
-        <div class="StockName">当前基金：{{Username}}</div>
-        <div ref="stockInfoChart" id="stockInfoChart"></div>
-      </el-col>
-      <el-col :span="6">
-        <div class="StockInfoTable">
-          <el-table
-              :data="tableData"
-              title="涨幅排行">
-
-            <el-table-column
-                label="排名"
-                prop="rank"
-                type="index"
-                width="60">
-            </el-table-column>
-
-            <el-table-column
-                label="基金名"
-                prop="name"
-                width="140">
-            </el-table-column>
-
-            <el-table-column
-                fixed="right"
-                label="操作"
-                width="80">
-              <template #default="scope">
-                <el-button
-                    type="text"
-                    size="small">
-                  详情
-                </el-button>
-              </template>
-            </el-table-column>
-
-          </el-table>
-        </div>
-      </el-col>
-    </el-row>
-  </el-main>
-  <el-dialog v-model="commentVisible">
-    <el-card class="box-card">
-      <template #header>
-        <div class="card-header">
-          <span>用户1</span>
-          <el-rate v-model="value1"></el-rate>
-        </div>
-      </template>
-      <div>comment</div>
-    </el-card>
-  </el-dialog>
-  <el-dialog v-model="AIVisible"></el-dialog>
+  <el-header>
+    <el-menu
+      :default-active="activeIndex"
+      class="stockInfoMenu"
+      mode="horizontal"
+      background-color="#545c64"
+      text-color="#fff"
+      active-text-color="#ffd04b"
+      router
+    >
+      <el-sub-menu index="1">
+        <template #title>数据目录</template>
+        <el-menu-item index="/StockInfo/dataCatalog_basicInfo" >基本信息</el-menu-item>
+        <el-menu-item index="/StockInfo/dataCatalog_navHistory">净值记录</el-menu-item>
+      </el-sub-menu>
+      <el-menu-item index="/StockInfo/RankInfo">排名信息</el-menu-item>
+      <el-menu-item index="/StockInfo/AI_analysis">AI分析</el-menu-item>
+      <el-menu-item index="/StockInfo/UserFeedback">用户反馈</el-menu-item>
+    </el-menu>
+  </el-header>
 </template>
 
 <style>

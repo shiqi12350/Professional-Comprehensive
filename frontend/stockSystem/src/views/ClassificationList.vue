@@ -3,10 +3,10 @@ import axios from "axios";
 export default {
   data(){
     return{
-      StockNum:0,
-      IndexNum:0,
-      BlendNum:0,
-      BondNum:0,
+      StockNum:1,
+      IndexNum:1,
+      BlendNum:1,
+      BondNum:1,
       StockFund:[],  /*股票型*/
       IndexFund:[],  /*货币市场型*/
       BlendFund:[],  /*混合型*/
@@ -15,6 +15,7 @@ export default {
   },
   methods:{
     async getStockList(num){
+      console.log("当前股票列表" + num)
       const response = await axios.post(
           "http://api.tushare.pro",
           {
@@ -56,7 +57,6 @@ export default {
             token: "91a073e655c1849334691d5f5c71a518ff5468891554887fad2afca0"
           }
       );
-      console.log(response.data.data.items[0][19])
       const stocks = response.data.data.items.filter(item => {
         return item[19] === '货币型';
       });
@@ -74,7 +74,6 @@ export default {
               params:{"ts_code":tsCode}
             }
         )
-        console.log(response2)
         const unitNav = response2.data.data.items[0][3];
         this.IndexFund.push({
           ts_code: tsCode,
@@ -83,7 +82,6 @@ export default {
           unit_nav: unitNav
         });
       }
-      console.log(this.IndexFund);
     },
     async getBlendList(num){
       const response = await axios.post(
@@ -153,15 +151,50 @@ export default {
         });
       }
     },
+    getStockByPage(currentPage){
+      this.StockFund = []
+      this.StockNum = currentPage
+      this.getStockList(this.StockNum - 1)
+    },
+    handleStockChange(currentPage) {
+      this.StockNum = currentPage
+      this.getStockByPage(this.StockNum)
+    },
+    getIndexByPage(currentPage){
+      this.IndexFund = []
+      this.IndexNum = currentPage
+      this.getIndexList(this.IndexNum - 1)
+    },
+    handleIndexChange(currentPage) {
+      this.IndexNum = currentPage
+      this.getIndexByPage(this.IndexNum)
+    },
+    getBlendByPage(currentPage){
+      this.BlendFund = []
+      this.BlendNum = currentPage
+      this.getBlendList(this.BlendNum - 1)
+    },
+    handleBlendChange(currentPage) {
+      this.BlendNum = currentPage
+      this.getBlendByPage(this.BlendNum)
+    },
+    getBondByPage(currentPage){
+      this.BondFund = []
+      this.BondNum = currentPage
+      this.getBondList(this.BondNum - 1)
+    },
+    handleBondChange(currentPage) {
+      this.BondNum = currentPage
+      this.getBondByPage(this.BondNum)
+    }
 
   },
   mounted(){
-    this.getStockList(this.StockNum)
-    this.getBondList(this.BondNum)
-    this.getBlendList(this.BlendNum)
-    this.getIndexList(this.IndexNum)
+    this.getStockList(0)
+    this.getBondList(0)
+    this.getBlendList(0)
+    this.getIndexList(0)
   }
-
 }
 
 </script>
@@ -182,6 +215,12 @@ export default {
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+          :current-page="StockNum"
+          @current-change="handleStockChange"
+          :page-size="50"
+          :total="250">
+      </el-pagination>
     </el-col>
     <el-col :span="12">
       <div>混合型</div>
@@ -197,6 +236,12 @@ export default {
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+          :current-page="BlendNum"
+          @current-change="handleBlendChange"
+          :page-size="50"
+          :total="250">
+      </el-pagination>
     </el-col>
   </el-row>
   <el-row>
@@ -214,9 +259,15 @@ export default {
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+          :current-page="BondNum"
+          @current-change="handleBondChange"
+          :page-size="50"
+          :total="250">
+      </el-pagination>
     </el-col>
     <el-col :span="12">
-      <div>指数型</div>
+      <div>货币型</div>
       <el-table
       :data="IndexFund">
         <el-table-column prop="ts_code" label="基金代码" width="100"> </el-table-column>
@@ -229,6 +280,12 @@ export default {
           </template>
         </el-table-column>
       </el-table>
+      <el-pagination
+          :current-page="IndexNum"
+          @current-change="handleIndexChange"
+          :page-size="50"
+          :total="250">
+      </el-pagination>
     </el-col>
   </el-row>
 </template>
