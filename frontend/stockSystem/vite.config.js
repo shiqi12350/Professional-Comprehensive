@@ -5,12 +5,15 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  proxy: {
-    '/LSTM_prediction': {
-      target: 'http://8.130.119.249:14106/LSTM_prediction',
-      changeOrigin: true,
-    },
-  },
+  // proxy: {
+  //   '/api': {
+  //     target: 'http://8.130.119.249:14103',
+  //     changeOrigin: true,
+  //     PathRewrite:{
+  //       '^/api': '/'
+  //     }
+  //   },
+  // },
   plugins: [
     vue(),
   ],

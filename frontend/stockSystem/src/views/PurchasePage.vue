@@ -77,7 +77,8 @@ export default{
         }]
       };
       NavChart.setOption(options)
-    }
+    },
+
   },
   data(){
     return{
@@ -180,7 +181,7 @@ export default{
               <el-input v-model="investPlan">定投的方法</el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" >创建订单</el-button>
+              <el-button type="primary" @click="purchase">创建订单</el-button>
               <el-button>取消</el-button>
             </el-form-item>
           </el-form>
