@@ -16,6 +16,16 @@ function turnToPurchasePage() {
 function goBack() {
   router.push('/')
 }
+
+function turnToUserInfo() {
+  router.push('/UserInfo')
+}
+function turnToTradeHistory() {
+  router.push('/TradeHistory')
+}
+function turnToAccountManage() {
+  router.push('/AccountManage')
+}
 </script>
 
 <template>
@@ -40,10 +50,13 @@ function goBack() {
           </template>
           <el-row>
             <el-col :span="12">
-              <el-button type="text" class="navButton">信息修改</el-button>
+              <el-button type="text" class="navButton" @click="turnToUserInfo">信息修改</el-button>
             </el-col>
             <el-col :span="12">
-              <el-button type="text" class="navButton">交易历史查看</el-button>
+              <el-button type="text" class="navButton" @click="turnToTradeHistory">交易历史查看</el-button>
+            </el-col>
+            <el-col :span="12">
+              <el-button type="text" class="navButton" @click="turnToAccountManage">持仓管理</el-button>
             </el-col>
           </el-row>
         </el-card>

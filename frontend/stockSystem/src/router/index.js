@@ -24,6 +24,14 @@ const router = createRouter({
       component: ()=> import("../views/Calculator.vue")
     },
     {
+      path: '/tradeHistory',
+      component: ()=> import("../views/TradeHistory.vue")
+    },
+    {
+      path: '/accountManage',
+      component: ()=> import("../views/AccountManage.vue")
+    },
+    {
       path: '/purchasePage',
       component: ()=> import("../views/PurchasePage.vue")
     },
