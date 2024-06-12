@@ -44,7 +44,7 @@ export default {
             api_name: "fund_nav",
             token: "91a073e655c1849334691d5f5c71a518ff5468891554887fad2afca0",
             params:{"ts_code":StockID,
-                    "nav_date":DuringTime}
+              "nav_date":DuringTime}
           }
       );
       console.log(response)

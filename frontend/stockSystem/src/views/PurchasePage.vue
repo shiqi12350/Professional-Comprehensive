@@ -2,6 +2,8 @@
 import * as echarts from "echarts";
 import {useRouter} from "vue-router";
 import axios from "axios";
+import Md5 from 'js-md5'
+
 
 export default{
   methods:{
@@ -58,62 +60,82 @@ export default{
       console.log(this.total_netasset)
       this.initChart()
     },
-    initChart(){
+    async purchase(){
+      console.log("调用购买")
+      const params = {
+        TraderID:String(this.form.IDnumber),
+        fundID:String(this.ts_code),
+        tradeAmount:Number(this.form.tradeAmount),
+        cardID:String(this.form.cardID),
+        passWord:Md5(this.form.passWord,32)
+      }
+      console.log(Md5(this.form.passWord,32))
+      console.log("params"+ this.form.IDnumber + this.ts_code + this.form.tradeAmount + this.form.cardID + this.form.passWord)
+      const url = "http://8.130.119.249:14103/api/v1/TradeManagement/Subscription"
+      const response = await axios.post(url, params)
+      console.log(response)
+    },
+    initChart() {
       let NavChart = echarts.init(this.$refs.NavChart)
       let xData = this.nav_date
       let data = this.total_netasset
-      let options={
-        xAxis:{
-          type:"category",
-          data:xData
+      let options = {
+        xAxis: {
+          type: "category",
+          data: xData
         },
-        yAxis:{
-          type:"value",
-          scale:true
+        yAxis: {
+          type: "value",
+          scale: true
         },
-        series:[{
+        series: [{
           data,
-          type:"line",
+          type: "line",
         }]
       };
       NavChart.setOption(options)
-    }
+    },
+
   },
-  data(){
-    return{
-      userName:'',
-      ifSubscribe:'开放申购',
-      ifRedeem:'开放赎回',
-      ts_code:"562340.SH",
-      stockName:'',
-      fund_type:'',
-      list_date:'',
-      issue_date:'',
-      issue_amount:'',
-      min_amount:'',
-      purc_startdate:'',
-      redm_startdate:'',
-      form:{
-        IDnumber:'',
-        tradeAmount:'',
-        cardID:'',
-        passWord:'',
+  data() {
+    return {
+      userName: '',
+      SearchStock:'',
+      ifSubscribe: '开放申购',
+      ifRedeem: '开放赎回',
+      ts_code: "562340.SH",
+      stockName: '',
+      fund_type: '',
+      list_date: '',
+      issue_date: '',
+      issue_amount: '',
+      min_amount: '',
+      purc_startdate: '',
+      redm_startdate: '',
+      form: {
+        IDnumber: '',
+        tradeAmount: '',
+        cardID: '',
+        passWord: '',
       },
-      investWay:'purchase',
-      NavList:[],
-      nav_date:[],
-      total_netasset:[],
+      investWay: 'purchase',
+      NavList: [],
+      nav_date: [],
+      total_netasset: [],
+      date:''
     }
   },
-  mounted(){
+  mounted() {
     this.getStockData(this.ts_code)
     this.getNavData(this.ts_code)
   },
   setup() {
     const router = useRouter()
+
     function goBack() {
       router.push('/')
     }
+
     return {
       goBack
     }
@@ -127,7 +149,7 @@ export default{
       <el-row>
         <el-col :span="15"></el-col>
         <el-col :span="6">
-          <el-input v-model="input" placeholder="请输入搜索的基金名称"></el-input>
+          <el-input v-model="SearchStock" placeholder="请输入搜索的基金名称"></el-input>
         </el-col>
         <el-col :span="2">
           <el-button>搜索</el-button>
@@ -139,22 +161,22 @@ export default{
           <el-descriptions
               :title="'当前基金名:' + stockName"
               :column="2">
-            <el-descriptions-item label="基金代码">{{ this.ts_code}}</el-descriptions-item>
-            <el-descriptions-item label="投资类型">{{ this.fund_type}}</el-descriptions-item>
-            <el-descriptions-item label="上市时间">{{ this.list_date}}</el-descriptions-item>
-            <el-descriptions-item label="发行日期">{{ this.issue_date}}</el-descriptions-item>
-            <el-descriptions-item label="发行份额(亿)">{{ this.issue_amount}}</el-descriptions-item>
-            <el-descriptions-item label="起点金额(万元)">{{ this.min_amount}}</el-descriptions-item>
-            <el-descriptions-item label="日常申购起始日">{{ this.purc_startdate}}</el-descriptions-item>
-            <el-descriptions-item label="日常赎回起始日">{{ this.redm_startdate}}</el-descriptions-item>
+            <el-descriptions-item label="基金代码">{{ this.ts_code }}</el-descriptions-item>
+            <el-descriptions-item label="投资类型">{{ this.fund_type }}</el-descriptions-item>
+            <el-descriptions-item label="上市时间">{{ this.list_date }}</el-descriptions-item>
+            <el-descriptions-item label="发行日期">{{ this.issue_date }}</el-descriptions-item>
+            <el-descriptions-item label="发行份额(亿)">{{ this.issue_amount }}</el-descriptions-item>
+            <el-descriptions-item label="起点金额(万元)">{{ this.min_amount }}</el-descriptions-item>
+            <el-descriptions-item label="日常申购起始日">{{ this.purc_startdate }}</el-descriptions-item>
+            <el-descriptions-item label="日常赎回起始日">{{ this.redm_startdate }}</el-descriptions-item>
           </el-descriptions>
           <div ref="NavChart" id="NavChart"></div>
         </el-col>
         <el-col :span="16">
-          <el-form class ="investForm"  ref="form" :model="form" label-width="350px">
+          <el-form class="investForm" ref="form" :model="form" label-width="350px">
             <el-form-item label="交易人身份证号码">
               <el-row>
-                  <el-input v-model="form.IDnumber"></el-input>
+                <el-input v-model="form.IDnumber"></el-input>
               </el-row>
             </el-form-item>
             <el-form-item label="交易金额">
@@ -176,11 +198,20 @@ export default{
               <el-radio v-model="investWay" label="purchase">购买</el-radio>
               <el-radio v-model="investWay" label="invest">定投</el-radio>
             </el-form-item>
-            <el-form-item v-if="investWay === 'invest'">
-              <el-input v-model="investPlan">定投的方法</el-input>
+            <el-form-item label="选择定投日期" v-if="investWay === 'invest'">
+              <div class="block">
+                <el-date-picker
+                    v-model="date"
+                    type="daterange"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                >
+                </el-date-picker>
+              </div>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" >创建订单</el-button>
+              <el-button type="primary" @click="purchase">创建订单</el-button>
               <el-button>取消</el-button>
             </el-form-item>
           </el-form>
@@ -191,11 +222,12 @@ export default{
 </template>
 
 <style>
-#NavChart{
-  width:500px;
-  height:350px;
+#NavChart {
+  width: 500px;
+  height: 350px;
 }
-.investForm{
-  margin-top:50px;
+
+.investForm {
+  margin-top: 50px;
 }
 </style>

@@ -204,7 +204,6 @@ export default {
       <el-descriptions-item label="占股票市值比">{{this.StockInfo.stk_mkv_ratio}}</el-descriptions-item>
       <el-descriptions-item label="占流通股本比例">{{this.StockInfo.stk_float_ratio}}</el-descriptions-item>
     </el-descriptions>
-    <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>
   </el-main>
 </template>
 

@@ -13,6 +13,11 @@
         <el-table-column prop="SubmissionAmount" label="Submission Amount"></el-table-column>
         <el-table-column prop="SubmissionTime" label="Submission Time"></el-table-column>
         <el-table-column prop="ConfirmTime" label="Confirm Time"></el-table-column>
+        <el-table-column fixed="right" label="操作" >
+          <template #default="scope">
+            <el-button @click="handleClick(scope.row)" type="text" size="small">赎回</el-button>
+          </template>
+        </el-table-column>
       </el-table>
   
       <el-pagination
@@ -97,7 +102,27 @@
       handleCurrentChangeType2(page) {
         this.currentPageType2 = page;
         this.paginateOrders();
-      }
+      },
+      handleClick(row) {
+        console.log(row)
+        this.$confirm('此操作将赎回已购买基金!', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        })
+            .then(() => {
+              this.$message({
+                type: 'success',
+                message: '赎回成功!',
+              })
+            })
+            .catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消操作',
+              })
+            })
+      },
     }
   };
   </script>

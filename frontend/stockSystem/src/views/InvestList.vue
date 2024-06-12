@@ -16,8 +16,12 @@
       function turnToCorrespondingStock() {
         router.push('/StockInfo')
       }
+      function turnToPurchasingStock(){
+        router.push('/PurchasePage')
+      }
       return {
-        turnToCorrespondingStock
+        turnToCorrespondingStock,
+        turnToPurchasingStock
       }
     },
     mounted() {
@@ -117,7 +121,7 @@
           <el-table-column fixed="right" label="操作" width="200">
             <template #default="scope">
               <el-button type="primary" @click="turnToCorrespondingStock">详情</el-button>
-              <el-button type="danger">买入</el-button>
+              <el-button type="danger" @click="turnToPurchasingStock">买入</el-button>
             </template>
           </el-table-column>
         </el-table>
