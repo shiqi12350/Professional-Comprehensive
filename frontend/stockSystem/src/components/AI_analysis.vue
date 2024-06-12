@@ -71,18 +71,6 @@ export  default {
       }
       console.log("测试结束");
     },
-    async getHistory() {
-      const API_URL = 'http://8.130.119.249:14103/api/v1/TradeManagement/Getorder'
-      const traderId = '450303200308052030'
-      try {
-        const queryString = `?TraderID=${traderId}`
-        const url = API_URL + queryString
-        const response = await axios.get(url)
-        console.log(response)
-      } catch (error) {
-        console.error(error)
-      }
-    },
     async getFeature() {
       console.log("getFeature")
       const apiUrl = "http://8.130.119.249:14105/get_fund_info";
@@ -98,6 +86,7 @@ export  default {
       const data = Object.assign({}, response.data);
       this.averageRiskReturn = data['平均风险收益率(%)'];
       this.annualizedReturn = data['年化收益率(%)'];
+      this.initRadarChart()
     },
     transformScore(stars) {
       //星级映射表
@@ -131,11 +120,38 @@ export  default {
       };
       PredictChart.setOption(options)
     },
+    initRadarChart(){
+      let radarChart = echarts.init(this.$refs.radarChart)
+      let options={
+        title:{
+          text:"五维图"
+        },
+        radar:[{
+          indicator:[
+            {name:"Alpha",max:0.001},
+            {name:"Beta",max:0.01},
+            {name:"Sharpe",max:1},
+            {name:"平均风险收益率(%)",max:0.1},
+            {name:"年化收益率(%)",max:10}
+          ]
+        }],
+        series:[
+          {
+            type:"radar",
+            data:[
+              {
+                value:[Number(this.Alpha),Number(this.Beta),Number(this.Sharpe),Number(this.averageRiskReturn),Number(this.annualizedReturn)]
+              }
+            ]
+          }
+        ]
+      }
+      radarChart.setOption(options)
+    }
   },
   mounted() {
     this.getNavData(this.StockID)
     this.AI_predict(this.array_data)
-    // this.getHistory()
     this.getFeature()
     this.getScore()
   }
@@ -169,18 +185,20 @@ export  default {
         <div class="prediction"> 当前基金评价：
           <el-rate v-model="score"></el-rate>
         </div>
-        <el-card class="box-card">
-          <template #header>
-            <div class="card-header">
-              <span>基金指标分析</span>
-            </div>
-          </template>
-          <div class="text item">{{ 'Alpha:' + this.Alpha }}</div>
-          <div class="text item">{{ 'Beta:' + this.Beta }}</div>
-          <div class="text item">{{ 'Sharpe:' + this.Sharpe }}</div>
-          <div class="text item">{{ '平均风险收益率(%):' + this.averageRiskReturn }}</div>
-          <div class="text item">{{ '年化收益率(%):' + this.annualizedReturn }}</div>
-        </el-card>
+        <br><br><br><br>
+<!--        <el-card class="box-card">-->
+<!--          <template #header>-->
+<!--            <div class="card-header">-->
+<!--              <span>基金指标分析</span>-->
+<!--            </div>-->
+<!--          </template>-->
+<!--          <div class="text item">{{ 'Alpha:' + this.Alpha }}</div>-->
+<!--          <div class="text item">{{ 'Beta:' + this.Beta }}</div>-->
+<!--          <div class="text item">{{ 'Sharpe:' + this.Sharpe }}</div>-->
+<!--          <div class="text item">{{ '平均风险收益率(%):' + this.averageRiskReturn }}</div>-->
+<!--          <div class="text item">{{ '年化收益率(%):' + this.annualizedReturn }}</div>-->
+<!--        </el-card>-->
+        <div ref="radarChart" id="radarChart"></div>
       </el-col>
       <el-col :span="4"></el-col>
       <el-col :span="12">
@@ -204,5 +222,9 @@ export  default {
 #PredictChart{
   width: 500px;
   height: 400px;
+}
+#radarChart{
+  width:500px;
+  height:400px;
 }
 </style>
