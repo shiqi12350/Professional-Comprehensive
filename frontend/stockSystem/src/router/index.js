@@ -20,16 +20,20 @@ const router = createRouter({
       component: ()=> import("../views/UserInfo.vue")
     },
     {
-      path: '/calculator',
-      component: ()=> import("../views/Calculator.vue")
-    },
-    {
       path: '/tradeHistory',
       component: ()=> import("../views/TradeHistory.vue")
     },
     {
       path: '/accountManage',
       component: ()=> import("../views/AccountManage.vue")
+    },
+    {
+      path: '/purchaseRate',
+      component: ()=> import("../views/PurchaseRate.vue")
+    },
+    {
+      path: '/redemptionRate',
+      component: ()=> import("../views/RedemptionRate.vue")
     },
     {
       path: '/purchasePage',
