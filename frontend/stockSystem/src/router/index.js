@@ -58,6 +58,10 @@ const router = createRouter({
     {
       path:'/StockInfo/UserFeedback',
       component: () => import("../components/UserFeedback.vue")
+    },
+    {
+      path:'/comparison',
+      component: ()=>import("../views/Comparison.vue")
     }
   ]
 })

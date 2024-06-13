@@ -41,6 +41,11 @@
         <el-table-column prop="SubmissionAmount" label="Submission Amount"></el-table-column>
         <el-table-column prop="SubmissionTime" label="Submission Time"></el-table-column>
         <el-table-column prop="ConfirmTime" label="Confirm Time"></el-table-column>
+        <el-table-column fixed="right" label="操作" >
+          <template #default="scope">
+            <el-button @click="handleClick(scope.row)" type="text" size="small">赎回</el-button>
+          </template>
+        </el-table-column>
       </el-table>
   
       <el-pagination

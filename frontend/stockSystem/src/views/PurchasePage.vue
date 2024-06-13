@@ -62,17 +62,19 @@ export default{
     },
     async purchase(){
       console.log("调用购买")
-      const params = {
-        TraderID:String(this.form.IDnumber),
-        fundID:String(this.ts_code),
-        tradeAmount:Number(this.form.tradeAmount),
-        cardID:String(this.form.cardID),
-        passWord:Md5(this.form.passWord,32)
-      }
+      // const params = {
+      //   TraderID:String(this.form.IDnumber),
+      //   fundID:String(this.ts_code),
+      //   tradeAmount:Number(this.form.tradeAmount),
+      //   cardID:String(this.form.cardID),
+      //   passWord:Md5(this.form.passWord,32)
+      // }
+      const queryString = `?TraderID=${this.form.IDnumber}&fundID=${this.ts_code}&tradeAmount=${this.form.tradeAmount}&cardID=${this.form.cardID}&passWord=${Md5(this.form.passWord,32)}`
       console.log(Md5(this.form.passWord,32))
       console.log("params"+ this.form.IDnumber + this.ts_code + this.form.tradeAmount + this.form.cardID + this.form.passWord)
-      const url = "http://8.130.119.249:14103/api/v1/TradeManagement/Subscription"
-      const response = await axios.post(url, params)
+      const api_url = "http://8.130.119.249:14103/api/v1/TradeManagement/Subscription"
+      const url = api_url+queryString
+      const response = await axios.post(url)
       console.log(response)
     },
     initChart() {

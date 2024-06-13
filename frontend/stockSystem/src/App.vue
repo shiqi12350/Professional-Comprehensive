@@ -1,5 +1,7 @@
 <script setup>
 import { RouterLink, RouterView, useRouter} from 'vue-router';
+import axios from "axios";
+
 const router = useRouter()
 function turnToInvestList() {
   router.push('/investList')
@@ -16,7 +18,6 @@ function turnToPurchasePage() {
 function goBack() {
   router.push('/')
 }
-
 function turnToUserInfo() {
   router.push('/UserInfo')
 }
@@ -25,6 +26,22 @@ function turnToTradeHistory() {
 }
 function turnToAccountManage() {
   router.push('/AccountManage')
+}
+function turnToComparison(){
+  router.push('/comparison')
+}
+async function changeTime(time) {
+  const url = 'http://8.130.119.249:14103/api/v1/TradeManagement/Modification_time'
+  const params = {
+    isoInstant: time
+  }
+  try {
+    const response = await axios.post(url, params)
+    console.log(response.data)
+    return response
+  } catch (error) {
+    console.log(error)
+  }
 }
 </script>
 
@@ -35,8 +52,11 @@ function turnToAccountManage() {
         <el-col :span="16">
           <el-page-header @click="goBack" content="基金交易系统"></el-page-header>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="4">
           {{"userName"}}
+        </el-col>
+        <el-col :span="4">
+          <el-button @click="changeTime()">修改系统时</el-button>
         </el-col>
       </el-row>
     </el-header>
@@ -104,7 +124,7 @@ function turnToAccountManage() {
               <el-button type="text" class="navButton">费率计算</el-button>
             </el-col>
           </el-row>
-          <el-button type="text" class="navButton">基金比较</el-button>
+          <el-button type="text" class="navButton" @click="turnToComparison">基金比较</el-button>
         </el-card>
       </el-aside>
       <el-main>
@@ -112,7 +132,6 @@ function turnToAccountManage() {
       </el-main>
     </el-container>
   </el-container>
-
 </template>
 
 
