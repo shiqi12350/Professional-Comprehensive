@@ -1,61 +1,38 @@
 <template>
-    <div>
-      <el-row>
-        <el-col :span="7">
-          <el-card>
-            <!--bankcard section-->
-            <el-table :data="bankCardList" style="width: 100%">
-              <el-table-column prop="bankCardNumber" label="银行卡号"></el-table-column>
-              <el-table-column label="操作">
-                <template slot-scope="scope">
-                  <el-button type="danger" @click="unbindBankCard(scope.row.bankCardNumber)">解绑</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <el-button type="primary" size="small" @click="bindBankCardDialogVisible = true">绑定</el-button>
+    
+    <el-card>
+    <el-button type="primary"  @click="bindBankCardDialogVisible = true">绑定</el-button>
+    <el-table :data="bankCardList" @row-click="handleRowClick" style="margin-top: 20px">
+      <el-table-column prop="bankCard" label="银行卡号"></el-table-column>
+      <el-table-column label="操作">
+        <template #default="{ row }">
+          <el-button size="small" @click="dismissBankCard(row.bankCard)">解绑</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    </el-card>
   
-            <el-dialog title="绑定银行卡" v-model="bindBankCardDialogVisible">
-              <el-form ref="bindBankCardForm" label-width="80px">
-                <el-form-item label="银行卡号">
-                  <el-input v-model="newBankCardNumber"></el-input>
-                </el-form-item>
-              </el-form>
-              <el-button type="primary" @click="bindBankCard">确认</el-button>
-            </el-dialog>
-          </el-card>
-        </el-col>
+    <!--绑定银行卡输入框-->
+    <el-dialog title="绑定银行卡" v-model="bindBankCardDialogVisible">
+      <el-form :model="bindBankCardForm" label-width="120px">
+        <el-form-item label="银行卡号">
+          <el-input v-model="bindBankCardForm.bankCard"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="bindBankCard">确认绑定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   
-        <el-col :span="17">
-          <!--银行卡持仓修改部分-->
-          <el-card>
-        <el-form label-width="80px">
-          <el-form-item label="选择银行卡">
-            <el-select v-model="selectedBankCard" placeholder="请选择银行卡" @change="getFundHoldings">
-              <el-option
-                v-for="card in bankCardList"
-                :key="card.bankCardNumber"
-                :label="card.bankCardNumber"
-                :value="card.bankCardNumber"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
+    <el-card>
+    <el-table :data="portionInfo" style="width: 100%">
+        <el-table-column prop="fundID" label="基金ID"></el-table-column>
+        <el-table-column prop="amount" label="持仓份额"></el-table-column>
+        <el-table-column prop="close" label="收盘价"></el-table-column>
+        <el-table-column prop="pct_chg" label="涨跌幅"></el-table-column>
+    </el-table>
+    </el-card>
   
-        <el-table :data="fundHoldings" style="width: 100%">
-          <el-table-column prop="fundID" label="基金代码"></el-table-column>
-          <el-table-column prop="amount" label="持仓份额"></el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.newAmount" placeholder="输入新份额"></el-input>
-              <el-button type="primary" @click="modifyFundHoldings(scope.row)">修改</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-card>
-  
-        </el-col>
-      </el-row>
-    </div>
   </template>
   
   <script>
@@ -64,133 +41,127 @@
   export default {
     data() {
       return {
-        userInfo: {
+        formData: {
           userID: '450303200308052030',
-          userName: '',
-          userPhone: '',
-          passWord: '',
-          birth: '',
-          email: '',
-          level: ''
+          bankCard: ''
         },
-        //银行卡部分
-        bankCardList: [], 
-        bindBankCardDialogVisible: false,//绑定部分
-        newBankCardNumber: '',
+        bankCardList: [],
+        bindBankCardDialogVisible: false,
+        bindBankCardForm: {
+          bankCard: ''
+        },
+        pagedBankCardList: [],
   
-        selectedBankCard: '',//持仓部分
-        fundHoldings: []
+        //绑定
+        portionInfo: []
       };
     },
+    async created() {
+      await this.getBankCard();
+    },
     methods: {
-      
-      //银行卡绑定
-      getBankCardList() {
-        axios.get('http://8.130.119.249:14100/api/v1/bankcard/getBankCardList', {
-          params: {
-            userID: '450303200308052030'
-          }
-        }).then(response => {
+        async getBankCard() {
+        try {
+          const response = await axios.get('http://8.130.119.249:14100/api/v1/accountManagement/getBankCardList', {
+            params: {
+              userID: this.formData.userID
+            }
+          });
           if (response.data.resultCode === 1) {
-            this.bankCardList = response.data.bankCardList.map(cardNumber => ({ bankCardNumber: cardNumber }));
+            this.formData.bankCard = response.data.bankCardList[0];
+            this.bankCardList.push({ bankCard: response.data.bankCardList[0] });
           } else {
-            console.error('Error: Bank card list not trustworthy. Error Code: -101');
+            alert('查询失败，错误代码：' + response.data.resultCode);
           }
-        }).catch(error => {
-          console.error('Error retrieving bank card list:', error);
-        });
+        } catch (error) {
+          alert('查询失败，错误信息：' + error.message);
+        }
       },
-
-      bindBankCard() {
-        //axios.post('http://8.130.119.249:14100/api/v1/bankcard/bindBankCard',
-        axios.post('http://8.130.119.249:14100/api/v1/accountManagement',  {
-          userID: '450303200308052030',
-          cardID: this.newBankCardNumber,
-          SPK: 'oA5XHdFaJ9'
-        }).then(response => {
+      async dismissBankCard(cardID) {
+        try {
+          const response = await axios.get('http://8.130.119.249:14100/api/v1/accountManagement/dismissBankCard', {
+            params:{
+              userID: this.formData.userID,
+              cardID: cardID
+            }
+          });
+          if (response.data.resultCode === 1) {
+            alert('解绑成功');
+            this.bankCardList = this.bankCardList.filter(item => item.bankCard !== cardID);
+          } else {
+            alert('解绑失败，错误代码：' + response.data.resultCode);
+          }
+        } catch (error) {
+          alert('解绑错误：' + error.message);
+        }
+      },
+      async bindBankCard() {
+        try {
+          const response = await axios.get('http://8.130.119.249:14100/api/v1/accountManagement/bindBankCard', {
+            params:{
+              userID: this.formData.userID,
+              cardID: this.bindBankCardForm.bankCard,
+              SPK: 'oA5XHdFaJ9'
+            }
+          });
           if (response.data.resultCode === 1) {
             alert('银行卡绑定成功');
+            this.bankCardList.push({ bankCard: this.bindBankCardForm.bankCard });
             this.bindBankCardDialogVisible = false;
-            this.getBankCardList();
+            this.bindBankCardForm.bankCard = '';
           } else {
-            console.error('Error binding bank card. Error Code:', response.data.resultCode);
+            alert('绑定失败，错误代码：' + response.data.resultCode);
           }
-        }).catch(error => {
-          console.error('Error binding bank card:', error);
-        });
+        } catch (error) {
+          alert('绑定失败，错误信息：' + error.message);
+        }
       },
 
-      unbindBankCard(cardNumber) {
-        axios.post('http://8.130.119.249:14100/api/v1/bankcard/dismissBankCard', {
-          userID: '450303200308052030',
-          cardID: cardNumber
-        }).then(response => {
-          if (response.data.resultCode === 1) {
-            alert('银行卡解绑成功');
-            this.getBankCardList();
-          } else {
-            console.error('Error unbinding bank card. Error Code:', response.data.resultCode);
-          }
-        }).catch(error => {
-          console.error('Error unbinding bank card:', error);
-        });
+      async handleRowClick(row) {
+        await this.getPortionInfo(row.bankCard);
+        //仅使用行对应的卡号调用getPortionInfo，目的是便利修改份额后刷新portionInfo
       },
-      
-      //持仓修改
-      getFundHoldings() {
-        axios.get('http://8.130.119.249:14100/api/v1/bankcard/getAllPortion', {
-          params: {
-            cardID: this.selectedBankCard
-          }
-        }).then(response => {
-          if (response.data.resultCode === 1) {
-            this.fundHoldings = response.data.info;
-            this.fundHoldings.forEach(item => {
-              item.newAmount = item.amount; // Initialize newAmount for each fund holding
-            });
-          } else {
-            console.error('Error: Fund holdings not trustworthy. Error Code: -104');
-          }
-        }).catch(error => {
-          console.error('Error retrieving fund holdings:', error);
-        });
-      },
-
-      modifyFundHoldings(fund) {
-        axios.post('http://8.130.119.249:14100/api/v1/bankcard/modifyPortion', {
-          cardID: this.selectedBankCard,
-          fundID: fund.fundID,
-          amount: fund.newAmount
-        }).then(response => {
-          if (response.data.resultCode === 1) {
-            alert('基金份额修改成功');
-            this.getFundHoldings(); // Refresh fund holdings after modification
-          } else {
-            console.error('Error modifying fund holdings. Error Code:', response.data.resultCode);
-          }
-        }).catch(error => {
-          console.error('Error modifying fund holdings:', error);
-        });
+      async getPortionInfo(cardID) {
+  try {
+    const response = await axios.get('http://8.130.119.249:14100/api/v1/accountManagement/getAllPortion', {
+      params: {
+        cardID: cardID
       }
-    },
-    mounted() {
-      this.getBankCardList();
+    });
+    if (response.data.resultCode === 1) {
+      this.portionInfo = response.data.info;
+      for(let i = 0; i < this.portionInfo.length; i++){
+
+        const response2 = await axios.post(
+          "http://api.tushare.pro",
+          {
+            api_name: "fund_daily",
+            token: "91a073e655c1849334691d5f5c71a518ff5468891554887fad2afca0",
+            params: {
+              "ts_code": this.portionInfo[i].fundID,
+              "start_date": "20200101",
+              "end_date": "20200107"
+            }
+          }
+        );
+        this.portionInfo[i].close= response2.data.data.items[0][5];
+        this.portionInfo[i].pct_chg= response2.data.data.items[0][8];
+      }
+    } else {
+      alert('获取持仓信息失败，错误代码：' + response.data.resultCode);
+      this.portionInfo = [];
     }
-  };
-  </script>
-  
-  <style>
-   .el-form-item__label {
-      font-size: 12px; /* 调整表单项标签字体大小 */
-   }
-  .el-input{
-    font-size:10px;
+  } catch (error) {
+    alert('获取持仓信息失败，错误信息：' + error.message);
+    this.portionInfo = [];
   }
-  .el-card{
-    margin-left:6px;
-  }
-  .el-table{
-    font-size:12px;
-  }
-  </style>
-  
+},
+  },
+};
+</script>
+
+<style>
+.el-card{
+  margin-top:10px;
+}
+</style>

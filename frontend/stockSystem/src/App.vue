@@ -1,8 +1,31 @@
 <script setup>
+
 import { RouterLink, RouterView, useRouter} from 'vue-router';
 import axios from "axios";
+import userInfo from '@/stores/user';
+import {storeToRefs } from "pinia";
+import loginVue from './components/login.vue';
+import {ref} from 'vue'
+import {watch} from 'vue'
 
 const router = useRouter()
+
+//get vuestore userID to Determine whether to log in or not 
+const user = userInfo();
+const {userID} = storeToRefs(user);
+
+//登录
+const loginIn = ref(false);
+let showLoginPage = function(){
+  loginIn.value = !loginIn.value
+}
+
+user.$subscribe((args, state) => {
+  loginIn.value = !loginIn.value
+
+})
+
+
 function turnToInvestList() {
   router.push('/investList')
 }
@@ -54,6 +77,12 @@ async function changeTime(time) {
         </el-col>
         <el-col :span="4">
           {{"userName"}}
+        <el-col :span="8">
+          <el-button v-if="userID == ''" @click="showLoginPage">登录</el-button>
+          <p v-else>{{userID}}</p>
+          <div class="login" v-if="loginIn">
+            <login-vue></login-vue>
+          </div>
         </el-col>
         <el-col :span="4">
           <el-button @click="changeTime()">修改系统时</el-button>
@@ -118,10 +147,10 @@ async function changeTime(time) {
           </template>
           <el-row>
             <el-col :span="12">
-              <el-button type="text" class="navButton">收益计算</el-button>
+              <el-button type="text" class="navButton" @click="turnToPurchaseRate">申购计算</el-button>
             </el-col>
             <el-col :span="12">
-              <el-button type="text" class="navButton">费率计算</el-button>
+              <el-button type="text" class="navButton" @click="turnToRedemptionRate">赎回计算</el-button>
             </el-col>
           </el-row>
           <el-button type="text" class="navButton" @click="turnToComparison">基金比较</el-button>
@@ -165,5 +194,18 @@ async function changeTime(time) {
 }
 .UserFunc,.StockFunc,.DetailFunc {
   margin-bottom: 10px;
+}
+
+.login{
+  z-index: 10;
+  position: absolute;
+  left: calc(50vw - 300px);
+  top: calc(50vh - 250px);
+  width: 450px;
+  height: 400px;
+  padding: 10px;
+  background-color: white;
+  box-shadow: 1px 1px 7px 1px #ccc;
+  border-radius: 10px;
 }
 </style>
