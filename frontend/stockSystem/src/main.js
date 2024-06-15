@@ -6,6 +6,8 @@ import * as echarts from 'echarts';
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
+createPinia()
+
 import App from './App.vue'
 import router from './router'
 

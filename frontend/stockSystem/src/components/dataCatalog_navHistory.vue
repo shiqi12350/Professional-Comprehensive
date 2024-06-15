@@ -1,10 +1,17 @@
 <script>
 import axios from "axios";
 import * as echarts from 'echarts';
+import {useStockInfoStore} from "@/stores/stockInfoStore.js";
 export default {
+  setup(){
+    const stockInfoStore = useStockInfoStore()
+    return {
+      stockId: stockInfoStore.stockId
+    }
+  },
   data(){
     return{
-      StockID:"021406.OF",
+      StockID:this.stockId,
       StartTime:"20240531",
       NavList:[],
       nav_date:[],
@@ -121,12 +128,27 @@ export default {
     >
       <el-sub-menu index="1">
         <template #title>数据目录</template>
-        <el-menu-item index="/StockInfo/dataCatalog_basicInfo" >基本信息</el-menu-item>
-        <el-menu-item index="/StockInfo/dataCatalog_navHistory">净值记录</el-menu-item>
+        <el-menu-item
+            index="/StockInfo/dataCatalog_basicInfo"
+            :params="{stockId: StockID}"
+        >基本信息</el-menu-item>
+        <el-menu-item
+            index="/StockInfo/dataCatalog_navHistory"
+            :params="{stockId: StockID}"
+        >净值记录</el-menu-item>
       </el-sub-menu>
-      <el-menu-item index="/StockInfo/RankInfo">排名信息</el-menu-item>
-      <el-menu-item index="/StockInfo/AI_analysis">AI分析</el-menu-item>
-      <el-menu-item index="/StockInfo/UserFeedback">用户反馈</el-menu-item>
+      <el-menu-item
+          index="/StockInfo/RankInfo"
+          :params="{stockId: StockID}"
+      >排名信息</el-menu-item>
+      <el-menu-item
+          index="/StockInfo/AI_analysis"
+          :params="{stockId: StockID}"
+      >AI分析</el-menu-item>
+      <el-menu-item
+          index="/StockInfo/UserFeedback"
+          :params="{stockId: StockID}"
+      >用户反馈</el-menu-item>
     </el-menu>
   </el-header>
   <el-main>

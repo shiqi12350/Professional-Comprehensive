@@ -77,6 +77,7 @@ async function changeTime(time) {
         </el-col>
         <el-col :span="4">
           {{"userName"}}
+        </el-col>
         <el-col :span="8">
           <el-button v-if="userID == ''" @click="showLoginPage">登录</el-button>
           <p v-else>{{userID}}</p>

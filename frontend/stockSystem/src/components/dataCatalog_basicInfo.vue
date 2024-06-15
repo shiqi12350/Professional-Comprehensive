@@ -1,9 +1,16 @@
 <script>
 import axios from "axios";
+import {useStockInfoStore} from "@/stores/stockInfoStore.js";
 export default {
+  setup(){
+    const stockInfoStore = useStockInfoStore()
+    return {
+      stockId: stockInfoStore.stockId
+    }
+  },
   data(){
     return{
-      StockID:"021406.OF",
+      StockID:this.stockId,
       StockInfo:[{
         ts_code:'',
         name:'',
@@ -77,7 +84,7 @@ export default {
       this.StockInfo.redm_startdate = response.data.data.items[0][23]
       this.StockInfo.market = response.data.data.items[0][24]
     },
-    async getManagerData(StockID){
+    async getNavData(StockID){
       const response = await axios.post(
           "http://api.tushare.pro",
           {
@@ -87,11 +94,74 @@ export default {
           }
       );
       console.log(response)
+      this.StockInfo.ann_date = response.data.data.items[0][1]
+      this.StockInfo.nav_date = response.data.data.items[0][2]
+      this.StockInfo.unit_nav = response.data.data.items[0][3]
+      this.StockInfo.accum_nav = response.data.data.items[0][4]
+      this.StockInfo.accum_div = response.data.data.items[0][5]
+      this.StockInfo.net_asset = response.data.data.items[0][6]
+      this.StockInfo.total_netasset = response.data.data.items[0][7]
+      this.StockInfo.adj_nav = response.data.data.items[0][8]
+    },
+    async getShareData(StockID){
+      const response = await axios.post(
+          "http://api.tushare.pro",
+          {
+            api_name: "fund_share",
+            token: "91a073e655c1849334691d5f5c71a518ff5468891554887fad2afca0",
+            params:{"ts_code":StockID}
+          }
+      );
+      console.log(response)
+      this.StockInfo.trade_date = response.data.data.items[0][1]
+      this.StockInfo.fd_share = response.data.data.items[0][2]
+    },
+    async getDivData(StockID){
+      const response = await axios.post(
+          "http://api.tushare.pro",
+          {
+            api_name: "fund_div",
+            token: "91a073e655c1849334691d5f5c71a518ff5468891554887fad2afca0",
+            params:{"ts_code":StockID}
+          }
+      );
+      console.log(response)
+      this.StockInfo.imp_anndate = response.data.data.items[0][2]
+      this.StockInfo.base_date = response.data.data.items[0][3]
+      this.StockInfo.div_proc = response.data.data.items[0][4]
+      this.StockInfo.record_date = response.data.data.items[0][5]
+      this.StockInfo.ex_date = response.data.data.items[0][6]
+      this.StockInfo.pay_date = response.data.data.items[0][7]
+      this.StockInfo.earpay_date = response.data.data.items[0][8]
+      this.StockInfo.net_ex_date = response.data.data.items[0][9]
+      this.StockInfo.div_cash = response.data.data.items[0][10]
+      this.StockInfo.base_unit = response.data.data.items[0][11]
+      this.StockInfo.ear_distr = response.data.data.items[0][12]
+      this.StockInfo.ear_amount = response.data.data.items[0][13]
+      this.StockInfo.account_date = response.data.data.items[0][14]
+      this.StockInfo.base_year = response.data.data.items[0][15]
+    },
+    async getPortfolioData(StockID){
+      const response = await axios.post(
+          "http://api.tushare.pro",
+          {
+            api_name: "fund_portfolio",
+            token: "91a073e655c1849334691d5f5c71a518ff5468891554887fad2afca0",
+            params:{"ts_code":StockID}
+          }
+      );
+      console.log(response)
+      this.StockInfo.mkv = response.data.data.items[0][4]
+      this.StockInfo.stk_mkv_ratio = response.data.data.items[0][6]
+      this.StockInfo.stk_float_ratio = response.data.data.items[0][7]
     }
   },
   mounted() {
     this.getStockList(this.StockID)
-    this.getManagerData(this.StockID)
+    this.getShareData(this.StockID)
+    this.getNavData(this.StockID)
+    this.getDivData(this.StockID)
+    this.getPortfolioData(this.StockID)
   }
 }
 </script>

@@ -3,11 +3,12 @@ import * as echarts from "echarts";
 import {useRouter} from "vue-router";
 import axios from "axios";
 import Md5 from 'js-md5'
-
+import { useStockInfoStore } from '@/stores/stockInfoStore.js'
 
 export default{
   methods:{
     async getStockData(stockID){
+      console.log("获取基金信息")
       const response = await axios.post(
           "http://api.tushare.pro",
           {
@@ -16,6 +17,8 @@ export default{
             params:{"ts_code":stockID}
           }
       );
+      console.log(this.ts_code)
+      console.log(response)
       this.stockName = response.data.data.items[0][1]
       this.fund_type = response.data.data.items[0][4]
       this.list_date = response.data.data.items[0][7]
@@ -24,7 +27,6 @@ export default{
       this.min_amount = response.data.data.items[0][15]
       this.purc_startdate = response.data.data.items[0][22]
       this.redm_startdate = response.data.data.items[0][23]
-      console.log(response)
       const response2 = await axios.post(
           "http://api.tushare.pro",
           {
@@ -69,10 +71,17 @@ export default{
       //   cardID:String(this.form.cardID),
       //   passWord:Md5(this.form.passWord,32)
       // }
-      const queryString = `?TraderID=${this.form.IDnumber}&fundID=${this.ts_code}&tradeAmount=${this.form.tradeAmount}&cardID=${this.form.cardID}&passWord=${Md5(this.form.passWord,32)}`
+      let queryString;
+      let api_url;
+      if(this.investWay==="purchase"){
+        queryString = `?TraderID=${this.form.IDnumber}&fundID=${this.ts_code}&tradeAmount=${this.form.tradeAmount}&cardID=${this.form.cardID}&passWord=${Md5(this.form.passWord,32)}`
+        api_url = "http://8.130.119.249:14103/api/v1/TradeManagement/Subscription"
+      } else{
+        queryString = `?TraderID=${this.form.IDnumber}&fundID=${this.ts_code}&tradeAmount=${this.form.tradeAmount}&cardID=${this.form.cardID}&passWord=${Md5(this.form.passWord,32)}&cronExpression=${"0+0+0+0+4"}`
+        api_url = "http://8.130.119.249:14103/api/v1/TradeManagement/schedule"
+      }
       console.log(Md5(this.form.passWord,32))
-      console.log("params"+ this.form.IDnumber + this.ts_code + this.form.tradeAmount + this.form.cardID + this.form.passWord)
-      const api_url = "http://8.130.119.249:14103/api/v1/TradeManagement/Subscription"
+
       const url = api_url+queryString
       const response = await axios.post(url)
       console.log(response)
@@ -105,7 +114,7 @@ export default{
       SearchStock:'',
       ifSubscribe: '开放申购',
       ifRedeem: '开放赎回',
-      ts_code: "562340.SH",
+      ts_code: this.stockId,
       stockName: '',
       fund_type: '',
       list_date: '',
@@ -132,14 +141,9 @@ export default{
     this.getNavData(this.ts_code)
   },
   setup() {
-    const router = useRouter()
-
-    function goBack() {
-      router.push('/')
-    }
-
+    const stockInfoStore = useStockInfoStore()
     return {
-      goBack
+      stockId: stockInfoStore.stockId,
     }
   }
 }
@@ -148,16 +152,6 @@ export default{
 <template>
   <el-container>
     <el-main>
-      <el-row>
-        <el-col :span="15"></el-col>
-        <el-col :span="6">
-          <el-input v-model="SearchStock" placeholder="请输入搜索的基金名称"></el-input>
-        </el-col>
-        <el-col :span="2">
-          <el-button>搜索</el-button>
-        </el-col>
-      </el-row>
-      <br>
       <el-row>
         <el-col :span="8">
           <el-descriptions
