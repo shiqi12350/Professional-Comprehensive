@@ -47,6 +47,12 @@ function turnToTradeHistory() {
 function turnToAccountManage() {
   router.push('/AccountManage')
 }
+function turnToPurchaseRate(){
+  router.push('/purchaseRate')
+}
+function turnToRedemptionRate(){
+  router.push('/redemptionRate')
+}
 function turnToComparison(){
   router.push('/comparison')
 }
@@ -55,16 +61,20 @@ async function changeTime(time) {
   const queryString = `?isoInstant=${time}`
   const url = api_url + queryString
   const response = await axios.post(url)
-  if(response.status === 200) {
-    this.$message({
-      message: '修改成功',
-      type: 'success'
-    });
-    this.inputRemark = ''
-  } else {
-    this.$message.error('修改失败')
-    this.inputRemark = ''
-  }
+  console.log(response)
+  // if(response.status === 200) {
+  //   this.$message({
+  //     message: '修改成功',
+  //     type: 'success'
+  //   });
+  //   this.inputRemark = ''
+  // } else {
+  //   this.$message.error('修改失败')
+  //   this.inputRemark = ''
+  // }
+  const url2 = "http://8.130.119.249:14103/api/v1/TradeManagement/Get_time"
+  const response2 = await axios.get(url2)
+  console.log(response2)
 }
 </script>
 
@@ -212,4 +222,17 @@ async function changeTime(time) {
   box-shadow: 1px 1px 7px 1px #ccc;
   border-radius: 10px;
 }
+
+//body {
+//  background-color: #2f3640;
+//}
+//.el-card {
+//  background-color: #333;
+//  border: 1px solid #9b59b6;
+//}
+//
+//.el-card__header,
+//.el-card__body {
+//  color: #fff;
+//}
 </style>
