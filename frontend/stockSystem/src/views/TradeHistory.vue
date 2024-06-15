@@ -15,7 +15,8 @@
         <el-table-column prop="ConfirmTime" label="Confirm Time"></el-table-column>
         <el-table-column fixed="right" label="操作" >
           <template #default="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">赎回</el-button>
+            <el-button @click="handleRevocationPurchase(scope.row)" type="text" size="small">撤销</el-button>
+            <el-button @click="handleRedeem(scope.row)" type="text" size="small">赎回</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -43,7 +44,7 @@
         <el-table-column prop="ConfirmTime" label="Confirm Time"></el-table-column>
         <el-table-column fixed="right" label="操作" >
           <template #default="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">赎回</el-button>
+            <el-button @click="handleRevocationRedeem(scope.row)" type="text" size="small">撤销</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -108,18 +109,71 @@
         this.currentPageType2 = page;
         this.paginateOrders();
       },
-      async handleClick(row) {
+      async handleRevocationPurchase(row) {
         console.log(row)
+        this.$confirm('此操作将撤销已购买/赎回基金!', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }).then(async () => {
+              const api_url = "http://8.130.119.249:14103/api/v1/TradeManagement/CancelTrade"
+              const queryString = `?Ordernum=${row.ordernumber}&OrderType=1`
+              const url = api_url + queryString
+              const response = await axios.post(url)
+              if(response.status === 200) {
+                this.$message({
+                  type: 'success',
+                  message: '撤销成功!'
+                })
+              }
+        }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消操作',
+              })
+            })
+      },
+      async handleRevocationRedeem(row) {
+        console.log(row)
+        this.$confirm('此操作将撤销已购买/赎回基金!', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }).then(async () => {
+          const api_url = "http://8.130.119.249:14103/api/v1/TradeManagement/CancelTrade"
+          const queryString = `?Ordernum=${row.ordernumber}&OrderType=2`
+          const url = api_url + queryString
+          const response = await axios.post(url)
+          if(response.status === 200) {
+            this.$message({
+              type: 'success',
+              message: '撤销成功!'
+            })
+          }
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作',
+          })
+        })
+      },
+      async handleRedeem(row){
         this.$confirm('此操作将赎回已购买基金!', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
         })
-            .then(() => {
-              this.$message({
-                type: 'success',
-                message: '赎回成功!',
-              })
+            .then(async () => {
+              const api_url = "http://8.130.119.249:14103/api/v1/TradeManagement/Redemption"
+              const queryString = `?Ordernum=${row.ordernumber}`
+              const url = api_url + queryString
+              const response = await axios.post(url)
+              if(response.status === 200) {
+                this.$message({
+                  type: 'success',
+                  message: '撤销成功!'
+                })
+              }
             })
             .catch(() => {
               this.$message({
@@ -127,7 +181,7 @@
                 message: '已取消操作',
               })
             })
-      },
+      }
     }
   };
   </script>

@@ -206,8 +206,24 @@ async function changeTime(time) {
 .navButton:hover {
   color:blue;
 }
-.UserFunc,.StockFunc,.DetailFunc {
-  margin-bottom: 10px;
+.UserFunc,
+.StockFunc,
+.DetailFunc,
+.CalculatorFunc {
+  margin-bottom:10px;
+  background-color: #333;
+  border: 1px solid #9b59b6;
+}
+
+.UserFunc .card-header,
+.StockFunc .card-header,
+.DetailFunc .card-header,
+.CalculatorFunc .card-header,
+.UserFunc .el-button,
+.StockFunc .el-button,
+.DetailFunc .el-button,
+.CalculatorFunc .el-button {
+  color: #fff;
 }
 
 .login{
@@ -223,16 +239,9 @@ async function changeTime(time) {
   border-radius: 10px;
 }
 
-//body {
-//  background-color: #2f3640;
-//}
-//.el-card {
-//  background-color: #333;
-//  border: 1px solid #9b59b6;
-//}
-//
-//.el-card__header,
-//.el-card__body {
-//  color: #fff;
-//}
+body {
+  background-color: #2f3640;
+}
+
+
 </style>

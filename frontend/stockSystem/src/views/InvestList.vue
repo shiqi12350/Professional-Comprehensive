@@ -11,6 +11,7 @@
         currentPage: 1,
         input:'',
         ts_code: '',
+        loading:true
       }
     },
     setup() {
@@ -50,8 +51,10 @@
 
         this.tableData = funds
         console.log(funds)
+        this.loading = false
       },
       getStockListByPage(currentPage){
+        this.loading = true
         this.currentPage = currentPage
         this.getStockList(this.currentPage - 1)
       },
@@ -60,6 +63,7 @@
         this.getStockListByPage(currentPage)
       },
       async searchByTsCode(){
+        this.loading = true
         const response = await axios.post(
             "http://api.tushare.pro",
             {
@@ -118,6 +122,8 @@
         <el-table
             :data="tableData"
             :width="1060"
+            :height="520"
+            v-loading="loading"
         >
           <el-table-column prop="tsCode" label="基金代码" width="100"> </el-table-column>
           <el-table-column prop="name" label="基金名称" width="250"> </el-table-column>
