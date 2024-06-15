@@ -108,7 +108,7 @@
         this.currentPageType2 = page;
         this.paginateOrders();
       },
-      handleClick(row) {
+      async handleClick(row) {
         console.log(row)
         this.$confirm('此操作将赎回已购买基金!', '提示', {
           confirmButtonText: '确定',

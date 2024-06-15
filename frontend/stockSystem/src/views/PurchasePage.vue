@@ -76,15 +76,42 @@ export default{
       if(this.investWay==="purchase"){
         queryString = `?TraderID=${this.form.IDnumber}&fundID=${this.ts_code}&tradeAmount=${this.form.tradeAmount}&cardID=${this.form.cardID}&passWord=${Md5(this.form.passWord,32)}`
         api_url = "http://8.130.119.249:14103/api/v1/TradeManagement/Subscription"
-      } else{
-        queryString = `?TraderID=${this.form.IDnumber}&fundID=${this.ts_code}&tradeAmount=${this.form.tradeAmount}&cardID=${this.form.cardID}&passWord=${Md5(this.form.passWord,32)}&cronExpression=${"0+0+0+0+4"}`
+      } else if(this.detailedInvestWay ==="weekly"){
+        queryString = `?TraderID=${this.form.IDnumber}&fundID=${this.ts_code}&tradeAmount=${this.form.tradeAmount}&cardID=${this.form.cardID}&passWord=${Md5(this.form.passWord,32)}&cronExpression=0+0+0+?+*+${this.investWeeklyWay}`
+        api_url = "http://8.130.119.249:14103/api/v1/TradeManagement/schedule"
+      } else if(this.detailedInvestWay ==="monthly"){
+        queryString = `?TraderID=${this.form.IDnumber}&fundID=${this.ts_code}&tradeAmount=${this.form.tradeAmount}&cardID=${this.form.cardID}&passWord=${Md5(this.form.passWord,32)}&cronExpression=0+0+0+${this.investMonthlyWay}+*+?`
         api_url = "http://8.130.119.249:14103/api/v1/TradeManagement/schedule"
       }
       console.log(Md5(this.form.passWord,32))
-
       const url = api_url+queryString
+      console.log(url)
       const response = await axios.post(url)
       console.log(response)
+      if(response.status === 200) {
+        this.$message({
+          message: '购买成功',
+          type: 'success'
+        });
+        this.form.IDnumber = ''
+        this.form.tradeAmount = ''
+        this.form.cardID = ''
+        this.form.passWord = ''
+        this.investWay = 'purchase'
+        this.detailedInvestWay = ''
+        this.investWeeklyWay = ''
+        this.investMonthlyWay = ''
+      } else {
+        this.$message.error('购买失败')
+        this.form.IDnumber = ''
+        this.form.tradeAmount = ''
+        this.form.cardID = ''
+        this.form.passWord = ''
+        this.investWay = 'purchase'
+        this.detailedInvestWay = ''
+        this.investWeeklyWay = ''
+        this.investMonthlyWay = ''
+      }
     },
     initChart() {
       let NavChart = echarts.init(this.$refs.NavChart)
@@ -130,10 +157,53 @@ export default{
         passWord: '',
       },
       investWay: 'purchase',
+      detailedInvestWay: '',
+      investWeeklyWay:'',
+      investMonthlyWay:'',
       NavList: [],
       nav_date: [],
       total_netasset: [],
-      date:''
+      date:'',
+      options:[
+        {
+          value:'weekly',
+          label:"每周定投"
+        },
+        {
+          value:'monthly',
+          label:"每月定投"
+        },
+      ],
+      weeklyOption:[
+        {
+          value:'MON',
+          label:"周一"
+        },
+        {
+          value:'TUE',
+          label:"周二"
+        },
+        {
+          value:'WED',
+          label:"周三"
+        },
+        {
+          value:'THU',
+          label:"周四"
+        },
+        {
+          value:'FRI',
+          label:"周五"
+        },
+        {
+          value:'SAT',
+          label:"周六"
+        },
+        {
+          value:'SUN',
+          label:"周日"
+        },
+      ],
     }
   },
   mounted() {
@@ -194,17 +264,45 @@ export default{
               <el-radio v-model="investWay" label="purchase">购买</el-radio>
               <el-radio v-model="investWay" label="invest">定投</el-radio>
             </el-form-item>
-            <el-form-item label="选择定投日期" v-if="investWay === 'invest'">
-              <div class="block">
-                <el-date-picker
-                    v-model="date"
-                    type="daterange"
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    end-placeholder="结束日期"
+            <el-form-item label="选择定投方法" v-if="investWay === 'invest'">
+                <el-select
+                    v-model="detailedInvestWay"
+                    placeholder="请选择"
                 >
-                </el-date-picker>
-              </div>
+                  <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                  </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="具体定投日期" v-if="detailedInvestWay === 'weekly'">
+              <el-select
+                v-model="investWeeklyWay"
+                placeholder="请选择"
+              >
+                <el-option
+                    v-for="item in weeklyOption"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="具体定投日期" v-if="detailedInvestWay === 'monthly'">
+              <el-row>
+                <el-col :span="4">
+                  每月
+                </el-col>
+                <el-col :span="12">
+                  <el-input v-model="investMonthlyWay" v-if="detailedInvestWay === 'monthly'"  placeholder="请输入日期">
+                  </el-input>
+                </el-col>
+                <el-col :span="8">
+                  日
+                </el-col>
+              </el-row>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="purchase">创建订单</el-button>

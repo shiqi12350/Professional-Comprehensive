@@ -1,5 +1,6 @@
 <script>
 import {useStockInfoStore} from "@/stores/stockInfoStore.js";
+import axios from "axios";
 
 export default{
   setup(){
@@ -9,27 +10,50 @@ export default{
     }
   },
   methods:{
-    remark(){
+    async remark(){
       console.log("send remark")
+      const api_url = "http://8.130.119.249:14102/api/v1/informationmaintenance/InsertNewComment"
+      const queryString = `?fundCode=${this.StockID}&content=${this.inputRemark}`
+      const url = api_url + queryString
+      console.log(url)
+      const response = await axios.get(url)
+      if(response.status === 200) {
+        this.$message({
+          message: '评论发送成功',
+          type: 'success'
+        });
+        this.inputRemark = ''
+      } else {
+        this.$message.error('评论发送失败')
+        this.inputRemark = ''
+      }
+      console.log(response)
+    },
+    async gerRemark(){
+      const api_url = "http://8.130.119.249:14102/api/v1/informationmaintenance/ObtainAllFundComment"
+      const queryString = `?fundCode=021406.OF`
+      const url = api_url+queryString
+      const response = await axios.get(url)
+      console.log(response.data.contentList[0].content)
+      this.comments = response.data.contentList.map(item => {
+        return {
+          text: item.content
+        }
+      })
+      console.log(this.comments)
+      console.log(response)
     }
   },
   data(){
     return{
       StockID:this.stockId,
       UserName:'高程侠',
-      comments: [
-        {
-          id: 1,
-          username: '张三',
-          text: '评论一'
-        },
-        {
-          id: 2,
-          username: '李四',
-          text: '评论二'
-        }
-      ]
+      inputRemark:'',
+      comments: []
     }
+  },
+  mounted(){
+    this.gerRemark()
   }
 }
 </script>
@@ -74,12 +98,8 @@ export default{
       </el-header>
       <el-main>
         <el-card
-            v-for="comment in comments"
-            :key="comment.id">
-
-          <div>{{ comment.username }}</div>
+            v-for="comment in comments">
           <p>{{ comment.text }}</p>
-
         </el-card>
       </el-main>
       <el-footer>
@@ -88,7 +108,7 @@ export default{
             {{this.UserName}}
           </el-col>
           <el-col :span="22">
-            <el-input v-model="input" placeholder="输入评论吧">
+            <el-input v-model="inputRemark" placeholder="输入评论吧">
             </el-input>
             <div class="button-wrapper">
               <el-button
