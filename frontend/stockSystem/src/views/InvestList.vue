@@ -1,6 +1,8 @@
   <script>
   import { useRouter } from 'vue-router';
   import axios from "axios";
+  import router from "@/router/index.js";
+  import { useStockInfoStore } from '@/stores/stockInfoStore.js'
   export default {
     data(){
       return{
@@ -9,15 +11,13 @@
         currentPage: 1,
         input:'',
         ts_code: '',
+        loading:true
       }
     },
     setup() {
-      const router = useRouter()
-      function turnToCorrespondingStock() {
-        router.push('/StockInfo')
-      }
+      const stockInfoStore = useStockInfoStore()
       return {
-        turnToCorrespondingStock
+        stockInfoStore
       }
     },
     mounted() {
@@ -51,8 +51,10 @@
 
         this.tableData = funds
         console.log(funds)
+        this.loading = false
       },
       getStockListByPage(currentPage){
+        this.loading = true
         this.currentPage = currentPage
         this.getStockList(this.currentPage - 1)
       },
@@ -61,6 +63,7 @@
         this.getStockListByPage(currentPage)
       },
       async searchByTsCode(){
+        this.loading = true
         const response = await axios.post(
             "http://api.tushare.pro",
             {
@@ -84,6 +87,18 @@
         this.tableData = []
         console.log(this.currentPage)
         this.getStockList(this.currentPage)
+      },
+      turnToCorrespondingStock(row) {
+        this.stockInfoStore.setStockId(row.tsCode)
+        router.push({
+          path: '/StockInfo',
+        })
+      },
+      turnToPurchasingStock(row){
+        this.stockInfoStore.setStockId(row.tsCode)
+        router.push({
+          path:'/PurchasePage',
+        })
       }
     }
   }
@@ -107,6 +122,8 @@
         <el-table
             :data="tableData"
             :width="1060"
+            :height="520"
+            v-loading="loading"
         >
           <el-table-column prop="tsCode" label="基金代码" width="100"> </el-table-column>
           <el-table-column prop="name" label="基金名称" width="250"> </el-table-column>
@@ -116,8 +133,8 @@
           <el-table-column prop="status" label="状态" width="100"> </el-table-column>
           <el-table-column fixed="right" label="操作" width="200">
             <template #default="scope">
-              <el-button type="primary" @click="turnToCorrespondingStock">详情</el-button>
-              <el-button type="danger">买入</el-button>
+              <el-button type="primary" @click="turnToCorrespondingStock(scope.row)">详情</el-button>
+              <el-button type="danger" @click="turnToPurchasingStock(scope.row)">买入</el-button>
             </template>
           </el-table-column>
         </el-table>

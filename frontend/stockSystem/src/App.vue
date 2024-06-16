@@ -1,6 +1,7 @@
 <script setup>
 
 import { RouterLink, RouterView, useRouter} from 'vue-router';
+import axios from "axios";
 import userInfo from '@/stores/user';
 import {storeToRefs } from "pinia";
 import loginVue from './components/login.vue';
@@ -18,13 +19,10 @@ const loginIn = ref(false);
 let showLoginPage = function(){
   loginIn.value = !loginIn.value
 }
-
 user.$subscribe((args, state) => {
   loginIn.value = !loginIn.value
 
 })
-
-
 function turnToInvestList() {
   router.push('/investList')
 }
@@ -40,7 +38,6 @@ function turnToPurchasePage() {
 function goBack() {
   router.push('/')
 }
-
 function turnToUserInfo() {
   router.push('/UserInfo')
 }
@@ -50,11 +47,34 @@ function turnToTradeHistory() {
 function turnToAccountManage() {
   router.push('/AccountManage')
 }
-function turnToPurchaseRate() {
+function turnToPurchaseRate(){
   router.push('/purchaseRate')
 }
-function turnToRedemptionRate() {
+function turnToRedemptionRate(){
   router.push('/redemptionRate')
+}
+function turnToComparison(){
+  router.push('/comparison')
+}
+async function changeTime(time) {
+  const api_url = 'http://8.130.119.249:14103/api/v1/TradeManagement/Modification_time'
+  const queryString = `?isoInstant=${time}`
+  const url = api_url + queryString
+  const response = await axios.post(url)
+  console.log(response)
+  // if(response.status === 200) {
+  //   this.$message({
+  //     message: '修改成功',
+  //     type: 'success'
+  //   });
+  //   this.inputRemark = ''
+  // } else {
+  //   this.$message.error('修改失败')
+  //   this.inputRemark = ''
+  // }
+  const url2 = "http://8.130.119.249:14103/api/v1/TradeManagement/Get_time"
+  const response2 = await axios.get(url2)
+  console.log(response2)
 }
 </script>
 
@@ -62,15 +82,24 @@ function turnToRedemptionRate() {
   <el-container>
     <el-header>
       <el-row>
-        <el-col :span="16">
+        <el-col :span="8">
           <el-page-header @click="goBack" content="基金交易系统"></el-page-header>
         </el-col>
+        <el-col :span="4">
+          {{"userName"}}
+        </el-col>
         <el-col :span="8">
-          <el-button v-if="userID == ''" @click="showLoginPage">登录</el-button>
+          <el-button v-if="userID === ''" @click="showLoginPage">登录</el-button>
           <p v-else>{{userID}}</p>
           <div class="login" v-if="loginIn">
             <login-vue></login-vue>
           </div>
+        </el-col>
+        <el-col :span="2">
+          <el-button @click="changeTime(1)">修改至一天后</el-button>
+        </el-col>
+        <el-col :span="2">
+          <el-button @click="changeTime(31)">修改至一月后</el-button>
         </el-col>
       </el-row>
     </el-header>
@@ -138,7 +167,7 @@ function turnToRedemptionRate() {
               <el-button type="text" class="navButton" @click="turnToRedemptionRate">赎回计算</el-button>
             </el-col>
           </el-row>
-          <el-button type="text" class="navButton">基金比较</el-button>
+          <el-button type="text" class="navButton" @click="turnToComparison">基金比较</el-button>
         </el-card>
       </el-aside>
       <el-main>
@@ -146,7 +175,6 @@ function turnToRedemptionRate() {
       </el-main>
     </el-container>
   </el-container>
-
 </template>
 
 
@@ -178,8 +206,24 @@ function turnToRedemptionRate() {
 .navButton:hover {
   color:blue;
 }
-.UserFunc,.StockFunc,.DetailFunc {
-  margin-bottom: 10px;
+.UserFunc,
+.StockFunc,
+.DetailFunc,
+.CalculatorFunc {
+  margin-bottom:10px;
+  background-color: #333;
+  border: 1px solid #9b59b6;
+}
+
+.UserFunc .card-header,
+.StockFunc .card-header,
+.DetailFunc .card-header,
+.CalculatorFunc .card-header,
+.UserFunc .el-button,
+.StockFunc .el-button,
+.DetailFunc .el-button,
+.CalculatorFunc .el-button {
+  color: #fff;
 }
 
 .login{
@@ -194,4 +238,10 @@ function turnToRedemptionRate() {
   box-shadow: 1px 1px 7px 1px #ccc;
   border-radius: 10px;
 }
+
+body {
+  background-color: #2f3640;
+}
+
+
 </style>
