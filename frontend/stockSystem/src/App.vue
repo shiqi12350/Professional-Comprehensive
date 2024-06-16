@@ -7,6 +7,7 @@ import {storeToRefs } from "pinia";
 import loginVue from './components/login.vue';
 import {ref} from 'vue'
 import {watch} from 'vue'
+import {User,Grid,View,Cellphone} from '@element-plus/icons'
 
 const router = useRouter()
 
@@ -21,41 +22,8 @@ let showLoginPage = function(){
 }
 user.$subscribe((args, state) => {
   loginIn.value = !loginIn.value
-
 })
-function turnToInvestList() {
-  router.push('/investList')
-}
-function turnToClassificationList() {
-  router.push('/classificationList')
-}
-function turnToStockInfo() {
-  router.push('/stockInfo')
-}
-function turnToPurchasePage() {
-  router.push('/purchasePage')
-}
-function goBack() {
-  router.push('/')
-}
-function turnToUserInfo() {
-  router.push('/UserInfo')
-}
-function turnToTradeHistory() {
-  router.push('/TradeHistory')
-}
-function turnToAccountManage() {
-  router.push('/AccountManage')
-}
-function turnToPurchaseRate(){
-  router.push('/purchaseRate')
-}
-function turnToRedemptionRate(){
-  router.push('/redemptionRate')
-}
-function turnToComparison(){
-  router.push('/comparison')
-}
+
 async function changeTime(time) {
   const api_url = 'http://8.130.119.249:14103/api/v1/TradeManagement/Modification_time'
   const queryString = `?isoInstant=${time}`
@@ -75,6 +43,7 @@ async function changeTime(time) {
   const url2 = "http://8.130.119.249:14103/api/v1/TradeManagement/Get_time"
   const response2 = await axios.get(url2)
   console.log(response2)
+
 }
 </script>
 
@@ -105,73 +74,62 @@ async function changeTime(time) {
     </el-header>
     <el-container>
       <el-aside>
-        <el-card class="UserFunc">
-          <template #header>
-            <div class="card-header">
-              <span>用户管理</span>
-            </div>
+        <el-menu
+            class="main-menu"
+            background-color="#5E7BFFFF"
+            text-color="#fff"
+            active-text-color="#FF804CFF"
+            unique-opened=true
+            router
+        >
+          <el-sub-menu>
+            <template #title>
+              <el-icon><User/></el-icon>
+              <span class="menuHeader">用户管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/userInfo">信息修改</el-menu-item>
+              <el-menu-item index="/tradeHistory">交易历史查看</el-menu-item>
+              <el-menu-item index="/accountManage">持仓管理</el-menu-item>
+            </el-menu-item-group>
+          </el-sub-menu>
+          <el-sub-menu>
+            <template #title>
+              <el-icon><Grid/></el-icon>
+              <span class="menuHeader">基金信息</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/investList">基金查看</el-menu-item>
+              <el-menu-item index="/classificationList">分类排行</el-menu-item>
+            </el-menu-item-group>
+          </el-sub-menu>
+          <el-sub-menu>
+            <template #title>
+              <el-icon><View/></el-icon>
+              <span class="menuHeader">基金研究</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/stockInfo">深度资料</el-menu-item>
+              <el-menu-item index="/purchasePage">基金购买</el-menu-item>
+            </el-menu-item-group>
+          </el-sub-menu>
+          <el-sub-menu>
+          <template #title>
+            <el-icon><Cellphone/></el-icon>
+            <span class="menuHeader">基金工具</span>
           </template>
-          <el-row>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToUserInfo">信息修改</el-button>
-            </el-col>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToTradeHistory">交易历史查看</el-button>
-            </el-col>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToAccountManage">持仓管理</el-button>
-            </el-col>
-          </el-row>
-        </el-card>
-        <el-card class="StockFunc">
-          <template #header>
-            <div class="card-header">
-              <span>基金信息</span>
-            </div>
-          </template>
-          <el-row>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToInvestList">基金查看</el-button>
-            </el-col>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToClassificationList">分类排行</el-button>
-            </el-col>
-          </el-row>
-        </el-card>
-        <el-card class="DetailFunc">
-          <template #header>
-            <div class="card-header">
-              <span>基金研究</span>
-            </div>
-          </template>
-          <el-row>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToStockInfo">深度资料</el-button>
-            </el-col>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToPurchasePage">基金购买</el-button>
-            </el-col>
-          </el-row>
-        </el-card>
-        <el-card class="CalculatorFunc">
-          <template #header>
-            <div class="card-header">
-              <span>基金工具</span>
-            </div>
-          </template>
-          <el-row>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToPurchaseRate">申购计算</el-button>
-            </el-col>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToRedemptionRate">赎回计算</el-button>
-            </el-col>
-          </el-row>
-          <el-button type="text" class="navButton" @click="turnToComparison">基金比较</el-button>
-        </el-card>
+          <el-menu-item-group>
+            <el-menu-item index="/purchaseRate">申购计算</el-menu-item>
+            <el-menu-item index="/redemptionRate">赎回计算</el-menu-item>
+            <el-menu-item index="/comparison">基金比较</el-menu-item>
+          </el-menu-item-group>
+        </el-sub-menu>
+        </el-menu>
       </el-aside>
       <el-main>
-        <router-view />
+        <el-card class="card">
+          <router-view />
+        </el-card>
       </el-main>
     </el-container>
   </el-container>
@@ -179,53 +137,6 @@ async function changeTime(time) {
 
 
 <style>
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: bold;
-  font-size: 16px;
-
-}
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
-
-.box-card {
-  width: 200px;
-}
-.navButton{
-  color: #333;
-  padding: 8px 16px;
-
-}
-.navButton:hover {
-  color:blue;
-}
-.UserFunc,
-.StockFunc,
-.DetailFunc,
-.CalculatorFunc {
-  margin-bottom:10px;
-  background-color: #333;
-  border: 1px solid #9b59b6;
-}
-
-.UserFunc .card-header,
-.StockFunc .card-header,
-.DetailFunc .card-header,
-.CalculatorFunc .card-header,
-.UserFunc .el-button,
-.StockFunc .el-button,
-.DetailFunc .el-button,
-.CalculatorFunc .el-button {
-  color: #fff;
-}
-
 .login{
   z-index: 10;
   position: absolute;
@@ -238,10 +149,24 @@ async function changeTime(time) {
   box-shadow: 1px 1px 7px 1px #ccc;
   border-radius: 10px;
 }
-
 body {
-  background-color: #2f3640;
+  background-color: #eef1ff;
 }
 
+.main-menu{
+  border-right: 0;
+  border-radius: 10px;
+}
 
+.menuHeader{
+  font-family:"AlimamaFangYuan",serif;
+  font-weight: bold;
+  font-size:18px;
+}
+.card {
+  background-image: url("@/resource/bg.png");
+  
+  background-size: cover;
+  background-repeat: no-repeat;
+}
 </style>

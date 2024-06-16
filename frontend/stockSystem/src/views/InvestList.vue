@@ -3,6 +3,7 @@
   import axios from "axios";
   import router from "@/router/index.js";
   import { useStockInfoStore } from '@/stores/stockInfoStore.js'
+  import {Search} from '@element-plus/icons'
   export default {
     data(){
       return{
@@ -81,6 +82,7 @@
           investType: response.data.data.items[0][19]
         }
         this.tableData = [fund]
+        this.loading = false
       },
       clearTsCode() {
         this.ts_code = ''
@@ -116,20 +118,24 @@
             <el-button
                 clearable:true
                 @click="searchByTsCode"
-                @clear="clearTsCode">搜索</el-button>
+                @clear="clearTsCode">
+              <img src="@/resource/搜索.png" width=20>
+            </el-button>
           </el-col>
         </el-row>
+        <br>
         <el-table
             :data="tableData"
             :width="1060"
-            :height="520"
+            :height="530"
             v-loading="loading"
+            :row-class-name="tableRowClassName"
         >
           <el-table-column prop="tsCode" label="基金代码" width="100"> </el-table-column>
-          <el-table-column prop="name" label="基金名称" width="250"> </el-table-column>
+          <el-table-column prop="name" label="基金名称" width="280"> </el-table-column>
           <el-table-column prop="management" label="管理人" width="150"> </el-table-column>
           <el-table-column prop="foundDate" label="成立日期" width="150"> </el-table-column>
-          <el-table-column prop="investType" label="投资风格" width="100"> </el-table-column>
+          <el-table-column prop="investType" label="投资风格" width="140"> </el-table-column>
           <el-table-column prop="status" label="状态" width="100"> </el-table-column>
           <el-table-column fixed="right" label="操作" width="200">
             <template #default="scope">
@@ -138,6 +144,7 @@
             </template>
           </el-table-column>
         </el-table>
+        <br>
         <el-pagination
             :current-page="currentPage"
             @current-change="handleCurrentChange"

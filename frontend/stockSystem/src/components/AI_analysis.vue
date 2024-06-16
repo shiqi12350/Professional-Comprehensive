@@ -11,6 +11,7 @@ export  default {
   },
   data(){
     return{
+      color:['#98fffc', '#61b8ff', '#98fffc', '#61b8ff', '#98fffc'],
       array_data:[],
       StockID:this.stockId,
       Alpha:'',
@@ -130,7 +131,10 @@ export  default {
       let radarChart = echarts.init(this.$refs.radarChart)
       let options={
         title:{
-          text:"五维图"
+          text:"基金能力五维显示",
+          style: {
+            textAlign: "center"
+          }
         },
         radar:[{
           indicator:[
@@ -139,7 +143,16 @@ export  default {
             {name:"Sharpe",max:1},
             {name:"平均风险收益率(%)",max:0.1},
             {name:"年化收益率(%)",max:10}
-          ]
+          ],
+          axisName:{
+            fontSize:15,
+            color:'#8d0000'
+          },
+          splitArea:{
+            areaStyle:{
+              color:this.color
+            }
+          }
         }],
         series:[
           {
@@ -148,7 +161,10 @@ export  default {
               {
                 value:[Number(this.Alpha),Number(this.Beta),Number(this.Sharpe),Number(this.averageRiskReturn),Number(this.annualizedReturn)]
               }
-            ]
+            ],
+            areaStyle:{
+              color:'#ef3939'
+            }
           }
         ]
       }
@@ -219,11 +235,15 @@ export  default {
 <!--          <div class="text item">{{ '平均风险收益率(%):' + this.averageRiskReturn }}</div>-->
 <!--          <div class="text item">{{ '年化收益率(%):' + this.annualizedReturn }}</div>-->
 <!--        </el-card>-->
-        <div ref="radarChart" id="radarChart"></div>
+        <el-card class="radar">
+          <div ref="radarChart" id="radarChart"></div>
+        </el-card>
       </el-col>
       <el-col :span="4"></el-col>
       <el-col :span="12">
-        <div ref="PredictChart" id="PredictChart"></div>
+        <el-card class="predictChart">
+          <div ref="PredictChart" id="PredictChart"></div>
+        </el-card>
       </el-col>
     </el-row>
   </el-main>
@@ -248,4 +268,12 @@ export  default {
   width:500px;
   height:400px;
 }
+.radar{
+  width:550px
+}
+.predictChart{
+  width:500px;
+  margin-top:100px
+}
+
 </style>

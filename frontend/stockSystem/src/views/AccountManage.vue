@@ -104,6 +104,7 @@
               SPK: 'oA5XHdFaJ9'
             }
           });
+          console.log(response)
           if (response.data.resultCode === 1) {
             alert('银行卡绑定成功');
             this.bankCardList.push({ bankCard: this.bindBankCardForm.bankCard });

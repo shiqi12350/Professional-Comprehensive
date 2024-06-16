@@ -192,7 +192,6 @@ export default {
         class="margin-top"
         title="基金基本信息"
         :column="2"
-        :size="size"
         border
     >
       <el-descriptions-item label="基金代码">{{this.StockInfo.ts_code}}</el-descriptions-item>
@@ -210,8 +209,6 @@ export default {
       <el-descriptions-item label="日常申购起始日">{{this.StockInfo.purc_startdate}}</el-descriptions-item>
       <el-descriptions-item label="日常赎回起始日">{{this.StockInfo.redm_startdate}}</el-descriptions-item>
       <el-descriptions-item label="E场内O场外">{{this.StockInfo.market}}</el-descriptions-item>
-
-
     </el-descriptions>
     <br><br>
     <el-descriptions

@@ -119,7 +119,9 @@
               const api_url = "http://8.130.119.249:14103/api/v1/TradeManagement/CancelTrade"
               const queryString = `?Ordernum=${row.ordernumber}&OrderType=1`
               const url = api_url + queryString
+              console.log(url)
               const response = await axios.post(url)
+              console.log(response)
               if(response.status === 200) {
                 this.$message({
                   type: 'success',
@@ -143,7 +145,9 @@
           const api_url = "http://8.130.119.249:14103/api/v1/TradeManagement/CancelTrade"
           const queryString = `?Ordernum=${row.ordernumber}&OrderType=2`
           const url = api_url + queryString
+          console.log(url)
           const response = await axios.post(url)
+          console.log(response)
           if(response.status === 200) {
             this.$message({
               type: 'success',
@@ -168,10 +172,11 @@
               const queryString = `?Ordernum=${row.ordernumber}`
               const url = api_url + queryString
               const response = await axios.post(url)
+              console.log(response)
               if(response.status === 200) {
                 this.$message({
                   type: 'success',
-                  message: '撤销成功!'
+                  message: '赎回成功!'
                 })
               }
             })

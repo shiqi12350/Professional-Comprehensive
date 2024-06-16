@@ -1,31 +1,85 @@
 <template>
-  
-    <p slot="header" style="height:40px; line-height:40px; font-weight: bold; background-color: #f2f2f2; color: #333; text-align: center;">认/申购费率计算</p>
-    <el-form :model="formData" label-width="100px">
+    <el-row>
+      <el-col :span="10">
+        <p slot="header" style="height:40px; line-height:40px; font-weight: bold; background-color: #f2f2f2; color: #333; text-align: center;">认/申购费率计算</p>
+        <el-form :model="formData" label-width="100px">
 
-      <!--基金ID查询-->
-      <el-form-item label="基金代码">
-        <el-input v-model="fundId" placeholder="申购基金编号"></el-input>
-        <el-button size="small" @click="getFundNetValue">查询</el-button>
-      </el-form-item>
+          <!--基金ID查询-->
+          <el-form-item label="基金代码">
+            <el-input v-model="fundId" placeholder="申购基金编号"></el-input>
+            <el-button size="small" @click="getFundNetValue">查询</el-button>
+          </el-form-item>
 
-      <el-form-item label="申购金额">
-        <el-input v-model="formData.purchaseAmount" placeholder="请输入金额(元)"></el-input>
-      </el-form-item>
-      <el-form-item label="单位净值">
-        <el-input v-model="formData.netValue" placeholder="请输入净值(元)"></el-input>
-      </el-form-item>
-      <el-form-item label="申购费率">
-        <el-input v-model="formData.purchaseRate" placeholder="请输入费率(%)"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="calculate">计算</el-button>
-      </el-form-item>
-    </el-form>
-  
-    <p slot="header" style=" height:40px; line-height:40px; font-weight: bold; background-color: #f2f2f2; color: #333; text-align: center;">计算结果</p>
-    <p>申购手续费：{{ result.purchaseFee }} 元</p>
-    <p>申购成交份额：{{ result.purchaseShares }} 份</p>
+          <el-form-item label="申购金额">
+            <el-input v-model="formData.purchaseAmount" placeholder="请输入金额(元)"></el-input>
+          </el-form-item>
+          <el-form-item label="单位净值">
+            <el-input v-model="formData.netValue" placeholder="请输入净值(元)"></el-input>
+          </el-form-item>
+          <el-form-item label="申购费率">
+            <el-input v-model="formData.purchaseRate" placeholder="请输入费率(%)"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="calculate">计算</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+      <el-col :span="4">
+
+      </el-col>
+      <el-col :span="10">
+        <p slot="header" style=" height:40px; line-height:40px; font-weight: bold; background-color: #f2f2f2; color: #333; text-align: center;">计算结果</p>
+        <p>申购手续费：{{ result.purchaseFee }} 元</p>
+        <p>申购成交份额：{{ result.purchaseShares }} 份</p>
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <el-col :span="10">
+        <p slot="header" style="height:40px; line-height:40px; font-weight: bold; background-color: #f2f2f2; color: #333; text-align: center;">赎回费率计算</p>
+        <el-form :model="formData" label-width="120px">
+
+          <!--订单选择-->
+          <el-form-item label="选择订单">
+            <el-select v-model="selectedOrder" placeholder="请选择订单" value-key="ordernumber" @change="handleOrderChange">
+              <el-option
+                  v-for="order in orderOptions"
+                  :key="order.ordernumber"
+                  :label="`单号：${order.ordernumber}&nbsp|&nbsp基金：${order.fundid} &nbsp|&nbsp份额：${order.share.toFixed(2)}`"
+                  :value="order"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="赎回份额">
+            <el-input v-model.number="formData.redemptionShares"></el-input>&nbsp元
+          </el-form-item>
+          <el-form-item label="赎回净值">
+            <el-input v-model.number="formData.redemptionNetValue"></el-input>&nbsp元
+          </el-form-item>
+          <el-form-item label="赎回费率 ">
+            <el-input v-model.number="formData.redemptionRate"></el-input>&nbsp%
+          </el-form-item>
+          <el-form-item label="申购净值">
+            <el-input v-model.number="formData.purchaseNetValue"></el-input>&nbsp元
+          </el-form-item>
+          <el-form-item label="后端申购费率">
+            <el-input v-model.number="formData.backendPurchaseRate"></el-input>&nbsp%
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="calculate">计算</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+      <el-col :span="4"></el-col>
+      <el-col :span="10">
+        <p slot="header" style=" height:40px; line-height:40px; font-weight: bold; background-color: #f2f2f2; color: #333; text-align: center;">计算结果</p>
+        <p>赎回手续费：{{ Math.round(result.redemptionFee * 100) / 100 }} 元</p>
+        <p>后端申购手续费：{{ Math.round(result.backendPurchaseFee * 100) / 100  }} 元</p>
+        <p>实际所得金额：{{ Math.round(result.actualAmount * 100) / 100 }} 元</p>
+      </el-col>
+    </el-row>
+
  
 </template>
 

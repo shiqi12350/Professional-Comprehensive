@@ -75,7 +75,7 @@
   
   <script setup lang="ts">
   import { ElMessage } from 'element-plus'
-  import md5 from 'js-md5';
+  import Md5 from 'js-md5';
   import { reactive, ref } from 'vue';
   import type { FormInstance, FormRules } from 'element-plus';
   import axios from 'axios';
@@ -205,7 +205,7 @@
               userID: ruleFormRegister.userID,
               userName: ruleFormRegister.userName,
               userPhone: ruleFormRegister.userPhone,
-              password: md5(ruleFormRegister.password),
+              password: Md5(ruleFormRegister.password),
               birth: ruleFormRegister.birth,
               email: ruleFormRegister.email,
             }

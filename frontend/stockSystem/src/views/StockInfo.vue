@@ -207,7 +207,6 @@ export default {
         class="margin-top"
         title="基金基本信息"
         :column="2"
-        :size="size"
         border
     >
       <el-descriptions-item label="基金代码">{{ this.StockInfo.ts_code }}</el-descriptions-item>
