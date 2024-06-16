@@ -127,9 +127,7 @@ async function changeTime(time) {
         </el-menu>
       </el-aside>
       <el-main>
-        <el-card class="card">
           <router-view />
-        </el-card>
       </el-main>
     </el-container>
   </el-container>
@@ -163,10 +161,5 @@ body {
   font-weight: bold;
   font-size:18px;
 }
-.card {
-  background-image: url("@/resource/bg.png");
-  
-  background-size: cover;
-  background-repeat: no-repeat;
-}
+
 </style>

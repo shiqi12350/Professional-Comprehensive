@@ -1,6 +1,6 @@
 <template>
     <p slot="header" style="height:40px; line-height:40px; font-weight: bold; background-color: #f2f2f2; color: #333; text-align: center;">赎回费率计算</p>
-      <el-form :model="formData" label-width="120px">
+      <el-form :model="redeemFormData" label-width="120px">
 
         <!--订单选择-->
         <el-form-item label="选择订单">
@@ -15,29 +15,29 @@
         </el-form-item>
 
         <el-form-item label="赎回份额">
-          <el-input v-model.number="formData.redemptionShares"></el-input>&nbsp元
+          <el-input v-model.number="redeemFormData.redemptionShares"></el-input>&nbsp元
         </el-form-item>
         <el-form-item label="赎回净值">
-          <el-input v-model.number="formData.redemptionNetValue"></el-input>&nbsp元
+          <el-input v-model.number="redeemFormData.redemptionNetValue"></el-input>&nbsp元
         </el-form-item>
         <el-form-item label="赎回费率 ">
-          <el-input v-model.number="formData.redemptionRate"></el-input>&nbsp%
+          <el-input v-model.number="redeemFormData.redemptionRate"></el-input>&nbsp%
         </el-form-item>
         <el-form-item label="申购净值">
-          <el-input v-model.number="formData.purchaseNetValue"></el-input>&nbsp元
+          <el-input v-model.number="redeemFormData.purchaseNetValue"></el-input>&nbsp元
         </el-form-item>
         <el-form-item label="后端申购费率">
-          <el-input v-model.number="formData.backendPurchaseRate"></el-input>&nbsp%
+          <el-input v-model.number="redeemFormData.backendPurchaseRate"></el-input>&nbsp%
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="calculate">计算</el-button>
+          <el-button type="primary" @click="calculateRedeem">计算</el-button>
         </el-form-item>
       </el-form>
   
     <p slot="header" style=" height:40px; line-height:40px; font-weight: bold; background-color: #f2f2f2; color: #333; text-align: center;">计算结果</p>
-    <p>赎回手续费：{{ Math.round(result.redemptionFee * 100) / 100 }} 元</p>
-    <p>后端申购手续费：{{ Math.round(result.backendPurchaseFee * 100) / 100  }} 元</p>
-    <p>实际所得金额：{{ Math.round(result.actualAmount * 100) / 100 }} 元</p>
+    <p>赎回手续费：{{ Math.round(redeemResult.redemptionFee * 100) / 100 }} 元</p>
+    <p>后端申购手续费：{{ Math.round(redeemResult.backendPurchaseFee * 100) / 100 }} 元</p>
+    <p>实际所得金额：{{ Math.round(redeemResult.actualAmount * 100) / 100 }} 元</p>
 
   </template>
   
@@ -47,14 +47,14 @@
   export default {
     data() {
       return {
-        formData: {
+        redeemFormData: {
           redemptionShares: null,
           redemptionNetValue: null,
           redemptionRate: null,
           purchaseNetValue: null,
           backendPurchaseRate: null
         },
-        result: {
+        redeemResult: {
           redemptionFee: null,
           backendPurchaseFee: null,
           actualAmount: null
@@ -75,8 +75,8 @@
         }
       },
       handleOrderChange() {
-        this.formData.redemptionShares = this.selectedOrder.share;
-        this.formData.redemptionRate = this.selectedOrder.Rate;
+        this.redeemFormData.redemptionShares = this.selectedOrder.share;
+        this.redeemFormData.redemptionRate = this.selectedOrder.Rate;
 
         this.getFundNav(this.selectedOrder.fundid);
       },
@@ -95,19 +95,19 @@
       }
     );
     const unitNav = response.data.data.items[0][3];
-    this.formData.redemptionNetValue = unitNav;
+    this.redeemFormData.redemptionNetValue = unitNav;
   } catch (error) {
     console.error('Error fetching fund nav:', error);
   }
 },
-      calculate() {
-        this.result.redemptionFee = (this.formData.redemptionShares * this.formData.redemptionNetValue * this.formData.redemptionRate) / 100;
-        if (this.formData.purchaseNetValue && this.formData.backendPurchaseRate) {
-          this.result.backendPurchaseFee = (this.formData.redemptionShares * this.formData.purchaseNetValue * this.formData.backendPurchaseRate / 100) / (1 + (this.formData.backendPurchaseRate / 100));
+      calculateRedeem() {
+        this.redeemResult.redemptionFee = (this.redeemFormData.redemptionShares * this.redeemFormData.redemptionNetValue * this.redeemFormData.redemptionRate) / 100;
+        if (this.redeemFormData.purchaseNetValue && this.redeemFormData.backendPurchaseRate) {
+          this.redeemResult.backendPurchaseFee = (this.redeemFormData.redemptionShares * this.redeemFormData.purchaseNetValue * this.redeemFormData.backendPurchaseRate / 100) / (1 + (this.redeemFormData.backendPurchaseRate / 100));
         } else {
-          this.result.backendPurchaseFee = 0;
+          this.redeemResult.backendPurchaseFee = 0;
         }
-        this.result.actualAmount = this.formData.redemptionShares * this.formData.redemptionNetValue - this.result.redemptionFee - this.result.backendPurchaseFee;
+        this.redeemResult.actualAmount = this.redeemFormData.redemptionShares * this.redeemFormData.redemptionNetValue - this.redeemResult.redemptionFee - this.redeemResult.backendPurchaseFee;
       }
     },
     mounted() {

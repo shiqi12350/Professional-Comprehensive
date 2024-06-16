@@ -14,8 +14,13 @@ export default {
       StockID:this.stockId,
       StartTime:"20240531",
       NavList:[],
+      pageList:[],
       nav_date:[],
+      currentPage: 1,
+      pageSize: 5,
       total_netasset:[],
+      tableData:[],
+      thisYear:null,
     }
   },
   methods:{
@@ -40,9 +45,11 @@ export default {
       this.total_netasset = this.NavList.map(item => {
         return item.total_netasset
       })
+      console.log(this.NavList)
       console.log(this.nav_date)
       console.log(this.total_netasset)
       this.initChart()
+      this.pagination()
     },
     async getTimeNavData(StockID,DuringTime){
       const response = await axios.post(
@@ -106,6 +113,19 @@ export default {
         }]
       };
       NavChart.setOption(options)
+    },
+    pagination() {
+      const pageCount = Math.ceil(this.NavList.length / this.pageSize)
+
+      for(let i = 0; i < pageCount; i++) {
+        this.pageList.push(
+            this.NavList.slice(i * this.pageSize, (i + 1) * this.pageSize)
+        )
+      }
+    },
+    handleCurrentChange(page) {
+      this.currentPage = page
+      this.tableData = this.pageList[page - 1]
     }
   },
   mounted() {
@@ -152,14 +172,35 @@ export default {
     </el-menu>
   </el-header>
   <el-main>
-    <div ref="stockNavChart" id="stockNavChart"></div>
+    <el-row>
+      <el-col :span="6">
+        <el-table
+          :data="tableData"
+          :size="small"
+        >
+          <el-table-column prop="nav_date" label="日期" width="100" ></el-table-column>
+          <el-table-column prop="total_netasset" label="净值" width="120" ></el-table-column>
+        </el-table>
+        <el-pagination
+            small
+            layout="prev, pager, next"
+            :current-page="currentPage"
+            :page-size="pageSize"
+            :total="25"
+            @current-change="handleCurrentChange">
+
+        </el-pagination>
+      </el-col>
+      <el-col :span="18">
+        <div ref="stockNavChart" id="stockNavChart"></div>
+      </el-col>
+    </el-row>
   </el-main>
 </template>
 
 <style>
 #stockNavChart{
-  width:1000px;
+  width:900px;
   height:550px;
-  margin-left:100px
 }
 </style>
