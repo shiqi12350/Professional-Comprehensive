@@ -119,8 +119,7 @@ async function changeTime(time) {
             <span class="menuHeader">基金工具</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="/purchaseRate">申购计算</el-menu-item>
-            <el-menu-item index="/redemptionRate">赎回计算</el-menu-item>
+            <el-menu-item index="/purchaseRate">基金计算器</el-menu-item>
             <el-menu-item index="/comparison">基金比较</el-menu-item>
           </el-menu-item-group>
         </el-sub-menu>

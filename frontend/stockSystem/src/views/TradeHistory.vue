@@ -1,11 +1,24 @@
 <template>
+  <el-card>
+    <template #header>
+      <el-row>
+        <el-col :span="2">
+          <div class="tradeHistoryTitle">
+            <img src="@/resource/tradeHistory.png" class="tradeHistoryPic">
+          </div>
+        </el-col>
+        <el-col :span="22">
+          <div class="tradeHistoryName">交易历史</div>
+        </el-col>
+      </el-row>
+    </template>
     <div>
       <el-table
-        v-if="currentPageOrdersType1.length > 0"
-        :data="currentPageOrdersType1"
-        style="margin-bottom: 20px"
-        border
-        stripe
+          v-if="currentPageOrdersType1.length > 0"
+          :data="currentPageOrdersType1"
+          style="margin-bottom: 20px"
+          border
+          stripe
       >
         <el-table-column prop="ordernumber" label="Order Number"></el-table-column>
         <el-table-column prop="company" label="Company"></el-table-column>
@@ -20,21 +33,21 @@
           </template>
         </el-table-column>
       </el-table>
-  
+
       <el-pagination
-        @current-change="handleCurrentChangeType1"
-        :current-page="currentPageType1"
-        :page-size="5"
-        :total="totalOrdersType1.length"
-        layout="prev, pager, next"
+          @current-change="handleCurrentChangeType1"
+          :current-page="currentPageType1"
+          :page-size="5"
+          :total="totalOrdersType1.length"
+          layout="prev, pager, next"
       ></el-pagination>
-  
+
       <el-table
-        v-if="currentPageOrdersType2.length > 0"
-        :data="currentPageOrdersType2"
-        style="margin-bottom: 20px"
-        border
-        stripe
+          v-if="currentPageOrdersType2.length > 0"
+          :data="currentPageOrdersType2"
+          style="margin-bottom: 20px"
+          border
+          stripe
       >
         <el-table-column prop="ordernumber" label="Order Number"></el-table-column>
         <el-table-column prop="company" label="Company"></el-table-column>
@@ -48,15 +61,17 @@
           </template>
         </el-table-column>
       </el-table>
-  
+
       <el-pagination
-        @current-change="handleCurrentChangeType2"
-        :current-page="currentPageType2"
-        :page-size="5"
-        :total="totalOrdersType2.length"
-        layout="prev, pager, next"
+          @current-change="handleCurrentChangeType2"
+          :current-page="currentPageType2"
+          :page-size="5"
+          :total="totalOrdersType2.length"
+          layout="prev, pager, next"
       ></el-pagination>
     </div>
+  </el-card>
+
   </template>
   
   <script>
@@ -193,3 +208,20 @@
     }
   };
   </script>
+
+<style>
+.tradeHistoryPic{
+  width:40px;
+  margin-top:10px;
+  margin-left:10px;
+}
+.tradeHistoryName{
+  margin-top:15px;
+  font-size:30px;
+}
+.tradeHistoryTitle{
+  width:250px;
+  height:60px;
+  background-color: #fff;
+}
+</style>

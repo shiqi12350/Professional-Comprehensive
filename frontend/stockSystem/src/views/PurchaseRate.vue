@@ -1,4 +1,17 @@
 <template>
+  <el-card>
+    <template #header>
+      <el-row>
+        <el-col :span="2">
+          <div class="calculatorTitle">
+            <img src="@/resource/calculator.png" class="calculatorPic">
+          </div>
+        </el-col>
+        <el-col :span="22">
+          <div class="calculatorName">基金计算器</div>
+        </el-col>
+      </el-row>
+    </template>
     <el-row>
       <el-col :span="10">
         <p slot="header" style="height:40px; line-height:40px; font-weight: bold; background-color: #f2f2f2; color: #333; text-align: center;">认/申购费率计算</p>
@@ -79,8 +92,7 @@
         <p>实际所得金额：{{ Math.round(redeemResult.actualAmount * 100) / 100 }} 元</p>
       </el-col>
     </el-row>
-
- 
+  </el-card>
 </template>
 
 <script>
@@ -204,5 +216,19 @@ export default {
 }
 .el-input{
   width:200px;
+}
+.calculatorPic{
+  width:40px;
+  margin-top:10px;
+  margin-left:10px;
+}
+.calculatorName{
+  margin-top:15px;
+  font-size:30px;
+}
+.calculatorTitle{
+  width:250px;
+  height:60px;
+  background-color: #fff;
 }
 </style>

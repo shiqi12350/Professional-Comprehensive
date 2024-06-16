@@ -1,6 +1,18 @@
 <template>
   <div>
         <el-card>
+          <template #header>
+            <el-row>
+              <el-col :span="2">
+                <div class="userInfoTitle">
+                  <img src="@/resource/userInfo.png" class="userInfoPic">
+                </div>
+              </el-col>
+              <el-col :span="22">
+                <div class="userInfoName">用户信息</div>
+              </el-col>
+            </el-row>
+          </template>
           <!-- User Information Section -->
           <el-form ref="userInfoForm" label-width="70px">
             <el-form-item label="身份证号">
@@ -132,6 +144,20 @@ export default {
 }
 .el-card{
   margin-left:20px;
+}
+.userInfoPic{
+  width:40px;
+  margin-top:10px;
+  margin-left:10px;
+}
+.userInfoName{
+  margin-top:15px;
+  font-size:30px;
+}
+.userInfoTitle{
+  width:250px;
+  height:60px;
+  background-color: #fff;
 }
 </style>
 

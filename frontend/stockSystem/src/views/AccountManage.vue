@@ -1,16 +1,30 @@
 <template>
-    
     <el-card>
-    <el-button type="primary"  @click="bindBankCardDialogVisible = true">绑定</el-button>
-    <el-table :data="bankCardList" @row-click="handleRowClick" style="margin-top: 20px">
-      <el-table-column prop="bankCard" label="银行卡号"></el-table-column>
-      <el-table-column label="操作">
-        <template #default="{ row }">
-          <el-button size="small" @click="dismissBankCard(row.bankCard)">解绑</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+      <template #header>
+        <el-row>
+          <el-col :span="2">
+            <div class="accountTitle">
+              <img src="@/resource/account.png" class="accountPic">
+            </div>
+          </el-col>
+          <el-col :span="22">
+            <div class="accountName">持仓管理</div>
+          </el-col>
+        </el-row>
+      </template>
+      <el-card>
+        <el-button type="primary"  @click="bindBankCardDialogVisible = true">绑定</el-button>
+        <el-table :data="bankCardList" @row-click="handleRowClick" style="margin-top: 20px">
+          <el-table-column prop="bankCard" label="银行卡号"></el-table-column>
+          <el-table-column label="操作">
+            <template #default="{ row }">
+              <el-button size="small" @click="dismissBankCard(row.bankCard)">解绑</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-card>
     </el-card>
+
   
     <!--绑定银行卡输入框-->
     <el-dialog title="绑定银行卡" v-model="bindBankCardDialogVisible">
@@ -164,5 +178,19 @@
 <style>
 .el-card{
   margin-top:10px;
+}
+.accountPic{
+   width:40px;
+   margin-top:10px;
+   margin-left:10px;
+ }
+.accountName{
+  margin-top:15px;
+  font-size:30px;
+}
+.accountTitle{
+  width:250px;
+  height:60px;
+  background-color: #fff;
 }
 </style>

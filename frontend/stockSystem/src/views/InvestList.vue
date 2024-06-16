@@ -109,16 +109,19 @@
   <template>
     <el-container>
       <el-main>
-        <el-row>
-          <el-col :span="4">
-            <div class="investListTitle">
-              <img src="@/resource/investList.png" class="investListPic">
-              基金列表
-            </div>
-          </el-col>
-          <el-col :span="20"></el-col>
-        </el-row>
         <el-card>
+          <template #header>
+            <el-row>
+              <el-col :span="2">
+                <div class="investListTitle">
+                  <img src="@/resource/investList.png" class="investListPic">
+                </div>
+              </el-col>
+              <el-col :span="22">
+                <div class="investListName">基金列表</div>
+              </el-col>
+            </el-row>
+          </template>
           <el-row>
             <el-col :span="16"></el-col>
             <el-col :span="6">
@@ -167,13 +170,17 @@
 
 <style>
 .investListPic{
-
+  width:40px;
+  margin-top:10px;
+  margin-left:10px;
+}
+.investListName{
+  margin-top:15px;
+  font-size:30px;
 }
 .investListTitle{
   width:250px;
-  height:80px;
+  height:60px;
   background-color: #fff;
-  border-radius: 10px;
-
 }
 </style>
