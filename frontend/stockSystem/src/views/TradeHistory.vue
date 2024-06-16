@@ -134,6 +134,7 @@
                 message: '已取消操作',
               })
             })
+        this.fetchTradeHistory()
       },
       async handleRevocationRedeem(row) {
         console.log(row)
@@ -160,6 +161,7 @@
             message: '已取消操作',
           })
         })
+        this.fetchTradeHistory()
       },
       async handleRedeem(row){
         this.$confirm('此操作将赎回已购买基金!', '提示', {
@@ -186,6 +188,7 @@
                 message: '已取消操作',
               })
             })
+        this.fetchTradeHistory()
       }
     }
   };
