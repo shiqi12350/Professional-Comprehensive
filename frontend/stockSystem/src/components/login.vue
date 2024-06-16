@@ -199,23 +199,26 @@
       if (valid) {
         console.log('submit!')
         
-        const response = await axios.post(
-            "http://8.130.119.249:14100/api/v1/accountManagement/Register",
-            {
-              userID: ruleFormRegister.userID,
-              userName: ruleFormRegister.userName,
-              userPhone: ruleFormRegister.userPhone,
-              password: md5(ruleFormRegister.password),
-              birth: ruleFormRegister.birth,
-              email: ruleFormRegister.email,
-            }
-        );
+        let data = new URLSearchParams();
+      data.append("userID",ruleFormRegister.userID)
+      data.append("userName",ruleFormRegister.userName)
+      data.append("userPhone",ruleFormRegister.userPhone)
+      data.append("password",ruleFormRegister.password)
+      data.append("birth",ruleFormRegister.birth)
+      data.append("email",ruleFormRegister.email)
+      const response = await axios.post(
+          "http://8.130.119.249:14100/api/v1/accountManagement/Register",
+          data,
+      );
         console.log(response);
         if(response.data.resultCode == 1){
           //登录成功
           ElMessage({
               message: '注册成功',
               type: 'success',
+          })
+          user.$patch({
+            userID:ruleFormRegister.userID
           })
         }else if(response.data.resultCode == -201){
           //注册失败
