@@ -60,7 +60,7 @@ export default{
 </script>
 
 <template>
-  <el-card>
+  <el-card class="feedbackCard">
     <template #header>
       <el-row>
         <el-col :span="2">
@@ -157,6 +157,7 @@ export default{
 .button-wrapper {
   text-align: right;
   margin-top:5px;
+  margin-bottom: 10px;
 }
 .forum {
   height: 80vh;
@@ -164,7 +165,7 @@ export default{
   flex-direction: column;
 }
 .userComment{
-  margin-bottom:10px;
+  margin-bottom:30px;
 }
 .userImage{
   height:40px;
@@ -182,5 +183,8 @@ export default{
   width:250px;
   height:60px;
   background-color: #fff;
+}
+.feedbackCard{
+  height:760px;
 }
 </style>

@@ -41,7 +41,7 @@ export  default {
       console.log(this.array_data)
     },
     async getScore() {
-      const apiUrl = 'http://localhost:14105/predict'
+      const apiUrl = 'http://8.130.119.249:14105/predict'
       const requestData = {
         features: [
           Number(this.Alpha),
@@ -63,7 +63,7 @@ export  default {
     },
     async getFeature() {
       console.log("getFeature")
-      const apiUrl = "http://localhost:14105/get_fund_info";
+      const apiUrl = "http://8.130.119.249:14105/get_fund_info";
       const queryString = `?fund_code=${this.StockID}`
       const url = apiUrl + queryString
       console.log(url)
