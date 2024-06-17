@@ -7,6 +7,7 @@ export default{
       StockID:'',
       StockDataset:[],
       comparisonLoading:false,
+      colors:['#fff554', '#ff7f0e', '#2ca02c', '#d62728']
     }
   },
   methods:{
@@ -121,7 +122,8 @@ export default{
         option.series.push({
           name: item.name,
           type: 'line',
-          data: data
+          data: data,
+          color: this.colors[this.StockDataset.indexOf(item) % this.colors.length]
         })
       })
       console.log(option.series)
