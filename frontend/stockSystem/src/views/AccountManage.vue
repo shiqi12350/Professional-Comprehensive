@@ -74,7 +74,7 @@
       await this.getBankCard();
     },
     methods: {
-        async getBankCard() {
+      async getBankCard() {
         try {
           const response = await axios.get('http://8.130.119.249:14100/api/v1/accountManagement/getBankCardList', {
             params: {
@@ -132,46 +132,38 @@
           alert('绑定失败，错误信息：' + error.message);
         }
       },
-
       async handleRowClick(row) {
         await this.getPortionInfo(row.bankCard);
         //仅使用行对应的卡号调用getPortionInfo，目的是便利修改份额后刷新portionInfo
       },
       async getPortionInfo(cardID) {
-  try {
-    const response = await axios.get('http://8.130.119.249:14100/api/v1/accountManagement/getAllPortion', {
-      params: {
-        cardID: cardID
-      }
-    });
-    if (response.data.resultCode === 1) {
-      this.portionInfo = response.data.info;
-      for(let i = 0; i < this.portionInfo.length; i++){
-
-        const response2 = await axios.post(
-          "http://api.tushare.pro",
-          {
-            api_name: "fund_daily",
-            token: "91a073e655c1849334691d5f5c71a518ff5468891554887fad2afca0",
-            params: {
-              "ts_code": this.portionInfo[i].fundID,
-              "start_date": "20200101",
-              "end_date": "20200107"
-            }
+        this.portionInfo = [];
+        const response = await axios.get('http://8.130.119.249:14100/api/v1/accountManagement/getAllPortion', {
+          params: {
+            cardID: cardID
           }
-        );
-        this.portionInfo[i].close= response2.data.data.items[0][5];
-        this.portionInfo[i].pct_chg= response2.data.data.items[0][8];
-      }
-    } else {
-      alert('获取持仓信息失败，错误代码：' + response.data.resultCode);
-      this.portionInfo = [];
-    }
-  } catch (error) {
-    alert('获取持仓信息失败，错误信息：' + error.message);
-    this.portionInfo = [];
-  }
-},
+        });
+        if (response.data.resultCode === 1) {
+          this.portionInfo = response.data.info;
+          for(let i = 0; i < this.portionInfo.length; i++){
+
+            const response2 = await axios.post(
+                "http://api.tushare.pro",
+                {
+                  api_name: "fund_daily",
+                  token: "91a073e655c1849334691d5f5c71a518ff5468891554887fad2afca0",
+                  params: {
+                    "ts_code": this.portionInfo[i].fundID,
+                    "start_date": "20200101",
+                    "end_date": "20200107"
+                  }
+                }
+            );
+            this.portionInfo[i].close= response2.data.data.items[0][5];
+            this.portionInfo[i].pct_chg= response2.data.data.items[0][8];
+          }
+        }
+      },
   },
 };
 </script>
