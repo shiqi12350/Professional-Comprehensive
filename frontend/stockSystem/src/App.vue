@@ -23,6 +23,13 @@ user.$subscribe((args, state) => {
   loginIn.value = !loginIn.value
 
 })
+
+const logout = () => {  
+      user.reset();  
+       //alert('您已成功退出登录！');  
+    };  
+
+
 function turnToInvestList() {
   router.push('/investList')
 }
@@ -90,7 +97,9 @@ async function changeTime(time) {
         </el-col>
         <el-col :span="8">
           <el-button v-if="userID === ''" @click="showLoginPage">登录</el-button>
-          <p v-else>{{userID}}</p>
+          <p v-else>
+            <el-button @click="logout">退出</el-button> {{userID}}
+          </p>
           <div class="login" v-if="loginIn">
             <login-vue></login-vue>
           </div>
