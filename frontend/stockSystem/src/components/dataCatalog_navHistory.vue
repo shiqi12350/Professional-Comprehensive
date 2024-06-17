@@ -13,6 +13,7 @@ export default {
     return{
       StockID:this.stockId,
       StartTime:"20240531",
+      array_data:[1.8233, 1.8125, 1.8312, 1.8305, 1.8098, 1.8198, 1.7881, 1.7687, 1.776, 1.7938, 1.825, 1.837, 1.8058, 1.7871, 1.7994, 1.8119999999999998, 1.8027, 1.7705, 1.7839, 1.8126, 1.8068, 1.8172, 1.819, 1.8045, 1.7932, 1.7574, 1.7691, 1.7242, 1.6955, 1.714, 1.7235, 1.7327, 1.7244, 1.7289, 1.7548, 1.7489, 1.7269, 1.7357, 1.6980000000000002, 1.6959, 1.682, 1.695, 1.6851],
       NavList:[],
       pageList:[],
       nav_date:[],
@@ -21,6 +22,8 @@ export default {
       total_netasset:[],
       tableData:[],
       thisYear:null,
+      listLoading:true,
+      totalList:[],
     }
   },
   methods:{
@@ -36,7 +39,7 @@ export default {
       for( let i = 25; i >=0 ; i--){
         this.NavList.push({
           nav_date:response.data.data.items[i][2],
-          total_netasset:response.data.data.items[i][8]
+          total_netasset:Number(response.data.data.items[i][8])
         })
       }
       this.nav_date = this.NavList.map(item => {
@@ -48,25 +51,41 @@ export default {
       console.log(this.NavList)
       console.log(this.nav_date)
       console.log(this.total_netasset)
-      this.initChart()
       this.pagination()
+      this.handleCurrentChange(1)
+      await this.AI_predict()
     },
-    async getTimeNavData(StockID,DuringTime){
-      const response = await axios.post(
-          "http://api.tushare.pro",
-          {
-            api_name: "fund_nav",
-            token: "91a073e655c1849334691d5f5c71a518ff5468891554887fad2afca0",
-            params:{"ts_code":StockID,
-              "nav_date":DuringTime}
-          }
-      );
+    async AI_predict() {
+      console.log("调用ai预测api")
+      console.log(this.array_data)
+      console.log(this.total_netasset)
+      const data = {
+        model_name: 2,
+        lookback: 19,
+        future_days: 7,
+        array:this.total_netasset
+      };
+      const response = await axios.post('http://127.0.0.1:14106/LSTM_prediction', data, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      this.predictNav = response.data.Prediction
+      this.allData = this.total_netasset
+      for(let i = 0;i < 7;i++){
+        this.allData.push(this.predictNav[i][0])
+      }
+      console.log("全部数据")
+      console.log(this.allData)
+      console.log("预测数字："+this.predictNav[0])
       console.log(response)
+      this.initChart()
     },
     initChart(){
       let NavChart = echarts.init(this.$refs.stockNavChart)
       let xData = this.nav_date
-      let data = this.total_netasset
+      xData.push('future 1','future 2','future 3','future 4','future 5','future 6','future 7')
+      let data = this.allData
       let options={
         xAxis:{
           type:"category",
@@ -124,13 +143,15 @@ export default {
       }
     },
     handleCurrentChange(page) {
+      this.listLoading = true
       this.currentPage = page
       this.tableData = this.pageList[page - 1]
+      this.listLoading = false
     }
   },
   mounted() {
     this.getNavData(this.StockID)
-    this.getTimeNavData(this.StockID,this.StartTime)
+
   }
 }
 </script>
@@ -177,9 +198,10 @@ export default {
         <el-table
           :data="tableData"
           :size="small"
+          v-loading="listLoading"
         >
-          <el-table-column prop="nav_date" label="日期" width="100" ></el-table-column>
-          <el-table-column prop="total_netasset" label="净值" width="120" ></el-table-column>
+          <el-table-column prop="nav_date" label="日期"  ></el-table-column>
+          <el-table-column prop="total_netasset" label="净值"></el-table-column>
         </el-table>
         <el-pagination
             small

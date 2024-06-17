@@ -28,10 +28,11 @@ export default{
         this.inputRemark = ''
       }
       console.log(response)
+      this.getRemark()
     },
-    async gerRemark(){
+    async getRemark(){
       const api_url = "http://8.130.119.249:14102/api/v1/informationmaintenance/ObtainAllFundComment"
-      const queryString = `?fundCode=021406.OF`
+      const queryString = `?fundCode=${this.StockID}`
       const url = api_url+queryString
       const response = await axios.get(url)
       console.log(response.data.contentList[0].content)
@@ -53,7 +54,7 @@ export default{
     }
   },
   mounted(){
-    this.gerRemark()
+    this.getRemark()
   }
 }
 </script>
@@ -98,8 +99,16 @@ export default{
       </el-header>
       <el-main>
         <el-card
+            class="userComment"
             v-for="comment in comments">
-          <p>{{ comment.text }}</p>
+          <el-row>
+            <el-col :span="2">
+              <img  class="userImage" src="@/resource/randomUser.png">
+            </el-col>
+            <el-col :span="22">
+              <p>{{ comment.text }}</p>
+            </el-col>
+          </el-row>
         </el-card>
       </el-main>
       <el-footer>
@@ -108,7 +117,12 @@ export default{
             {{this.UserName}}
           </el-col>
           <el-col :span="22">
-            <el-input v-model="inputRemark" placeholder="输入评论吧">
+            <el-input
+                type="textarea"
+                :autosize="{ minRows: 3, maxRows: 4}"
+                v-model="inputRemark"
+                placeholder="留下你的亮评"
+            >
             </el-input>
             <div class="button-wrapper">
               <el-button
@@ -130,10 +144,18 @@ export default{
 <style>
 .button-wrapper {
   text-align: right;
+  margin-top:5px;
 }
 .forum {
   height: 80vh;
   display: flex;
   flex-direction: column;
 }
+.userComment{
+  margin-bottom:10px;
+}
+.userImage{
+  height:40px;
+}
+
 </style>

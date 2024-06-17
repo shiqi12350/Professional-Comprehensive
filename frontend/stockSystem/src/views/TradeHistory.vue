@@ -95,14 +95,21 @@
     },
     methods: {
       fetchTradeHistory() {
+        this.totalOrdersType1 = []
+        this.totalOrdersType2 = []
+        this.currentPageOrdersType1 = []
+        this.currentPageOrdersType2 = []
         axios.get(this.apiUrl, {
           params: {
             TraderID: this.userID
           }
         })
         .then(response => {
-          this.totalOrdersType1 = response.data.filter(order => order.ordertype === '1');
-          this.totalOrdersType2 = response.data.filter(order => order.ordertype === '2');
+          console.log("response")
+          console.log(response.data)
+          this.totalOrdersType1 = response.data.filter(order => (order.ordertype === '1' && order.orderstate !== 0));
+          this.totalOrdersType2 = response.data.filter(order => (order.ordertype === '2' && order.orderstate !== 0));
+
           this.paginateOrders();
         })
         .catch(error => {

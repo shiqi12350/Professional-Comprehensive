@@ -1,0 +1,12 @@
+@font-face {
+    font-family:"AlimamaFangYuan";
+    src:url("@/resource/AlimamaFangYuanTiVF-Thin.ttf");
+    font-weight:normal;
+    font-style:normal;
+}
+@font-face{
+    font-family:"AlimamaDongFangDaKai";
+    src:url("@/resource/AlimamaDongFangDaKai-Regular.ttf");
+    font-weight:normal;
+    font-style:normal;
+}

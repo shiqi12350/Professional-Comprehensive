@@ -5,7 +5,8 @@ export default{
   data(){
     return{
       StockID:'',
-      StockDataset:[]
+      StockDataset:[],
+      comparisonLoading:false,
     }
   },
   methods:{
@@ -16,6 +17,7 @@ export default{
     },
 
     async addStock(StockID){
+      this.comparisonLoading = true
       let stockInfo = {
         ts_code:'',
         name:'',
@@ -92,6 +94,7 @@ export default{
       this.StockDataset.push(item)
       console.log(this.StockDataset)
       this.updateChart()
+      this.comparisonLoading = false
     },
     updateChart(){
       let chart = echarts.init(this.$refs.compareChart)
@@ -152,6 +155,7 @@ export default{
       <el-col :span="18"></el-col>
     </el-row>
     <el-table
+        v-loading='comparisonLoading'
         :data="StockDataset">
       <el-table-column  prop="ts_code" label="基金代码" ></el-table-column>
       <el-table-column  prop="name" label="基金名称" ></el-table-column>

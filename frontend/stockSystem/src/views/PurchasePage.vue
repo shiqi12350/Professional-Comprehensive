@@ -118,6 +118,9 @@ export default{
       let xData = this.nav_date
       let data = this.total_netasset
       let options = {
+        title:{
+          text:"近期净值走势"
+        },
         xAxis: {
           type: "category",
           data: xData
@@ -236,22 +239,23 @@ export default{
     <el-container>
       <el-main>
         <el-row>
-          <el-col :span="8">
+          <el-col :span="10">
             <el-descriptions
                 :title="'当前基金名:' + stockName"
-                :column="2">
-              <el-descriptions-item label="基金代码">{{ this.ts_code }}</el-descriptions-item>
+                :column="2"
+                class="stockDescription">
+              <el-descriptions-item label="基金代码" width="230px">{{ this.ts_code }}</el-descriptions-item>
               <el-descriptions-item label="投资类型">{{ this.fund_type }}</el-descriptions-item>
               <el-descriptions-item label="上市时间">{{ this.list_date }}</el-descriptions-item>
               <el-descriptions-item label="发行日期">{{ this.issue_date }}</el-descriptions-item>
               <el-descriptions-item label="发行份额(亿)">{{ this.issue_amount }}</el-descriptions-item>
               <el-descriptions-item label="起点金额(万元)">{{ this.min_amount }}</el-descriptions-item>
               <el-descriptions-item label="日常申购起始日">{{ this.purc_startdate }}</el-descriptions-item>
-              <el-descriptions-item label="日常赎回起始日">{{ this.redm_startdate }}</el-descriptions-item>
+              <el-descriptions-item label="日常赎回起始日" >{{ this.redm_startdate }}</el-descriptions-item>
             </el-descriptions>
             <div ref="NavChart" id="NavChart"></div>
           </el-col>
-          <el-col :span="16">
+          <el-col :span="14">
             <el-form class="investForm" ref="form" :model="form" label-width="350px">
               <el-form-item label="交易人身份证号码">
                 <el-row>
@@ -353,4 +357,8 @@ export default{
   height:60px;
   background-color: #fff;
 }
+.stockDescription{
+  margin-bottom:20px;
+  }
+
 </style>
