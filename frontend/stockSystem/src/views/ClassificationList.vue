@@ -11,6 +11,10 @@ export default {
       IndexFund:[],  /*货币市场型*/
       BlendFund:[],  /*混合型*/
       BondFund:[],   /*债券型*/
+      stockLoading:true,
+      indexLoading:true,
+      blendLoading:true,
+      bondLoading:true
     }
   },
   methods:{
@@ -47,6 +51,7 @@ export default {
           status: status,
           unit_nav: unitNav
         });
+        this.stockLoading = false
       }
     },
     async getIndexList(num){
@@ -81,6 +86,7 @@ export default {
           status: status,
           unit_nav: unitNav
         });
+        this.indexLoading = false
       }
     },
     async getBlendList(num){
@@ -115,6 +121,7 @@ export default {
           status: status,
           unit_nav: unitNav
         });
+        this.blendLoading = false
       }
     },
     async getBondList(num){
@@ -149,9 +156,11 @@ export default {
           status: status,
           unit_nav: unitNav
         });
+        this.bondLoading = false
       }
     },
     getStockByPage(currentPage){
+      this.stockLoading = true
       this.StockFund = []
       this.StockNum = currentPage
       this.getStockList(this.StockNum - 1)
@@ -161,6 +170,7 @@ export default {
       this.getStockByPage(this.StockNum)
     },
     getIndexByPage(currentPage){
+      this.indexLoading = true
       this.IndexFund = []
       this.IndexNum = currentPage
       this.getIndexList(this.IndexNum - 1)
@@ -170,6 +180,7 @@ export default {
       this.getIndexByPage(this.IndexNum)
     },
     getBlendByPage(currentPage){
+      this.blendLoading = true
       this.BlendFund = []
       this.BlendNum = currentPage
       this.getBlendList(this.BlendNum - 1)
@@ -179,6 +190,7 @@ export default {
       this.getBlendByPage(this.BlendNum)
     },
     getBondByPage(currentPage){
+      this.bondLoading = true
       this.BondFund = []
       this.BondNum = currentPage
       this.getBondList(this.BondNum - 1)
@@ -200,96 +212,179 @@ export default {
 </script>
 
 <template>
-  <el-row>
-    <el-col :span="12">
-      <div>股票型</div>
-      <el-table
-        :data="StockFund">
-        <el-table-column prop="ts_code" label="基金代码" width="100"> </el-table-column>
-        <el-table-column prop="name" label="基金名称" width="200"> </el-table-column>
-        <el-table-column prop="unit_nav" label="单位净值" width="100"> </el-table-column>
-        <el-table-column prop="status" label="申购状态" width="90"> </el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
-          <template #default="scope">
-            <el-button type="primary">详情</el-button>
+  <el-card>
+    <template #header>
+      <el-row>
+        <el-col :span="2">
+          <div class="classificationTitle">
+            <img src="@/resource/classification.png" class="classificationPic">
+          </div>
+        </el-col>
+        <el-col :span="22">
+          <div class="classificationName">分类排行</div>
+        </el-col>
+      </el-row>
+    </template>
+    <el-row>
+      <el-col :span="12">
+        <el-card class="stockCard">
+          <template #header>
+            <div class="cardHeader">
+              <img src="@/resource/股票.png" class="headerPic">
+              <span>股票型</span>
+            </div>
           </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-          :current-page="StockNum"
-          @current-change="handleStockChange"
-          :page-size="50"
-          :total="250">
-      </el-pagination>
-    </el-col>
-    <el-col :span="12">
-      <div>混合型</div>
-      <el-table
-      :data="BlendFund">
-        <el-table-column prop="ts_code" label="基金代码" width="100"> </el-table-column>
-        <el-table-column prop="name" label="基金名称" width="200"> </el-table-column>
-        <el-table-column prop="unit_nav" label="单位净值" width="100"> </el-table-column>
-        <el-table-column prop="status" label="申购状态" width="90"> </el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
-          <template #default="scope">
-            <el-button type="primary">详情</el-button>
+          <el-table
+              :data="StockFund"
+              size="small"
+              stripe="true"
+              v-loading="stockLoading">
+            <el-table-column prop="ts_code" label="基金代码" width="100"> </el-table-column>
+            <el-table-column prop="name" label="基金名称" width="180"> </el-table-column>
+            <el-table-column prop="unit_nav" label="单位净值" width="80"> </el-table-column>
+            <el-table-column prop="status" label="申购状态" width="80"> </el-table-column>
+            <el-table-column fixed="right" label="操作" width="100">
+              <template #default="scope">
+                <el-button type="primary" plain>详情</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+              :current-page="StockNum"
+              @current-change="handleStockChange"
+              :page-size="50"
+              :total="250">
+          </el-pagination>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card class="blendCard">
+          <template #header>
+            <div class="cardHeader">
+              <img src="@/resource/团队.png" class="headerPic">
+              <span>混合型</span>
+            </div>
           </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-          :current-page="BlendNum"
-          @current-change="handleBlendChange"
-          :page-size="50"
-          :total="250">
-      </el-pagination>
-    </el-col>
-  </el-row>
-  <el-row>
-    <el-col :span="12">
-      <div>债券型</div>
-      <el-table
-      :data="BondFund">
-        <el-table-column prop="ts_code" label="基金代码" width="100"> </el-table-column>
-        <el-table-column prop="name" label="基金名称" width="200"> </el-table-column>
-        <el-table-column prop="unit_nav" label="单位净值" width="100"> </el-table-column>
-        <el-table-column prop="status" label="申购状态" width="90"> </el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
-          <template #default="scope">
-            <el-button type="primary">详情</el-button>
+          <el-table
+              :data="BlendFund"
+              size="small"
+              stripe="true"
+              v-loading="blendLoading">
+            <el-table-column prop="ts_code" label="基金代码" width="100"> </el-table-column>
+            <el-table-column prop="name" label="基金名称" width="180"> </el-table-column>
+            <el-table-column prop="unit_nav" label="单位净值" width="80"> </el-table-column>
+            <el-table-column prop="status" label="申购状态" width="80"> </el-table-column>
+            <el-table-column fixed="right" label="操作" width="100">
+              <template #default="scope">
+                <el-button type="primary" plain>详情</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+              :current-page="BlendNum"
+              @current-change="handleBlendChange"
+              :page-size="50"
+              :total="250">
+          </el-pagination>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="12">
+        <el-card class="bondCard">
+          <template #header>
+            <div class="cardHeader">
+              <img src="@/resource/债券.png" class="headerPic">
+              <span>债券型</span>
+            </div>
           </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-          :current-page="BondNum"
-          @current-change="handleBondChange"
-          :page-size="50"
-          :total="250">
-      </el-pagination>
-    </el-col>
-    <el-col :span="12">
-      <div>货币型</div>
-      <el-table
-      :data="IndexFund">
-        <el-table-column prop="ts_code" label="基金代码" width="100"> </el-table-column>
-        <el-table-column prop="name" label="基金名称" width="200"> </el-table-column>
-        <el-table-column prop="unit_nav" label="单位净值" width="100"> </el-table-column>
-        <el-table-column prop="status" label="申购状态" width="90"> </el-table-column>
-        <el-table-column fixed="right" label="操作" width="100">
-          <template #default="scope">
-            <el-button type="primary">详情</el-button>
+          <el-table
+              :data="BondFund"
+              size="small"
+              stripe="true"
+              v-loading="bondLoading">
+            <el-table-column prop="ts_code" label="基金代码" width="100"> </el-table-column>
+            <el-table-column prop="name" label="基金名称" width="180"> </el-table-column>
+            <el-table-column prop="unit_nav" label="单位净值" width="80"> </el-table-column>
+            <el-table-column prop="status" label="申购状态" width="80"> </el-table-column>
+            <el-table-column fixed="right" label="操作" width="100">
+              <template #default="scope">
+                <el-button type="primary" plain>详情</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+              :current-page="BondNum"
+              @current-change="handleBondChange"
+              :page-size="50"
+              :total="250">
+          </el-pagination>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card class="indexCard">
+          <template #header>
+            <div class="cardHeader">
+              <img src="@/resource/人民币.png" class="headerPic">
+              <span>货币型</span>
+            </div>
           </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-          :current-page="IndexNum"
-          @current-change="handleIndexChange"
-          :page-size="50"
-          :total="250">
-      </el-pagination>
-    </el-col>
-  </el-row>
+          <el-table
+              :data="IndexFund"
+              size="small"
+              stripe="true"
+              v-loading="indexLoading">
+            <el-table-column prop="ts_code" label="基金代码" width="100"> </el-table-column>
+            <el-table-column prop="name" label="基金名称" width="180"> </el-table-column>
+            <el-table-column prop="unit_nav" label="单位净值" width="80"> </el-table-column>
+            <el-table-column prop="status" label="申购状态" width="80"> </el-table-column>
+            <el-table-column fixed="right" label="操作" width="100">
+              <template #default="scope">
+                <el-button type="primary" plain>详情</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+              :current-page="IndexNum"
+              @current-change="handleIndexChange"
+              :page-size="50"
+              :total="250">
+          </el-pagination>
+        </el-card>
+      </el-col>
+    </el-row>
+  </el-card>
 </template>
 
-<style scoped>
+<style>
+.stockCard,.blendCard,.bondCard,.indexCard{
+  margin-left:10px;
+  margin-bottom:5px;
+}
 
+.cardHeader{
+  font-family:'AlimamaFangYuan',serif;
+  margin-bottom:10px;
+  font-size:20px;
+}
+
+.headerPic{
+  width:40px;
+  height:40px;
+  margin-right:40px
+}
+.classificationPic{
+  width:40px;
+  margin-top:10px;
+  margin-left:10px;
+}
+.classificationName{
+  margin-top:15px;
+  font-size:30px;
+}
+.classificationTitle{
+  width:250px;
+  height:60px;
+  background-color: #fff;
+}
 </style>

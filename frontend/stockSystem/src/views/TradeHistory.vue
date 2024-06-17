@@ -1,11 +1,24 @@
 <template>
+  <el-card>
+    <template #header>
+      <el-row>
+        <el-col :span="2">
+          <div class="tradeHistoryTitle">
+            <img src="@/resource/tradeHistory.png" class="tradeHistoryPic">
+          </div>
+        </el-col>
+        <el-col :span="22">
+          <div class="tradeHistoryName">交易历史</div>
+        </el-col>
+      </el-row>
+    </template>
     <div>
       <el-table
-        v-if="currentPageOrdersType1.length > 0"
-        :data="currentPageOrdersType1"
-        style="margin-bottom: 20px"
-        border
-        stripe
+          v-if="currentPageOrdersType1.length > 0"
+          :data="currentPageOrdersType1"
+          style="margin-bottom: 20px"
+          border
+          stripe
       >
         <el-table-column prop="ordernumber" label="Order Number"></el-table-column>
         <el-table-column prop="company" label="Company"></el-table-column>
@@ -20,21 +33,21 @@
           </template>
         </el-table-column>
       </el-table>
-  
+
       <el-pagination
-        @current-change="handleCurrentChangeType1"
-        :current-page="currentPageType1"
-        :page-size="5"
-        :total="totalOrdersType1.length"
-        layout="prev, pager, next"
+          @current-change="handleCurrentChangeType1"
+          :current-page="currentPageType1"
+          :page-size="5"
+          :total="totalOrdersType1.length"
+          layout="prev, pager, next"
       ></el-pagination>
-  
+
       <el-table
-        v-if="currentPageOrdersType2.length > 0"
-        :data="currentPageOrdersType2"
-        style="margin-bottom: 20px"
-        border
-        stripe
+          v-if="currentPageOrdersType2.length > 0"
+          :data="currentPageOrdersType2"
+          style="margin-bottom: 20px"
+          border
+          stripe
       >
         <el-table-column prop="ordernumber" label="Order Number"></el-table-column>
         <el-table-column prop="company" label="Company"></el-table-column>
@@ -48,15 +61,17 @@
           </template>
         </el-table-column>
       </el-table>
-  
+
       <el-pagination
-        @current-change="handleCurrentChangeType2"
-        :current-page="currentPageType2"
-        :page-size="5"
-        :total="totalOrdersType2.length"
-        layout="prev, pager, next"
+          @current-change="handleCurrentChangeType2"
+          :current-page="currentPageType2"
+          :page-size="5"
+          :total="totalOrdersType2.length"
+          layout="prev, pager, next"
       ></el-pagination>
     </div>
+  </el-card>
+
   </template>
   
   <script>
@@ -80,14 +95,21 @@
     },
     methods: {
       fetchTradeHistory() {
+        this.totalOrdersType1 = []
+        this.totalOrdersType2 = []
+        this.currentPageOrdersType1 = []
+        this.currentPageOrdersType2 = []
         axios.get(this.apiUrl, {
           params: {
             TraderID: this.userID
           }
         })
         .then(response => {
-          this.totalOrdersType1 = response.data.filter(order => order.ordertype === '1');
-          this.totalOrdersType2 = response.data.filter(order => order.ordertype === '2');
+          console.log("response")
+          console.log(response.data)
+          this.totalOrdersType1 = response.data.filter(order => (order.ordertype === '1' && order.orderstate !== 0));
+          this.totalOrdersType2 = response.data.filter(order => (order.ordertype === '2' && order.orderstate !== 0));
+
           this.paginateOrders();
         })
         .catch(error => {
@@ -119,7 +141,9 @@
               const api_url = "http://8.130.119.249:14103/api/v1/TradeManagement/CancelTrade"
               const queryString = `?Ordernum=${row.ordernumber}&OrderType=1`
               const url = api_url + queryString
+              console.log(url)
               const response = await axios.post(url)
+              console.log(response)
               if(response.status === 200) {
                 this.$message({
                   type: 'success',
@@ -132,6 +156,7 @@
                 message: '已取消操作',
               })
             })
+        this.fetchTradeHistory()
       },
       async handleRevocationRedeem(row) {
         console.log(row)
@@ -143,7 +168,9 @@
           const api_url = "http://8.130.119.249:14103/api/v1/TradeManagement/CancelTrade"
           const queryString = `?Ordernum=${row.ordernumber}&OrderType=2`
           const url = api_url + queryString
+          console.log(url)
           const response = await axios.post(url)
+          console.log(response)
           if(response.status === 200) {
             this.$message({
               type: 'success',
@@ -156,6 +183,7 @@
             message: '已取消操作',
           })
         })
+        this.fetchTradeHistory()
       },
       async handleRedeem(row){
         this.$confirm('此操作将赎回已购买基金!', '提示', {
@@ -168,10 +196,11 @@
               const queryString = `?Ordernum=${row.ordernumber}`
               const url = api_url + queryString
               const response = await axios.post(url)
+              console.log(response)
               if(response.status === 200) {
                 this.$message({
                   type: 'success',
-                  message: '撤销成功!'
+                  message: '赎回成功!'
                 })
               }
             })
@@ -181,7 +210,25 @@
                 message: '已取消操作',
               })
             })
+        this.fetchTradeHistory()
       }
     }
   };
   </script>
+
+<style>
+.tradeHistoryPic{
+  width:40px;
+  margin-top:10px;
+  margin-left:10px;
+}
+.tradeHistoryName{
+  margin-top:15px;
+  font-size:30px;
+}
+.tradeHistoryTitle{
+  width:250px;
+  height:60px;
+  background-color: #fff;
+}
+</style>

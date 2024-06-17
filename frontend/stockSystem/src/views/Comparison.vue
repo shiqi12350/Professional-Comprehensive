@@ -5,7 +5,8 @@ export default{
   data(){
     return{
       StockID:'',
-      StockDataset:[]
+      StockDataset:[],
+      comparisonLoading:false,
     }
   },
   methods:{
@@ -16,6 +17,7 @@ export default{
     },
 
     async addStock(StockID){
+      this.comparisonLoading = true
       let stockInfo = {
         ts_code:'',
         name:'',
@@ -92,6 +94,7 @@ export default{
       this.StockDataset.push(item)
       console.log(this.StockDataset)
       this.updateChart()
+      this.comparisonLoading = false
     },
     updateChart(){
       let chart = echarts.init(this.$refs.compareChart)
@@ -129,41 +132,71 @@ export default{
 </script>
 
 <template>
-  <el-row>
-    <el-col :span="4">
-      <el-input placeholder="请输入内容" v-model="StockID" > </el-input>
-    </el-col>
-    <el-col :span="2">
-      <el-button @click="addStock(this.StockID)">添加基金</el-button>
-    </el-col>
-    <el-col :span="18"></el-col>
-  </el-row>
-  <el-table
-    :data="StockDataset">
-    <el-table-column  prop="ts_code" label="基金代码" ></el-table-column>
-    <el-table-column  prop="name" label="基金名称" ></el-table-column>
-    <el-table-column  prop="p_value" label="面值" ></el-table-column>
-    <el-table-column  prop="fd_share" label="	基金份额（万）" ></el-table-column>
-    <el-table-column  prop="pct_chg" label="涨跌幅(%)" ></el-table-column>
-    <el-table-column  prop="amount" label="成交额(千元)" ></el-table-column>
-    <el-table-column fixed="right" label="操作" width="120">
-      <template #default="scope">
-        <el-button
-            @click.prevent="deleteRow(scope.$index)"
-            type="text"
-            size="small"
-        >
-          移除
-        </el-button>
-      </template>
-    </el-table-column>
-  </el-table>
-  <div ref="compareChart" id="compareChart"></div>
+  <el-card>
+    <template #header>
+      <el-row>
+        <el-col :span="2">
+          <div class="comparisonTitle">
+            <img src="@/resource/comparison.png" class="comparisonPic">
+          </div>
+        </el-col>
+        <el-col :span="22">
+          <div class="comparisonName">基金比较</div>
+        </el-col>
+      </el-row>
+    </template>
+    <el-row>
+      <el-col :span="4">
+        <el-input placeholder="请输入内容" v-model="StockID" > </el-input>
+      </el-col>
+      <el-col :span="2">
+        <el-button @click="addStock(this.StockID)">添加基金</el-button>
+      </el-col>
+      <el-col :span="18"></el-col>
+    </el-row>
+    <el-table
+        v-loading='comparisonLoading'
+        :data="StockDataset">
+      <el-table-column  prop="ts_code" label="基金代码" ></el-table-column>
+      <el-table-column  prop="name" label="基金名称" ></el-table-column>
+      <el-table-column  prop="p_value" label="面值" ></el-table-column>
+      <el-table-column  prop="fd_share" label="	基金份额（万）" ></el-table-column>
+      <el-table-column  prop="pct_chg" label="涨跌幅(%)" ></el-table-column>
+      <el-table-column  prop="amount" label="成交额(千元)" ></el-table-column>
+      <el-table-column fixed="right" label="操作" width="120">
+        <template #default="scope">
+          <el-button
+              @click.prevent="deleteRow(scope.$index)"
+              type="text"
+              size="small"
+          >
+            移除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div ref="compareChart" id="compareChart"></div>
+  </el-card>
+
 </template>
 
 <style>
 #compareChart{
   width:800px;
   height:500px;
+}
+.comparisonPic{
+  width:40px;
+  margin-top:10px;
+  margin-left:10px;
+}
+.comparisonName{
+  margin-top:15px;
+  font-size:30px;
+}
+.comparisonTitle{
+  width:250px;
+  height:60px;
+  background-color: #fff;
 }
 </style>

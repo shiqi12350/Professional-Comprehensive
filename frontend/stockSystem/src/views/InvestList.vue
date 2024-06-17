@@ -3,6 +3,7 @@
   import axios from "axios";
   import router from "@/router/index.js";
   import { useStockInfoStore } from '@/stores/stockInfoStore.js'
+  import {Search} from '@element-plus/icons'
   export default {
     data(){
       return{
@@ -81,6 +82,7 @@
           investType: response.data.data.items[0][19]
         }
         this.tableData = [fund]
+        this.loading = false
       },
       clearTsCode() {
         this.ts_code = ''
@@ -107,47 +109,78 @@
   <template>
     <el-container>
       <el-main>
-        <el-row>
-          <el-col :span="16"></el-col>
-          <el-col :span="6">
-            <el-input v-model="ts_code" placeholder="请输入基金代码"></el-input>
-          </el-col>
-          <el-col :span="2">
-            <el-button
-                clearable:true
-                @click="searchByTsCode"
-                @clear="clearTsCode">搜索</el-button>
-          </el-col>
-        </el-row>
-        <el-table
-            :data="tableData"
-            :width="1060"
-            :height="520"
-            v-loading="loading"
-        >
-          <el-table-column prop="tsCode" label="基金代码" width="100"> </el-table-column>
-          <el-table-column prop="name" label="基金名称" width="250"> </el-table-column>
-          <el-table-column prop="management" label="管理人" width="150"> </el-table-column>
-          <el-table-column prop="foundDate" label="成立日期" width="150"> </el-table-column>
-          <el-table-column prop="investType" label="投资风格" width="100"> </el-table-column>
-          <el-table-column prop="status" label="状态" width="100"> </el-table-column>
-          <el-table-column fixed="right" label="操作" width="200">
-            <template #default="scope">
-              <el-button type="primary" @click="turnToCorrespondingStock(scope.row)">详情</el-button>
-              <el-button type="danger" @click="turnToPurchasingStock(scope.row)">买入</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-        <el-pagination
-            :current-page="currentPage"
-            @current-change="handleCurrentChange"
-            :page-size="10"
-            :total="1000">
-        </el-pagination>
+        <el-card>
+          <template #header>
+            <el-row>
+              <el-col :span="2">
+                <div class="investListTitle">
+                  <img src="@/resource/investList.png" class="investListPic">
+                </div>
+              </el-col>
+              <el-col :span="22">
+                <div class="investListName">基金列表</div>
+              </el-col>
+            </el-row>
+          </template>
+          <el-row>
+            <el-col :span="16"></el-col>
+            <el-col :span="6">
+              <el-input v-model="ts_code" placeholder="请输入基金代码"></el-input>
+            </el-col>
+            <el-col :span="2">
+              <el-button
+                  clearable:true
+                  @click="searchByTsCode"
+                  @clear="clearTsCode">
+                <img src="@/resource/搜索.png" width=20>
+              </el-button>
+            </el-col>
+          </el-row>
+          <br>
+          <el-table
+              :data="tableData"
+              :width="1060"
+              :height="530"
+              v-loading="loading"
+          >
+            <el-table-column prop="tsCode" label="基金代码" width="100"> </el-table-column>
+            <el-table-column prop="name" label="基金名称" width="280"> </el-table-column>
+            <el-table-column prop="management" label="管理人" width="150"> </el-table-column>
+            <el-table-column prop="foundDate" label="成立日期" width="150"> </el-table-column>
+            <el-table-column prop="investType" label="投资风格" width="140"> </el-table-column>
+            <el-table-column prop="status" label="状态" width="100"> </el-table-column>
+            <el-table-column fixed="right" label="操作" width="200">
+              <template #default="scope">
+                <el-button type="primary" @click="turnToCorrespondingStock(scope.row)">详情</el-button>
+                <el-button type="danger" @click="turnToPurchasingStock(scope.row)">买入</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <br>
+          <el-pagination
+              :current-page="currentPage"
+              @current-change="handleCurrentChange"
+              :page-size="10"
+              :total="1000">
+          </el-pagination>
+        </el-card>
       </el-main>
     </el-container>
   </template>
 
-  <style>
-
-  </style>
+<style>
+.investListPic{
+  width:40px;
+  margin-top:10px;
+  margin-left:10px;
+}
+.investListName{
+  margin-top:15px;
+  font-size:30px;
+}
+.investListTitle{
+  width:250px;
+  height:60px;
+  background-color: #fff;
+}
+</style>

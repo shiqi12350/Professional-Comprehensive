@@ -56,7 +56,13 @@
               <el-input v-model="ruleFormRegister.password" type="password" show-password autocomplete="off" />
               </el-form-item>
               <el-form-item label="birth" prop="birth">
-              <el-input v-model="ruleFormRegister.birth" type="text" autocomplete="off" />
+                <el-date-picker
+                    v-model="ruleFormRegister.birth"
+                    type="date"
+                    format="YYYY-MM-DD"
+                    value-format="YYYY-MM-DD"
+                    placeholder="选择日期"
+                ></el-date-picker>
               </el-form-item>
               <el-form-item label="email" prop="email">
               <el-input v-model="ruleFormRegister.email" type="text" autocomplete="off" />
@@ -75,7 +81,7 @@
   
   <script setup lang="ts">
   import { ElMessage } from 'element-plus'
-  import md5 from 'js-md5';
+  import Md5 from 'js-md5';
   import { reactive, ref } from 'vue';
   import type { FormInstance, FormRules } from 'element-plus';
   import axios from 'axios';

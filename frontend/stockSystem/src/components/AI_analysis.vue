@@ -11,7 +11,8 @@ export  default {
   },
   data(){
     return{
-      array_data:[],
+      color:['#d8fcfa', '#a9d6fd', '#d8fcfa', '#a9d6fd', '#d8fcfa'],
+      array_data:[1.8233, 1.8125, 1.8312, 1.8305, 1.8098, 1.8198, 1.7881, 1.7687, 1.776, 1.7938, 1.825, 1.837, 1.8058, 1.7871, 1.7994, 1.8119999999999998, 1.8027, 1.7705, 1.7839, 1.8126, 1.8068, 1.8172, 1.819, 1.8045, 1.7932, 1.7574, 1.7691, 1.7242, 1.6955, 1.714, 1.7235, 1.7327, 1.7244, 1.7289, 1.7548, 1.7489, 1.7269, 1.7357, 1.6980000000000002, 1.6959, 1.682, 1.695, 1.6851],
       StockID:this.stockId,
       Alpha:'',
       Beta:'',
@@ -20,6 +21,7 @@ export  default {
       annualizedReturn:'',
       score:null,
       predictNav:[],
+      allData:[]
     }
   },
   methods:{
@@ -37,27 +39,8 @@ export  default {
       }
       console.log(this.array_data)
     },
-    async AI_predict(array_data) {
-      console.log("调用ai预测api")
-      console.log(array_data)
-      const data = {
-        model_name: 1,
-        lookback: 20,
-        future_days: 7,
-        array: [1.8233, 1.8125, 1.8312, 1.8305, 1.8098, 1.8198, 1.7881, 1.7687, 1.776, 1.7938, 1.825, 1.837, 1.8058, 1.7871, 1.7994, 1.8119999999999998, 1.8027, 1.7705, 1.7839, 1.8126, 1.8068, 1.8172, 1.819, 1.8045, 1.7932, 1.7574, 1.7691, 1.7242, 1.6955, 1.714, 1.7235, 1.7327, 1.7244, 1.7289, 1.7548, 1.7489, 1.7269, 1.7357, 1.6980000000000002, 1.6959, 1.682, 1.695, 1.6851],
-      };
-      const response = await axios.post('http://127.0.0.1:14106/LSTM_prediction', data, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      this.predictNav = response.data.Prediction
-      console.log("预测数字："+this.predictNav[0])
-      console.log(response)
-      this.initChart()
-    },
     async getScore() {
-      const apiUrl = 'http://8.130.119.249:14105/predict'
+      const apiUrl = 'http://localhost:14105/predict'
       const requestData = {
         features: [
           Number(this.Alpha),
@@ -79,13 +62,12 @@ export  default {
     },
     async getFeature() {
       console.log("getFeature")
-      const apiUrl = "http://8.130.119.249:14105/get_fund_info";
-
-      const response = await axios.get(apiUrl, {
-        params: {
-          fund_code: this.StockID
-        }
-      });
+      const apiUrl = "http://localhost:14105/get_fund_info";
+      const queryString = `?fund_code=${this.StockID}`
+      const url = apiUrl + queryString
+      console.log(url)
+      const response = await axios.get(url);
+      console.log(response)
       this.Alpha = response.data.Alpha
       this.Beta = response.data.Beta
       this.Sharpe = response.data.Sharpe
@@ -106,40 +88,32 @@ export  default {
 
       return map[stars]
     },
-    initChart() {
-      let PredictChart = echarts.init(this.$refs.PredictChart)
-      let xData = ['1','2','3','4','5','6','7']
-      let data = [Number(this.predictNav[0]),Number(this.predictNav[1]),Number(this.predictNav[2]),Number(this.predictNav[3]),Number(this.predictNav[4]),Number(this.predictNav[5]),Number(this.predictNav[6])]
-      let options = {
-        xAxis: {
-          type: "category",
-          data: xData
-        },
-        yAxis: {
-          type: "value",
-          scale: true
-        },
-        series: [{
-          data,
-          type: "line",
-        }]
-      };
-      PredictChart.setOption(options)
-    },
     initRadarChart(){
       let radarChart = echarts.init(this.$refs.radarChart)
       let options={
         title:{
-          text:"五维图"
+          text:"基金能力五维显示",
+          style: {
+            textAlign: "center"
+          }
         },
         radar:[{
           indicator:[
-            {name:"Alpha",max:0.001},
-            {name:"Beta",max:0.01},
-            {name:"Sharpe",max:1},
-            {name:"平均风险收益率(%)",max:0.1},
-            {name:"年化收益率(%)",max:10}
-          ]
+            {name:"Alpha",max:0.005597,min:-0.00567},
+            {name:"Beta",max:2.732936225,min:-4.79113},
+            {name:"Sharpe",max:5.101323,min:-0.073011285},
+            {name:"平均风险收益率(%)",max:1.082191 ,min:-0.58113},
+            {name:"年化收益率(%)",max:5061.553026 ,min:-87.90064599}
+          ],
+          axisName:{
+            fontSize:14,
+            color:'#8d0000'
+          },
+          splitArea:{
+            areaStyle:{
+              color:this.color
+            }
+          }
         }],
         series:[
           {
@@ -148,7 +122,10 @@ export  default {
               {
                 value:[Number(this.Alpha),Number(this.Beta),Number(this.Sharpe),Number(this.averageRiskReturn),Number(this.annualizedReturn)]
               }
-            ]
+            ],
+            areaStyle:{
+              color:'#ef3939'
+            }
           }
         ]
       }
@@ -157,7 +134,6 @@ export  default {
   },
   mounted() {
     this.getNavData(this.StockID)
-    this.AI_predict(this.array_data)
     this.getFeature()
     this.getScore()
   }
@@ -203,10 +179,6 @@ export  default {
   <el-main>
     <el-row>
       <el-col :span="8">
-        <div class="prediction"> 当前基金评价：
-          <el-rate v-model="score"></el-rate>
-        </div>
-        <br><br><br><br>
 <!--        <el-card class="box-card">-->
 <!--          <template #header>-->
 <!--            <div class="card-header">-->
@@ -219,11 +191,69 @@ export  default {
 <!--          <div class="text item">{{ '平均风险收益率(%):' + this.averageRiskReturn }}</div>-->
 <!--          <div class="text item">{{ '年化收益率(%):' + this.annualizedReturn }}</div>-->
 <!--        </el-card>-->
-        <div ref="radarChart" id="radarChart"></div>
+        <el-card class="radar">
+          <div class="predictionStock">{{this.StockID}}</div>
+          <div class="prediction"> 当前基金评价：
+            <el-rate v-model="score"></el-rate>
+          </div>
+          <el-divider></el-divider>
+          <div ref="radarChart" id="radarChart"></div>
+        </el-card>
       </el-col>
       <el-col :span="4"></el-col>
       <el-col :span="12">
-        <div ref="PredictChart" id="PredictChart"></div>
+        <el-card class="predictChart">
+          <div>在基金评价中，以下指标用于评估基金的绩效和风险：</div>
+          <div>
+            <div class="expressionTitle">
+              Alpha：
+            </div>
+            <div>
+              Alpha表示基金的超额收益，是指基金在扣除市场基准收益后的剩余收益。
+              正的Alpha值意味着基金的表现优于市场基准，而负的Alpha值则意味着基金表现逊于市场基准。
+              Alpha通常用来衡量基金经理的选股能力和投资决策的效果。
+            </div>
+          </div>
+          <div>
+            <div class="expressionTitle">
+              Beta：
+            </div>
+            <div>
+              Beta用于衡量基金相对于市场基准的波动性。
+              Beta值为1表示基金的波动性与市场基准一致；Beta值大于1表示基金波动性大于市场，意味着基金的风险较高；Beta值小于1表示基金波动性小于市场，意味着基金的风险较低。
+              Beta值帮助投资者了解基金对市场波动的敏感度。
+              通过综合使用这些指标，投资者可以更全面地了解基金的风险、收益以及基金经理的表现，从而做出更明智的投资决策。
+            </div>
+          </div>
+          <div>
+            <div class="expressionTitle">
+              Sharpe Ratio（夏普比率）：
+            </div>
+            <div>
+              Sharpe比率用于衡量基金每单位风险所获得的超额回报。
+              公式为：(基金的平均收益率 - 无风险利率) / 基金的标准差。
+              较高的Sharpe比率表示基金在承担相同风险的情况下，提供了更高的回报，反之亦然。
+            </div>
+          </div>
+          <div>
+            <div class="expressionTitle">
+              平均风险收益率(%)：
+            </div>
+            <div>
+              平均风险收益率是基金在一段时间内的平均收益率，通常以年化百分比表示。
+              它可以用来衡量基金在特定风险水平下的表现。
+            </div>
+          </div>
+          <div>
+            <div class="expressionTitle">
+              年化收益率(%)：
+            </div>
+            <div>
+              年化收益率是将基金的总收益率转换为年度收益率，以便于不同时间段之间的比较。
+              公式为：年化收益率 = (1 + 总收益率)^(1/年数) - 1。
+            </div>
+          </div>
+        </el-card>
       </el-col>
     </el-row>
   </el-main>
@@ -231,7 +261,6 @@ export  default {
 
 <style>
 .prediction {
-  margin-top: 50px;
   margin-left: 30px;
 }
 
@@ -248,4 +277,18 @@ export  default {
   width:500px;
   height:400px;
 }
+.radar{
+  width:550px
+}
+.predictChart{
+  width:500px;
+}
+.prediction{
+  font-size:30px;
+}
+.predictionStock{
+  text-align:center;
+  font-size:20px;
+}
+
 </style>

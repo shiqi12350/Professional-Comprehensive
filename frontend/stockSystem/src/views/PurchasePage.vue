@@ -118,6 +118,9 @@ export default{
       let xData = this.nav_date
       let data = this.total_netasset
       let options = {
+        title:{
+          text:"近期净值走势"
+        },
         xAxis: {
           type: "category",
           data: xData
@@ -220,51 +223,65 @@ export default{
 </script>
 
 <template>
-  <el-container>
-    <el-main>
+  <el-card>
+    <template #header>
       <el-row>
-        <el-col :span="8">
-          <el-descriptions
-              :title="'当前基金名:' + stockName"
-              :column="2">
-            <el-descriptions-item label="基金代码">{{ this.ts_code }}</el-descriptions-item>
-            <el-descriptions-item label="投资类型">{{ this.fund_type }}</el-descriptions-item>
-            <el-descriptions-item label="上市时间">{{ this.list_date }}</el-descriptions-item>
-            <el-descriptions-item label="发行日期">{{ this.issue_date }}</el-descriptions-item>
-            <el-descriptions-item label="发行份额(亿)">{{ this.issue_amount }}</el-descriptions-item>
-            <el-descriptions-item label="起点金额(万元)">{{ this.min_amount }}</el-descriptions-item>
-            <el-descriptions-item label="日常申购起始日">{{ this.purc_startdate }}</el-descriptions-item>
-            <el-descriptions-item label="日常赎回起始日">{{ this.redm_startdate }}</el-descriptions-item>
-          </el-descriptions>
-          <div ref="NavChart" id="NavChart"></div>
+        <el-col :span="2">
+          <div class="purchaseTitle">
+            <img src="@/resource/purchase.png" class="purchasePic">
+          </div>
         </el-col>
-        <el-col :span="16">
-          <el-form class="investForm" ref="form" :model="form" label-width="350px">
-            <el-form-item label="交易人身份证号码">
-              <el-row>
-                <el-input v-model="form.IDnumber"></el-input>
-              </el-row>
-            </el-form-item>
-            <el-form-item label="交易金额">
-              <el-row>
-                <el-input v-model="form.tradeAmount"></el-input>
-              </el-row>
-            </el-form-item>
-            <el-form-item label="交易银行卡号">
-              <el-row>
-                <el-input v-model="form.cardID"></el-input>
-              </el-row>
-            </el-form-item>
-            <el-form-item label="银行卡密码">
-              <el-row>
-                <el-input v-model="form.passWord"></el-input>
-              </el-row>
-            </el-form-item>
-            <el-form-item label="投资方式">
-              <el-radio v-model="investWay" label="purchase">购买</el-radio>
-              <el-radio v-model="investWay" label="invest">定投</el-radio>
-            </el-form-item>
-            <el-form-item label="选择定投方法" v-if="investWay === 'invest'">
+        <el-col :span="22">
+          <div class="purchaseName">基金购买</div>
+        </el-col>
+      </el-row>
+    </template>
+    <el-container>
+      <el-main>
+        <el-row>
+          <el-col :span="10">
+            <el-descriptions
+                :title="'当前基金名:' + stockName"
+                :column="2"
+                class="stockDescription">
+              <el-descriptions-item label="基金代码" width="230px">{{ this.ts_code }}</el-descriptions-item>
+              <el-descriptions-item label="投资类型">{{ this.fund_type }}</el-descriptions-item>
+              <el-descriptions-item label="上市时间">{{ this.list_date }}</el-descriptions-item>
+              <el-descriptions-item label="发行日期">{{ this.issue_date }}</el-descriptions-item>
+              <el-descriptions-item label="发行份额(亿)">{{ this.issue_amount }}</el-descriptions-item>
+              <el-descriptions-item label="起点金额(万元)">{{ this.min_amount }}</el-descriptions-item>
+              <el-descriptions-item label="日常申购起始日">{{ this.purc_startdate }}</el-descriptions-item>
+              <el-descriptions-item label="日常赎回起始日" >{{ this.redm_startdate }}</el-descriptions-item>
+            </el-descriptions>
+            <div ref="NavChart" id="NavChart"></div>
+          </el-col>
+          <el-col :span="14">
+            <el-form class="investForm" ref="form" :model="form" label-width="350px">
+              <el-form-item label="交易人身份证号码">
+                <el-row>
+                  <el-input v-model="form.IDnumber"></el-input>
+                </el-row>
+              </el-form-item>
+              <el-form-item label="交易金额">
+                <el-row>
+                  <el-input v-model="form.tradeAmount"></el-input>
+                </el-row>
+              </el-form-item>
+              <el-form-item label="交易银行卡号">
+                <el-row>
+                  <el-input v-model="form.cardID"></el-input>
+                </el-row>
+              </el-form-item>
+              <el-form-item label="银行卡密码">
+                <el-row>
+                  <el-input v-model="form.passWord"></el-input>
+                </el-row>
+              </el-form-item>
+              <el-form-item label="投资方式">
+                <el-radio v-model="investWay" label="purchase">购买</el-radio>
+                <el-radio v-model="investWay" label="invest">定投</el-radio>
+              </el-form-item>
+              <el-form-item label="选择定投方法" v-if="investWay === 'invest'">
                 <el-select
                     v-model="detailedInvestWay"
                     placeholder="请选择"
@@ -276,43 +293,45 @@ export default{
                       :value="item.value">
                   </el-option>
                 </el-select>
-            </el-form-item>
-            <el-form-item label="具体定投日期" v-if="detailedInvestWay === 'weekly'">
-              <el-select
-                v-model="investWeeklyWay"
-                placeholder="请选择"
-              >
-                <el-option
-                    v-for="item in weeklyOption"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="具体定投日期" v-if="detailedInvestWay === 'monthly'">
-              <el-row>
-                <el-col :span="4">
-                  每月
-                </el-col>
-                <el-col :span="12">
-                  <el-input v-model="investMonthlyWay" v-if="detailedInvestWay === 'monthly'"  placeholder="请输入日期">
-                  </el-input>
-                </el-col>
-                <el-col :span="8">
-                  日
-                </el-col>
-              </el-row>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="purchase">创建订单</el-button>
-              <el-button>取消</el-button>
-            </el-form-item>
-          </el-form>
-        </el-col>
-      </el-row>
-    </el-main>
-  </el-container>
+              </el-form-item>
+              <el-form-item label="具体定投日期" v-if="detailedInvestWay === 'weekly'">
+                <el-select
+                    v-model="investWeeklyWay"
+                    placeholder="请选择"
+                >
+                  <el-option
+                      v-for="item in weeklyOption"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="具体定投日期" v-if="detailedInvestWay === 'monthly'">
+                <el-row>
+                  <el-col :span="4">
+                    每月
+                  </el-col>
+                  <el-col :span="12">
+                    <el-input v-model="investMonthlyWay" v-if="detailedInvestWay === 'monthly'"  placeholder="请输入日期">
+                    </el-input>
+                  </el-col>
+                  <el-col :span="8">
+                    日
+                  </el-col>
+                </el-row>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="purchase">创建订单</el-button>
+                <el-button>取消</el-button>
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-row>
+      </el-main>
+    </el-container>
+  </el-card>
+
 </template>
 
 <style>
@@ -324,4 +343,22 @@ export default{
 .investForm {
   margin-top: 50px;
 }
+.purchasePic{
+  width:40px;
+  margin-top:10px;
+  margin-left:10px;
+}
+.purchaseName{
+  margin-top:15px;
+  font-size:30px;
+}
+.purchaseTitle{
+  width:250px;
+  height:60px;
+  background-color: #fff;
+}
+.stockDescription{
+  margin-bottom:20px;
+  }
+
 </style>

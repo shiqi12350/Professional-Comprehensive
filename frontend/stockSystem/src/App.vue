@@ -5,8 +5,9 @@ import axios from "axios";
 import userInfo from '@/stores/user';
 import {storeToRefs } from "pinia";
 import loginVue from './components/login.vue';
-import {ref} from 'vue'
+import {onMounted, ref} from 'vue'
 import {watch} from 'vue'
+import {User,Grid,View,Cellphone} from '@element-plus/icons'
 
 const router = useRouter()
 
@@ -16,14 +17,17 @@ const {userID} = storeToRefs(user);
 
 //登录
 const loginIn = ref(false);
+
+const systemTime = ref()
+
 let showLoginPage = function(){
   loginIn.value = !loginIn.value
 }
 user.$subscribe((args, state) => {
   loginIn.value = !loginIn.value
-
 })
 
+<<<<<<< HEAD
 const logout = () => {  
       user.reset();  
        //alert('您已成功退出登录！');  
@@ -63,6 +67,8 @@ function turnToRedemptionRate(){
 function turnToComparison(){
   router.push('/comparison')
 }
+=======
+>>>>>>> 1b87634bb98133f625c1d830d2a01209a2926791
 async function changeTime(time) {
   const api_url = 'http://8.130.119.249:14103/api/v1/TradeManagement/Modification_time'
   const queryString = `?isoInstant=${time}`
@@ -79,14 +85,24 @@ async function changeTime(time) {
   //   this.$message.error('修改失败')
   //   this.inputRemark = ''
   // }
-  const url2 = "http://8.130.119.249:14103/api/v1/TradeManagement/Get_time"
-  const response2 = await axios.get(url2)
-  console.log(response2)
+  this.getTime()
 }
+
+async function getTime(){
+  const url = "http://8.130.119.249:14103/api/v1/TradeManagement/Get_time"
+  const response = await axios.get(url)
+  console.log(response)
+  const date = new Date(response.data)
+  systemTime.value = date.toISOString().split('T')[0]
+}
+onMounted(()=>{
+  getTime()
+})
 </script>
 
 <template>
   <el-container>
+<<<<<<< HEAD
     <el-header>
       <el-row>
         <el-col :span="8">
@@ -119,122 +135,105 @@ async function changeTime(time) {
             <div class="card-header">
               <span>用户管理</span>
             </div>
+=======
+    <el-aside>
+      <el-menu
+          class="main-menu"
+          background-color="#5E7BFFFF"
+          text-color="#fff"
+          active-text-color="#FF804CFF"
+          unique-opened=true
+          router
+      >
+        <el-sub-menu>
+          <template #title>
+            <el-icon><User/></el-icon>
+            <span class="menuHeader">用户管理</span>
+>>>>>>> 1b87634bb98133f625c1d830d2a01209a2926791
           </template>
+          <el-menu-item-group>
+            <el-menu-item index="/userInfo">信息修改</el-menu-item>
+            <el-menu-item index="/tradeHistory">交易历史查看</el-menu-item>
+            <el-menu-item index="/accountManage">持仓管理</el-menu-item>
+          </el-menu-item-group>
+        </el-sub-menu>
+        <el-sub-menu>
+          <template #title>
+            <el-icon><Grid/></el-icon>
+            <span class="menuHeader">基金信息</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="/investList">基金查看</el-menu-item>
+            <el-menu-item index="/classificationList">分类排行</el-menu-item>
+          </el-menu-item-group>
+        </el-sub-menu>
+        <el-sub-menu>
+          <template #title>
+            <el-icon><View/></el-icon>
+            <span class="menuHeader">基金研究</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="/stockInfo">深度资料</el-menu-item>
+            <el-menu-item index="/purchasePage">基金购买</el-menu-item>
+          </el-menu-item-group>
+        </el-sub-menu>
+        <el-sub-menu>
+          <template #title>
+            <el-icon><Cellphone/></el-icon>
+            <span class="menuHeader">基金工具</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="/purchaseRate">基金计算器</el-menu-item>
+            <el-menu-item index="/comparison">基金比较</el-menu-item>
+          </el-menu-item-group>
+        </el-sub-menu>
+      </el-menu>
+    </el-aside>
+    <el-main>
+      <el-container>
+        <el-header class="stockWebHeader">
           <el-row>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToUserInfo">信息修改</el-button>
+            <el-col :span="4">
+
             </el-col>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToTradeHistory">交易历史查看</el-button>
+            <el-col :span="8">
+              <div class="stockWebName">基金交易系统</div>
             </el-col>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToAccountManage">持仓管理</el-button>
+
+            <el-col :span="6">
+              <div class="showTime">当前系统时：{{systemTime}}</div>
+            </el-col>
+            <el-col :span="2">
+              <el-button v-if="userID === ''" @click="showLoginPage" class="loginIcon">
+                <img src="@/resource/login.png" class="loginPic">
+              </el-button>
+              <p v-else>{{userID}}</p>
+              <div class="login" v-if="loginIn">
+                <login-vue></login-vue>
+              </div>
+            </el-col>
+            <el-col :span="2">
+              <el-button @click="changeTime(1)" class="changeDateButton">
+                <img src="@/resource/changeOneDay.png" class="changeDate">
+              </el-button>
+            </el-col>
+            <el-col :span="2">
+              <el-button @click="changeTime(31)" class="changeDateButton">
+                <img src="@/resource/changeOneMonth.png" class="changeDate">
+              </el-button>
             </el-col>
           </el-row>
-        </el-card>
-        <el-card class="StockFunc">
-          <template #header>
-            <div class="card-header">
-              <span>基金信息</span>
-            </div>
-          </template>
-          <el-row>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToInvestList">基金查看</el-button>
-            </el-col>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToClassificationList">分类排行</el-button>
-            </el-col>
-          </el-row>
-        </el-card>
-        <el-card class="DetailFunc">
-          <template #header>
-            <div class="card-header">
-              <span>基金研究</span>
-            </div>
-          </template>
-          <el-row>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToStockInfo">深度资料</el-button>
-            </el-col>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToPurchasePage">基金购买</el-button>
-            </el-col>
-          </el-row>
-        </el-card>
-        <el-card class="CalculatorFunc">
-          <template #header>
-            <div class="card-header">
-              <span>基金工具</span>
-            </div>
-          </template>
-          <el-row>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToPurchaseRate">申购计算</el-button>
-            </el-col>
-            <el-col :span="12">
-              <el-button type="text" class="navButton" @click="turnToRedemptionRate">赎回计算</el-button>
-            </el-col>
-          </el-row>
-          <el-button type="text" class="navButton" @click="turnToComparison">基金比较</el-button>
-        </el-card>
-      </el-aside>
-      <el-main>
-        <router-view />
-      </el-main>
-    </el-container>
+        </el-header>
+        <el-main>
+          <router-view />
+        </el-main>
+      </el-container>
+    </el-main>
   </el-container>
 </template>
 
 
 <style>
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: bold;
-  font-size: 16px;
-
-}
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
-
-.box-card {
-  width: 200px;
-}
-.navButton{
-  color: #333;
-  padding: 8px 16px;
-
-}
-.navButton:hover {
-  color:blue;
-}
-.UserFunc,
-.StockFunc,
-.DetailFunc,
-.CalculatorFunc {
-  margin-bottom:10px;
-  background-color: #333;
-  border: 1px solid #9b59b6;
-}
-
-.UserFunc .card-header,
-.StockFunc .card-header,
-.DetailFunc .card-header,
-.CalculatorFunc .card-header,
-.UserFunc .el-button,
-.StockFunc .el-button,
-.DetailFunc .el-button,
-.CalculatorFunc .el-button {
-  color: #fff;
-}
-
 .login{
   z-index: 10;
   position: absolute;
@@ -249,8 +248,42 @@ async function changeTime(time) {
 }
 
 body {
-  background-color: #2f3640;
+  background-color: #eef1ff;
 }
 
+.main-menu{
+  border-right: 0;
+  border-radius: 10px;
+}
 
+.menuHeader{
+  font-family:"AlimamaFangYuan",serif;
+  font-weight: bold;
+  font-size:18px;
+}
+
+.stockWebHeader{
+  background-color: #ffffff;
+}
+
+.stockWebName{
+  margin-top:5px;
+  font-family:"AlimamaFangYuan",serif;
+  font-size:38px;
+}
+.showTime{
+  margin-top:15px;
+}
+.loginIcon{
+  margin-top:10px
+}
+.loginPic{
+  height:20px;
+}
+.changeDate{
+  height:20px;
+}
+.changeDateButton{
+  margin-top:10px
+}
 </style>
