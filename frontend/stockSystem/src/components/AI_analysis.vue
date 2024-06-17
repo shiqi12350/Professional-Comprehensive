@@ -21,7 +21,8 @@ export  default {
       annualizedReturn:'',
       score:null,
       predictNav:[],
-      allData:[]
+      allData:[],
+      activeNames: [],
     }
   },
   methods:{
@@ -141,122 +142,112 @@ export  default {
 </script>
 
 <template>
-  <el-header>
-    <el-menu
-        :default-active="activeIndex"
-        class="stockInfoMenu"
-        mode="horizontal"
-        background-color="#545c64"
-        text-color="#fff"
-        active-text-color="#ffd04b"
-        router
-    >
-      <el-sub-menu index="1">
-        <template #title>数据目录</template>
+  <el-card>
+    <template #header>
+      <el-row>
+        <el-col :span="2">
+          <div class="predictTitle">
+            <img src="@/resource/predict.png" class="predictPic">
+          </div>
+        </el-col>
+        <el-col :span="22">
+          <div class="predictName">AI评价</div>
+        </el-col>
+      </el-row>
+    </template>
+    <el-header>
+      <el-menu
+          :default-active="activeIndex"
+          class="stockInfoMenu"
+          mode="horizontal"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b"
+          router
+      >
+        <el-sub-menu index="1">
+          <template #title>数据目录</template>
+          <el-menu-item
+              index="/StockInfo/dataCatalog_basicInfo"
+              :params="{stockId: StockID}"
+          >基本信息</el-menu-item>
+          <el-menu-item
+              index="/StockInfo/dataCatalog_navHistory"
+              :params="{stockId: StockID}"
+          >净值记录</el-menu-item>
+        </el-sub-menu>
         <el-menu-item
-            index="/StockInfo/dataCatalog_basicInfo"
+            index="/StockInfo/RankInfo"
             :params="{stockId: StockID}"
-        >基本信息</el-menu-item>
+        >排名信息</el-menu-item>
         <el-menu-item
-            index="/StockInfo/dataCatalog_navHistory"
+            index="/StockInfo/AI_analysis"
             :params="{stockId: StockID}"
-        >净值记录</el-menu-item>
-      </el-sub-menu>
-      <el-menu-item
-          index="/StockInfo/RankInfo"
-          :params="{stockId: StockID}"
-      >排名信息</el-menu-item>
-      <el-menu-item
-          index="/StockInfo/AI_analysis"
-          :params="{stockId: StockID}"
-      >AI分析</el-menu-item>
-      <el-menu-item
-          index="/StockInfo/UserFeedback"
-          :params="{stockId: StockID}"
-      >用户反馈</el-menu-item>
-    </el-menu>
-  </el-header>
-  <el-main>
-    <el-row>
-      <el-col :span="8">
-<!--        <el-card class="box-card">-->
-<!--          <template #header>-->
-<!--            <div class="card-header">-->
-<!--              <span>基金指标分析</span>-->
-<!--            </div>-->
-<!--          </template>-->
-<!--          <div class="text item">{{ 'Alpha:' + this.Alpha }}</div>-->
-<!--          <div class="text item">{{ 'Beta:' + this.Beta }}</div>-->
-<!--          <div class="text item">{{ 'Sharpe:' + this.Sharpe }}</div>-->
-<!--          <div class="text item">{{ '平均风险收益率(%):' + this.averageRiskReturn }}</div>-->
-<!--          <div class="text item">{{ '年化收益率(%):' + this.annualizedReturn }}</div>-->
-<!--        </el-card>-->
-        <el-card class="radar">
-          <div class="predictionStock">{{this.StockID}}</div>
-          <div class="prediction"> 当前基金评价：
-            <el-rate v-model="score"></el-rate>
-          </div>
-          <el-divider></el-divider>
-          <div ref="radarChart" id="radarChart"></div>
-        </el-card>
-      </el-col>
-      <el-col :span="4"></el-col>
-      <el-col :span="12">
-        <el-card class="predictChart">
-          <div>在基金评价中，以下指标用于评估基金的绩效和风险：</div>
-          <div>
-            <div class="expressionTitle">
-              Alpha：
+        >AI分析</el-menu-item>
+        <el-menu-item
+            index="/StockInfo/UserFeedback"
+            :params="{stockId: StockID}"
+        >用户反馈</el-menu-item>
+      </el-menu>
+    </el-header>
+    <el-main>
+      <el-row>
+        <el-col :span="8">
+          <el-card class="radar">
+            <div class="predictionStock">{{this.StockID}}</div>
+            <div class="prediction"> 当前基金评价：
+              <el-rate v-model="score"></el-rate>
             </div>
-            <div>
-              Alpha表示基金的超额收益，是指基金在扣除市场基准收益后的剩余收益。
-              正的Alpha值意味着基金的表现优于市场基准，而负的Alpha值则意味着基金表现逊于市场基准。
-              Alpha通常用来衡量基金经理的选股能力和投资决策的效果。
-            </div>
-          </div>
-          <div>
-            <div class="expressionTitle">
-              Beta：
-            </div>
-            <div>
-              Beta用于衡量基金相对于市场基准的波动性。
-              Beta值为1表示基金的波动性与市场基准一致；Beta值大于1表示基金波动性大于市场，意味着基金的风险较高；Beta值小于1表示基金波动性小于市场，意味着基金的风险较低。
-              Beta值帮助投资者了解基金对市场波动的敏感度。
-              通过综合使用这些指标，投资者可以更全面地了解基金的风险、收益以及基金经理的表现，从而做出更明智的投资决策。
-            </div>
-          </div>
-          <div>
-            <div class="expressionTitle">
-              Sharpe Ratio（夏普比率）：
-            </div>
-            <div>
-              Sharpe比率用于衡量基金每单位风险所获得的超额回报。
-              公式为：(基金的平均收益率 - 无风险利率) / 基金的标准差。
-              较高的Sharpe比率表示基金在承担相同风险的情况下，提供了更高的回报，反之亦然。
-            </div>
-          </div>
-          <div>
-            <div class="expressionTitle">
-              平均风险收益率(%)：
-            </div>
-            <div>
-              平均风险收益率是基金在一段时间内的平均收益率，通常以年化百分比表示。
-              它可以用来衡量基金在特定风险水平下的表现。
-            </div>
-          </div>
-          <div>
-            <div class="expressionTitle">
-              年化收益率(%)：
-            </div>
-            <div>
-              年化收益率是将基金的总收益率转换为年度收益率，以便于不同时间段之间的比较。
-              公式为：年化收益率 = (1 + 总收益率)^(1/年数) - 1。
-            </div>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
-  </el-main>
+            <el-divider></el-divider>
+            <div ref="radarChart" id="radarChart"></div>
+          </el-card>
+        </el-col>
+        <el-col :span="5"></el-col>
+        <el-col :span="9">
+          <el-card class="predictChart">
+            <div>在基金评价中，以下指标用于评估基金的绩效和风险：</div>
+            <el-collapse v-model="activeNames">
+              <el-collapse-item title="Alpha：衡量基金经理的选股能力和投资决策的效果" name="1" class="expressionTitle">
+                <div class="expressionContent">
+                  Alpha表示基金的超额收益，是指基金在扣除市场基准收益后的剩余收益。
+                </div>
+                <div class="expressionContent">
+                  正的Alpha值意味着基金的表现优于市场基准，而负的Alpha值则意味着基金表现逊于市场基准。
+                </div>
+              </el-collapse-item>
+              <el-collapse-item title="Beta：衡量基金相对于市场基准的波动性" name="2" class="expressionTitle">
+                <div class="expressionContent">
+                  Beta值为1表示基金的波动性与市场基准一致；Beta值大于1表示基金波动性大于市场，意味着基金的风险较高；Beta值小于1表示基金波动性小于市场，意味着基金的风险较低。
+                </div>
+                <div class="expressionContent">
+                  Beta值帮助投资者了解基金对市场波动的敏感度。
+                </div>
+              </el-collapse-item>
+              <el-collapse-item title="Sharpe Ratio：衡量基金每单位风险所获得的超额回报" name="3" class="expressionTitle">
+                <div class="expressionContent">
+                  公式为：(基金的平均收益率 - 无风险利率) / 基金的标准差。
+                </div>
+                <div class="expressionContent">
+                  较高的Sharpe比率表示基金在承担相同风险的情况下，提供了更高的回报，反之亦然。
+                </div>
+              </el-collapse-item>
+              <el-collapse-item title="平均风险收益率(%)：衡量基金在特定风险水平下的表现" name="4" class="expressionTitle">
+                <div class="expressionContent">
+                  平均风险收益率是基金在一段时间内的平均收益率，通常以年化百分比表示。
+                </div>
+              </el-collapse-item>
+              <el-collapse-item title="年化收益率(%)：将基金的总收益率转换为年度收益率" name="5" class="expressionTitle">
+                <div class="expressionContent">
+                  公式为：年化收益率 = (1 + 总收益率)^(1/年数) - 1。
+                </div>
+              </el-collapse-item>
+            </el-collapse>
+          </el-card>
+        </el-col>
+      </el-row>
+    </el-main>
+  </el-card>
+
 </template>
 
 <style>
@@ -290,5 +281,21 @@ export  default {
   text-align:center;
   font-size:20px;
 }
-
+.predictPic{
+  width:40px;
+  margin-top:10px;
+  margin-left:10px;
+}
+.predictName{
+  margin-top:15px;
+  font-size:30px;
+}
+.predictTitle{
+  width:250px;
+  height:60px;
+  background-color: #fff;
+}
+.expressionContent{
+  font-size:10px
+}
 </style>

@@ -1,82 +1,105 @@
 <template>
-    <div class="login_register_box">
-      <div v-if="showBol" class="login_box">
-          <el-form
-              ref="ruleFormRef"
-              style="max-width: 600px"
-              :model="ruleForm"
-              status-icon
-              :rules="rules"
-              label-width="auto"
-              class="demo-ruleForm"
-          >
-              <el-form-item label="userPhone" prop="userPhone">
-              <el-input v-model="ruleForm.userPhone" type="text" autocomplete="off" />
-              </el-form-item>
-              <el-form-item label="Password" prop="pass">
-              <el-input
-                  v-model="ruleForm.pass"
-                  type="password"
-                  autocomplete="off"
-                  show-password
-              />
-              </el-form-item>
-              <el-form-item>
-              <el-button type="primary" @click="submitForm(ruleFormRef)">
-                  登录
-              </el-button>
-              <el-button @click="resetForm(ruleFormRef)">重置</el-button>
-              </el-form-item>
-          </el-form>
-      </div>
-      <div v-else class="register_box">
-          <el-form
-              ref="ruleFormRef"
-              style="max-width: 600px"
-              :model="ruleFormRegister"
-              status-icon
-              :rules="rulesRegister"
-              label-width="auto"
-              class="demo-ruleForm"
-          >
-              <el-form-item label="userID" prop="userID">
-              <el-input v-model="ruleFormRegister.userID" type="text" autocomplete="off" />
-              </el-form-item>
-              <el-form-item label="userName" prop="userName">
-              <el-input
-                  v-model="ruleFormRegister.userName"
-                  type="text"
-                  autocomplete="off"
-              />
-              </el-form-item>
-              <el-form-item label="userPhone" prop="userPhone">
-              <el-input v-model="ruleFormRegister.userPhone" type="text" autocomplete="off" />
-              </el-form-item>
-              <el-form-item label="password" prop="password">
-              <el-input v-model="ruleFormRegister.password" type="password" show-password autocomplete="off" />
-              </el-form-item>
-              <el-form-item label="birth" prop="birth">
-                <el-date-picker
-                    v-model="ruleFormRegister.birth"
-                    type="date"
-                    format="YYYY-MM-DD"
-                    value-format="YYYY-MM-DD"
-                    placeholder="选择日期"
-                ></el-date-picker>
-              </el-form-item>
-              <el-form-item label="email" prop="email">
-              <el-input v-model="ruleFormRegister.email" type="text" autocomplete="off" />
-              </el-form-item>
-              <el-form-item>
-              <el-button type="primary" @click="submitRegisterForm(ruleFormRef)">
-                  注册
-              </el-button>
-              <el-button @click="resetRegisterForm(ruleFormRef)">重置</el-button>
-              </el-form-item>
-          </el-form>
-      </div>
-      <p @click="switchPage()" class="swi_btn">切换登录/注册</p>
-    </div>
+  <el-container class="loginPage">
+    <el-header>
+      <el-row>
+        <el-col :span="23"></el-col>
+        <el-col :span="1">
+          <el-button type="text" @click="close">x</el-button>
+        </el-col>
+      </el-row>
+    </el-header>
+    <el-main>
+      <el-row>
+        <el-col :span="14" v-if="showBol===true">
+          <img src="@/resource/loginChart%20.png" class="loginChart">
+        </el-col>
+        <el-col :span="10">
+          <div class="login_register_box">
+            <div v-if="showBol" class="login_box">
+              <el-form
+                  ref="ruleFormRef"
+                  style="max-width: 1000px"
+                  :model="ruleForm"
+                  status-icon
+                  :rules="rules"
+                  label-width="auto"
+                  class="demo-ruleForm"
+              >
+                <el-form-item label="userPhone" prop="userPhone">
+                  <el-input v-model="ruleForm.userPhone" type="text" autocomplete="off" />
+                </el-form-item>
+                <el-form-item label="Password" prop="pass">
+                  <el-input
+                      v-model="ruleForm.pass"
+                      type="password"
+                      autocomplete="off"
+                      show-password
+                  />
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" @click="submitForm(ruleFormRef)">
+                    登录
+                  </el-button>
+                  <el-button @click="resetForm(ruleFormRef)">重置</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div v-else class="register_box">
+              <el-form
+                  ref="ruleFormRef"
+                  style="max-width: 600px"
+                  :model="ruleFormRegister"
+                  status-icon
+                  :rules="rulesRegister"
+                  label-width="auto"
+                  class="demo-ruleForm"
+              >
+                <el-form-item label="userID" prop="userID">
+                  <el-input v-model="ruleFormRegister.userID" type="text" autocomplete="off" />
+                </el-form-item>
+                <el-form-item label="userName" prop="userName">
+                  <el-input
+                      v-model="ruleFormRegister.userName"
+                      type="text"
+                      autocomplete="off"
+                  />
+                </el-form-item>
+                <el-form-item label="userPhone" prop="userPhone">
+                  <el-input v-model="ruleFormRegister.userPhone" type="text" autocomplete="off" />
+                </el-form-item>
+                <el-form-item label="password" prop="password">
+                  <el-input v-model="ruleFormRegister.password" type="password" show-password autocomplete="off" />
+                </el-form-item>
+                <el-form-item label="birth" prop="birth">
+                  <el-date-picker
+                      v-model="ruleFormRegister.birth"
+                      type="date"
+                      format="YYYY-MM-DD"
+                      value-format="YYYY-MM-DD"
+                      placeholder="选择日期"
+                  ></el-date-picker>
+                </el-form-item>
+                <el-form-item label="email" prop="email">
+                  <el-input v-model="ruleFormRegister.email" type="text" autocomplete="off" />
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" @click="submitRegisterForm(ruleFormRef)">
+                    注册
+                  </el-button>
+                  <el-button @click="resetRegisterForm(ruleFormRef)">重置</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+            <p @click="switchPage()" class="swi_btn">切换登录/注册</p>
+          </div>
+        </el-col>
+        <el-col :span="14" v-if="showBol===false">
+          <img src="@/resource/registerChart.png" class="loginChart">
+        </el-col>
+      </el-row>
+
+    </el-main>
+  </el-container>
   </template>
   
   <script setup lang="ts">
@@ -86,11 +109,17 @@
   import type { FormInstance, FormRules } from 'element-plus';
   import axios from 'axios';
   import userInfo from '@/stores/user';
+  import App from '@/App.vue'
   
   //用于修改vuestore的userID
   const user = userInfo();
-  
-  
+
+ function close(){
+   console.log("传递closeLogin参数")
+    this.$emit('closeLogin',true)
+ }
+
+
   //切换登录还是注册页面
   const showBol = ref<boolean>(true);
   let switchPage = function(){
@@ -165,8 +194,8 @@
     if (!formEl) return
     formEl.resetFields()
   }
-  
-  
+
+
   //注册
   
   //注册表单
@@ -195,9 +224,9 @@
     birth: [{ validator: validateuser, trigger: 'blur' }],
     email: [{ validator: validateuser, trigger: 'blur' }]
   })
-  
-  
-  
+
+
+
   // 注册按钮
   const submitRegisterForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
@@ -252,7 +281,6 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      height: 100%;
       align-items: center;
   }
   .swi_btn{
@@ -261,5 +289,14 @@
   .swi_btn:hover{
       color: red;
       cursor: pointer;
+  }
+  .loginChart{
+    margin-left:50px;
+    height:250px;
+  }
+
+  .loginPage{
+    width: 800px;
+    height: 500px;
   }
   </style>

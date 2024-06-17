@@ -167,113 +167,140 @@ export default {
 </script>
 
 <template>
-  <el-header>
-    <el-menu
-        :default-active="activeIndex"
-        class="stockInfoMenu"
-        mode="horizontal"
-        background-color="#545c64"
-        text-color="#fff"
-        active-text-color="#ffd04b"
-        router
-    >
-      <el-sub-menu index="1">
-        <template #title>数据目录</template>
-        <el-menu-item index="/StockInfo/dataCatalog_basicInfo" >基本信息</el-menu-item>
-        <el-menu-item index="/StockInfo/dataCatalog_navHistory">净值记录</el-menu-item>
-      </el-sub-menu>
-      <el-menu-item index="/StockInfo/RankInfo">排名信息</el-menu-item>
-      <el-menu-item index="/StockInfo/AI_analysis">AI分析</el-menu-item>
-      <el-menu-item index="/StockInfo/UserFeedback">用户反馈</el-menu-item>
-    </el-menu>
-  </el-header>
-  <el-main>
-    <el-descriptions
-        class="margin-top"
-        title="基金基本信息"
-        :column="2"
-        border
-    >
-      <el-descriptions-item label="基金代码">{{this.StockInfo.ts_code}}</el-descriptions-item>
-      <el-descriptions-item label="简称">{{this.StockInfo.name}}</el-descriptions-item>
-      <el-descriptions-item label="管理人">{{this.StockInfo.management}}</el-descriptions-item>
-      <el-descriptions-item label="托管人">{{this.StockInfo.custodian}}</el-descriptions-item>
-      <el-descriptions-item label="投资类型">{{this.StockInfo.fund_type}}</el-descriptions-item>
-      <el-descriptions-item label="成立日期">{{this.StockInfo.found_date}}</el-descriptions-item>
-      <el-descriptions-item label="管理费">{{this.StockInfo.m_fee}}</el-descriptions-item>
-      <el-descriptions-item label="托管费">{{this.StockInfo.c_fee}}</el-descriptions-item>
-      <el-descriptions-item label="面值">{{this.StockInfo.p_value}}</el-descriptions-item>
-      <el-descriptions-item label="业绩比较基准">{{this.StockInfo.benchmark}}</el-descriptions-item>
-      <el-descriptions-item label="存续状态D摘牌 I发行 L已上市">{{this.StockInfo.status}}</el-descriptions-item>
-      <el-descriptions-item label="投资风格">{{this.StockInfo.invest_type}}</el-descriptions-item>
-      <el-descriptions-item label="日常申购起始日">{{this.StockInfo.purc_startdate}}</el-descriptions-item>
-      <el-descriptions-item label="日常赎回起始日">{{this.StockInfo.redm_startdate}}</el-descriptions-item>
-      <el-descriptions-item label="E场内O场外">{{this.StockInfo.market}}</el-descriptions-item>
-    </el-descriptions>
-    <br><br>
-    <el-descriptions
-        class="margin-top"
-        title="基金规模数据"
-        :column="2"
-        :size="size"
-        border>
-      <el-descriptions-item label="交易（变动）日期">{{this.StockInfo.trade_date}}</el-descriptions-item>
-      <el-descriptions-item label="基金份额（万）">{{this.StockInfo.fd_share}}</el-descriptions-item>
-    </el-descriptions>
-    <br><br>
-    <el-descriptions
-        class="margin-top"
-        title="基金净值数据"
-        :column="2"
-        :size="size"
-        border>
-      <el-descriptions-item label="公告日期">{{this.StockInfo.ann_date}}</el-descriptions-item>
-      <el-descriptions-item label="净值日期">{{this.StockInfo.nav_date}}</el-descriptions-item>
-      <el-descriptions-item label="单位净值">{{this.StockInfo.unit_nav}}</el-descriptions-item>
-      <el-descriptions-item label="累计净值">{{this.StockInfo.accum_nav}}</el-descriptions-item>
-      <el-descriptions-item label="累计分红">{{this.StockInfo.accum_div}}</el-descriptions-item>
-      <el-descriptions-item label="资产净值">{{this.StockInfo.net_asset}}</el-descriptions-item>
-      <el-descriptions-item label="合计资产净值">{{this.StockInfo.total_netasset}}</el-descriptions-item>
-      <el-descriptions-item label="复权单位净值">{{this.StockInfo.adj_nav}}</el-descriptions-item>
-    </el-descriptions>
-    <el-descriptions
-        class="margin-top"
-        title="基金分红"
-        :column="2"
-        :size="size"
-        border>
-      <el-descriptions-item label="公告日期">{{this.StockInfo.ann_date}}</el-descriptions-item>
-      <el-descriptions-item label="分红实施公告日">{{this.StockInfo.imp_anndate}}</el-descriptions-item>
-      <el-descriptions-item label="分配收益基准日">{{this.StockInfo.base_date}}</el-descriptions-item>
-      <el-descriptions-item label="方案进度">{{this.StockInfo.div_proc}}</el-descriptions-item>
-      <el-descriptions-item label="权益登记日">{{this.StockInfo.record_date}}</el-descriptions-item>
-      <el-descriptions-item label="除息日">{{this.StockInfo.ex_date}}</el-descriptions-item>
-      <el-descriptions-item label="派息日">{{this.StockInfo.earpay_date}}</el-descriptions-item>
-      <el-descriptions-item label="净值除权日">{{this.StockInfo.net_ex_date}}</el-descriptions-item>
-      <el-descriptions-item label="每股派息(元)">{{this.StockInfo.div_cash}}</el-descriptions-item>
-      <el-descriptions-item label="基准基金份额(万份)">{{this.StockInfo.base_unit}}</el-descriptions-item>
-      <el-descriptions-item label="可分配收益(元)">{{this.StockInfo.ear_distr}}</el-descriptions-item>
-      <el-descriptions-item label="收益分配金额(元)">{{this.StockInfo.ear_amount}}</el-descriptions-item>
-      <el-descriptions-item label="红利再投资到账日">{{this.StockInfo.account_date}}</el-descriptions-item>
-      <el-descriptions-item label="份额基准年度">{{this.StockInfo.base_year}}</el-descriptions-item>
-    </el-descriptions>
-    <el-descriptions
-        class="margin-top"
-        title="基金持仓"
-        :column="2"
-        :size="size"
-        border>
-      <el-descriptions-item label="公告日期">{{this.StockInfo.ann_date}}</el-descriptions-item>
-      <el-descriptions-item label="截止日期">{{this.StockInfo.end_date}}</el-descriptions-item>
-      <el-descriptions-item label="股票代码">{{this.StockInfo.symbol}}</el-descriptions-item>
-      <el-descriptions-item label="持有股票市值(元)">{{this.StockInfo.mkv}}</el-descriptions-item>
-      <el-descriptions-item label="持有股票数量（股）">{{this.StockInfo.amount}}</el-descriptions-item>
-      <el-descriptions-item label="占股票市值比">{{this.StockInfo.stk_mkv_ratio}}</el-descriptions-item>
-      <el-descriptions-item label="占流通股本比例">{{this.StockInfo.stk_float_ratio}}</el-descriptions-item>
-    </el-descriptions>
-  </el-main>
+  <el-card>
+    <template #header>
+      <el-row>
+        <el-col :span="2">
+          <div class="stockInfoTitle">
+            <img src="@/resource/stockInfo.png" class="stockInfoPic">
+          </div>
+        </el-col>
+        <el-col :span="22">
+          <div class="stockInfoName">深度资料</div>
+        </el-col>
+      </el-row>
+    </template>
+    <el-header>
+      <el-menu
+          :default-active="activeIndex"
+          class="stockInfoMenu"
+          mode="horizontal"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b"
+          router
+      >
+        <el-sub-menu index="1">
+          <template #title>数据目录</template>
+          <el-menu-item index="/StockInfo/dataCatalog_basicInfo" >基本信息</el-menu-item>
+          <el-menu-item index="/StockInfo/dataCatalog_navHistory">净值记录</el-menu-item>
+        </el-sub-menu>
+        <el-menu-item index="/StockInfo/RankInfo">排名信息</el-menu-item>
+        <el-menu-item index="/StockInfo/AI_analysis">AI分析</el-menu-item>
+        <el-menu-item index="/StockInfo/UserFeedback">用户反馈</el-menu-item>
+      </el-menu>
+    </el-header>
+    <el-main>
+      <el-descriptions
+          class="margin-top"
+          title="基金基本信息"
+          :column="2"
+          border
+      >
+        <el-descriptions-item label="基金代码">{{this.StockInfo.ts_code}}</el-descriptions-item>
+        <el-descriptions-item label="简称">{{this.StockInfo.name}}</el-descriptions-item>
+        <el-descriptions-item label="管理人">{{this.StockInfo.management}}</el-descriptions-item>
+        <el-descriptions-item label="托管人">{{this.StockInfo.custodian}}</el-descriptions-item>
+        <el-descriptions-item label="投资类型">{{this.StockInfo.fund_type}}</el-descriptions-item>
+        <el-descriptions-item label="成立日期">{{this.StockInfo.found_date}}</el-descriptions-item>
+        <el-descriptions-item label="管理费">{{this.StockInfo.m_fee}}</el-descriptions-item>
+        <el-descriptions-item label="托管费">{{this.StockInfo.c_fee}}</el-descriptions-item>
+        <el-descriptions-item label="面值">{{this.StockInfo.p_value}}</el-descriptions-item>
+        <el-descriptions-item label="业绩比较基准">{{this.StockInfo.benchmark}}</el-descriptions-item>
+        <el-descriptions-item label="存续状态D摘牌 I发行 L已上市">{{this.StockInfo.status}}</el-descriptions-item>
+        <el-descriptions-item label="投资风格">{{this.StockInfo.invest_type}}</el-descriptions-item>
+        <el-descriptions-item label="日常申购起始日">{{this.StockInfo.purc_startdate}}</el-descriptions-item>
+        <el-descriptions-item label="日常赎回起始日">{{this.StockInfo.redm_startdate}}</el-descriptions-item>
+        <el-descriptions-item label="E场内O场外">{{this.StockInfo.market}}</el-descriptions-item>
+      </el-descriptions>
+      <br><br>
+      <el-descriptions
+          class="margin-top"
+          title="基金规模数据"
+          :column="2"
+          :size="size"
+          border>
+        <el-descriptions-item label="交易（变动）日期">{{this.StockInfo.trade_date}}</el-descriptions-item>
+        <el-descriptions-item label="基金份额（万）">{{this.StockInfo.fd_share}}</el-descriptions-item>
+      </el-descriptions>
+      <br><br>
+      <el-descriptions
+          class="margin-top"
+          title="基金净值数据"
+          :column="2"
+          :size="size"
+          border>
+        <el-descriptions-item label="公告日期">{{this.StockInfo.ann_date}}</el-descriptions-item>
+        <el-descriptions-item label="净值日期">{{this.StockInfo.nav_date}}</el-descriptions-item>
+        <el-descriptions-item label="单位净值">{{this.StockInfo.unit_nav}}</el-descriptions-item>
+        <el-descriptions-item label="累计净值">{{this.StockInfo.accum_nav}}</el-descriptions-item>
+        <el-descriptions-item label="累计分红">{{this.StockInfo.accum_div}}</el-descriptions-item>
+        <el-descriptions-item label="资产净值">{{this.StockInfo.net_asset}}</el-descriptions-item>
+        <el-descriptions-item label="合计资产净值">{{this.StockInfo.total_netasset}}</el-descriptions-item>
+        <el-descriptions-item label="复权单位净值">{{this.StockInfo.adj_nav}}</el-descriptions-item>
+      </el-descriptions>
+      <el-descriptions
+          class="margin-top"
+          title="基金分红"
+          :column="2"
+          :size="size"
+          border>
+        <el-descriptions-item label="公告日期">{{this.StockInfo.ann_date}}</el-descriptions-item>
+        <el-descriptions-item label="分红实施公告日">{{this.StockInfo.imp_anndate}}</el-descriptions-item>
+        <el-descriptions-item label="分配收益基准日">{{this.StockInfo.base_date}}</el-descriptions-item>
+        <el-descriptions-item label="方案进度">{{this.StockInfo.div_proc}}</el-descriptions-item>
+        <el-descriptions-item label="权益登记日">{{this.StockInfo.record_date}}</el-descriptions-item>
+        <el-descriptions-item label="除息日">{{this.StockInfo.ex_date}}</el-descriptions-item>
+        <el-descriptions-item label="派息日">{{this.StockInfo.earpay_date}}</el-descriptions-item>
+        <el-descriptions-item label="净值除权日">{{this.StockInfo.net_ex_date}}</el-descriptions-item>
+        <el-descriptions-item label="每股派息(元)">{{this.StockInfo.div_cash}}</el-descriptions-item>
+        <el-descriptions-item label="基准基金份额(万份)">{{this.StockInfo.base_unit}}</el-descriptions-item>
+        <el-descriptions-item label="可分配收益(元)">{{this.StockInfo.ear_distr}}</el-descriptions-item>
+        <el-descriptions-item label="收益分配金额(元)">{{this.StockInfo.ear_amount}}</el-descriptions-item>
+        <el-descriptions-item label="红利再投资到账日">{{this.StockInfo.account_date}}</el-descriptions-item>
+        <el-descriptions-item label="份额基准年度">{{this.StockInfo.base_year}}</el-descriptions-item>
+      </el-descriptions>
+      <el-descriptions
+          class="margin-top"
+          title="基金持仓"
+          :column="2"
+          :size="size"
+          border>
+        <el-descriptions-item label="公告日期">{{this.StockInfo.ann_date}}</el-descriptions-item>
+        <el-descriptions-item label="截止日期">{{this.StockInfo.end_date}}</el-descriptions-item>
+        <el-descriptions-item label="股票代码">{{this.StockInfo.symbol}}</el-descriptions-item>
+        <el-descriptions-item label="持有股票市值(元)">{{this.StockInfo.mkv}}</el-descriptions-item>
+        <el-descriptions-item label="持有股票数量（股）">{{this.StockInfo.amount}}</el-descriptions-item>
+        <el-descriptions-item label="占股票市值比">{{this.StockInfo.stk_mkv_ratio}}</el-descriptions-item>
+        <el-descriptions-item label="占流通股本比例">{{this.StockInfo.stk_float_ratio}}</el-descriptions-item>
+      </el-descriptions>
+    </el-main>
+  </el-card>
 </template>
 
 <style>
-
+.stockInfoPic{
+  width:40px;
+  margin-top:10px;
+  margin-left:10px;
+}
+.stockInfoName{
+  margin-top:15px;
+  font-size:30px;
+}
+.stockInfoTitle{
+  width:250px;
+  height:60px;
+  background-color: #fff;
+}
 </style>

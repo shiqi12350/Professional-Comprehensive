@@ -104,76 +104,104 @@ export default{
 </script>
 
 <template>
-  <el-header>
-    <el-menu
-        :default-active="activeIndex"
-        class="stockInfoMenu"
-        mode="horizontal"
-        background-color="#545c64"
-        text-color="#fff"
-        active-text-color="#ffd04b"
-        router
-    >
-      <el-sub-menu index="1">
-        <template #title>数据目录</template>
+  <el-card>
+    <template #header>
+      <el-row>
+        <el-col :span="2">
+          <div class="rankTitle">
+            <img src="@/resource/stockInfo.png" class="rankPic">
+          </div>
+        </el-col>
+        <el-col :span="22">
+          <div class="rankName">排名信息</div>
+        </el-col>
+      </el-row>
+    </template>
+    <el-header>
+      <el-menu
+          :default-active="activeIndex"
+          class="stockInfoMenu"
+          mode="horizontal"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b"
+          router
+      >
+        <el-sub-menu index="1">
+          <template #title>数据目录</template>
+          <el-menu-item
+              index="/StockInfo/dataCatalog_basicInfo"
+              :params="{stockId: StockID}"
+          >基本信息</el-menu-item>
+          <el-menu-item
+              index="/StockInfo/dataCatalog_navHistory"
+              :params="{stockId: StockID}"
+          >净值记录</el-menu-item>
+        </el-sub-menu>
         <el-menu-item
-            index="/StockInfo/dataCatalog_basicInfo"
+            index="/StockInfo/RankInfo"
             :params="{stockId: StockID}"
-        >基本信息</el-menu-item>
+        >排名信息</el-menu-item>
         <el-menu-item
-            index="/StockInfo/dataCatalog_navHistory"
+            index="/StockInfo/AI_analysis"
             :params="{stockId: StockID}"
-        >净值记录</el-menu-item>
-      </el-sub-menu>
-      <el-menu-item
-          index="/StockInfo/RankInfo"
-          :params="{stockId: StockID}"
-      >排名信息</el-menu-item>
-      <el-menu-item
-          index="/StockInfo/AI_analysis"
-          :params="{stockId: StockID}"
-      >AI分析</el-menu-item>
-      <el-menu-item
-          index="/StockInfo/UserFeedback"
-          :params="{stockId: StockID}"
-      >用户反馈</el-menu-item>
-    </el-menu>
-  </el-header>
-  <el-main>
-    <el-descriptions title="当前基金信息" direction="vertical" :column="8" border>
-      <el-descriptions-item label="基金代码">{{this.StockID}}</el-descriptions-item>
-      <el-descriptions-item label="交易日期">{{this.trade_date}}</el-descriptions-item>
-      <el-descriptions-item label="开盘价(元)">{{this.open}}</el-descriptions-item>
-      <el-descriptions-item label="收盘价(元)">{{this.close}}</el-descriptions-item>
-      <el-descriptions-item label="涨跌额(元)">{{this.change}}</el-descriptions-item>
-      <el-descriptions-item label="涨跌幅(%)">{{this.pct_chg}}</el-descriptions-item>
-      <el-descriptions-item label="成交量(手)">{{this.vol}}</el-descriptions-item>
-      <el-descriptions-item label="成交额(千元)">{{this.amount}}</el-descriptions-item>
-    </el-descriptions>
-    <br>
-    <el-check-tag @click="sortBy('open')"  :checked="openChecked" >按开盘价</el-check-tag>
-    <el-check-tag @click="sortBy('close')"  :checked="closeChecked" >按收盘价</el-check-tag>
-    <el-check-tag @click="sortBy('change')" :checked="changeChecked" >按涨跌额</el-check-tag>
-    <el-check-tag @click="sortBy('pct_chg')" :checked="pct_chgChecked" >按涨跌幅</el-check-tag>
-    <el-check-tag @click="sortBy('vol')" :checked="volChecked" >按成交量</el-check-tag>
-    <el-check-tag @click="sortBy('amount')" :checked="amountChecked">按成交额</el-check-tag>
-    <el-table
-      :data="sortedList">
-      <el-table-column type="index" :index="indexMethod"> </el-table-column>
-      <el-table-column prop="ts_code" label="基金代码" width="150"> </el-table-column>
-      <el-table-column prop="trade_date" label="交易日期" width="150"></el-table-column>
-      <el-table-column prop="open" label="开盘价(元)" width="100"></el-table-column>
-      <el-table-column prop="close" label="收盘价(元)" width="100"></el-table-column>
-      <el-table-column prop="change" label="涨跌额(元)" width="100"></el-table-column>
-      <el-table-column prop="pct_chg" label="涨跌幅(%)" width="100"></el-table-column>
-      <el-table-column prop="vol" label="成交量(手)" width="150"></el-table-column>
-      <el-table-column prop="amount" label="成交额(千元)" width="180"></el-table-column>
-    </el-table>
-  </el-main>
+        >AI分析</el-menu-item>
+        <el-menu-item
+            index="/StockInfo/UserFeedback"
+            :params="{stockId: StockID}"
+        >用户反馈</el-menu-item>
+      </el-menu>
+    </el-header>
+    <el-main>
+      <el-descriptions title="当前基金信息" direction="vertical" :column="8" border>
+        <el-descriptions-item label="基金代码">{{this.StockID}}</el-descriptions-item>
+        <el-descriptions-item label="交易日期">{{this.trade_date}}</el-descriptions-item>
+        <el-descriptions-item label="开盘价(元)">{{this.open}}</el-descriptions-item>
+        <el-descriptions-item label="收盘价(元)">{{this.close}}</el-descriptions-item>
+        <el-descriptions-item label="涨跌额(元)">{{this.change}}</el-descriptions-item>
+        <el-descriptions-item label="涨跌幅(%)">{{this.pct_chg}}</el-descriptions-item>
+        <el-descriptions-item label="成交量(手)">{{this.vol}}</el-descriptions-item>
+        <el-descriptions-item label="成交额(千元)">{{this.amount}}</el-descriptions-item>
+      </el-descriptions>
+      <br>
+      <el-check-tag @click="sortBy('open')"  :checked="openChecked" >按开盘价</el-check-tag>
+      <el-check-tag @click="sortBy('close')"  :checked="closeChecked" >按收盘价</el-check-tag>
+      <el-check-tag @click="sortBy('change')" :checked="changeChecked" >按涨跌额</el-check-tag>
+      <el-check-tag @click="sortBy('pct_chg')" :checked="pct_chgChecked" >按涨跌幅</el-check-tag>
+      <el-check-tag @click="sortBy('vol')" :checked="volChecked" >按成交量</el-check-tag>
+      <el-check-tag @click="sortBy('amount')" :checked="amountChecked">按成交额</el-check-tag>
+      <el-table
+          :data="sortedList">
+        <el-table-column type="index" :index="indexMethod"> </el-table-column>
+        <el-table-column prop="ts_code" label="基金代码" width="150"> </el-table-column>
+        <el-table-column prop="trade_date" label="交易日期" width="150"></el-table-column>
+        <el-table-column prop="open" label="开盘价(元)" width="100"></el-table-column>
+        <el-table-column prop="close" label="收盘价(元)" width="100"></el-table-column>
+        <el-table-column prop="change" label="涨跌额(元)" width="100"></el-table-column>
+        <el-table-column prop="pct_chg" label="涨跌幅(%)" width="100"></el-table-column>
+        <el-table-column prop="vol" label="成交量(手)" width="150"></el-table-column>
+        <el-table-column prop="amount" label="成交额(千元)" width="180"></el-table-column>
+      </el-table>
+    </el-main>
+  </el-card>
 </template>
 
 <style>
 .el-check-tag{
   margin-left:50px
+}
+.rankPic{
+  width:40px;
+  margin-top:10px;
+  margin-left:10px;
+}
+.rankName{
+  margin-top:15px;
+  font-size:30px;
+}
+.rankTitle{
+  width:250px;
+  height:60px;
+  background-color: #fff;
 }
 </style>

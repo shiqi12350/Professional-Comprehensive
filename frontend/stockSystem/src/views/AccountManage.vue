@@ -18,7 +18,7 @@
           <el-table-column prop="bankCard" label="银行卡号"></el-table-column>
           <el-table-column label="操作">
             <template #default="{ row }">
-              <el-button size="small" @click="dismissBankCard(row.bankCard)">解绑</el-button>
+              <el-button type="primary" @click="dismissBankCard(row.bankCard)">解绑</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -81,6 +81,7 @@
               userID: this.formData.userID
             }
           });
+          console.log(response)
           if (response.data.resultCode === 1) {
             this.formData.bankCard = response.data.bankCardList[0];
             this.bankCardList.push({ bankCard: response.data.bankCardList[0] });

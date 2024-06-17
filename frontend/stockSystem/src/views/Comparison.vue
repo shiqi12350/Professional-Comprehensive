@@ -132,7 +132,7 @@ export default{
 </script>
 
 <template>
-  <el-card>
+  <el-card class="comparisonCard">
     <template #header>
       <el-row>
         <el-col :span="2">
@@ -150,7 +150,9 @@ export default{
         <el-input placeholder="请输入内容" v-model="StockID" > </el-input>
       </el-col>
       <el-col :span="2">
-        <el-button @click="addStock(this.StockID)">添加基金</el-button>
+        <el-button @click="addStock(this.StockID)">
+          <img src="@/resource/add.png" class="addStock">
+        </el-button>
       </el-col>
       <el-col :span="18"></el-col>
     </el-row>
@@ -198,5 +200,13 @@ export default{
   width:250px;
   height:60px;
   background-color: #fff;
+}
+.addStock{
+  height:20px;
+}
+.comparisonCard{
+  background-image: url('@/resource/bg5.png');
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 </style>

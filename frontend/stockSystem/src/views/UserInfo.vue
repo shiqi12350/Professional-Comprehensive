@@ -1,48 +1,53 @@
 <template>
-  <div>
-        <el-card>
-          <template #header>
-            <el-row>
-              <el-col :span="2">
-                <div class="userInfoTitle">
-                  <img src="@/resource/userInfo.png" class="userInfoPic">
-                </div>
-              </el-col>
-              <el-col :span="22">
-                <div class="userInfoName">用户信息</div>
-              </el-col>
-            </el-row>
-          </template>
-          <!-- User Information Section -->
-          <el-form ref="userInfoForm" label-width="70px">
-            <el-form-item label="身份证号">
-              <el-input v-model="userInfo.userID" :disabled="true"></el-input>
-            </el-form-item>
-            <el-form-item label="姓名">
-              <el-input v-model="userInfo.userName" :disabled="!isEditable"></el-input>
-            </el-form-item>
-            <el-form-item label="电话号码">
-              <el-input v-model="userInfo.userPhone" :disabled="!isEditable"></el-input>
-            </el-form-item>
-            <el-form-item label="密码">
-              <el-input v-model="userInfo.passWord" :disabled="!isEditable" type="password" @change="handlePasswordChange"></el-input>
-            </el-form-item>
-            <el-form-item label="确认密码" v-if="showConfirmPassword">
-              <el-input v-model="confirmPassword" type="password"></el-input>
-            </el-form-item>
-            <el-form-item label="生日">
-              <el-date-picker v-model="userInfo.birth" type="date" :disabled="!isEditable"></el-date-picker>
-            </el-form-item>
-            <el-form-item label="邮箱">
-              <el-input v-model="userInfo.email" :disabled="!isEditable"></el-input>
-            </el-form-item>
-            <el-form-item label="等级">
-              <el-input v-model="userInfo.level" :disabled="true"></el-input>
-            </el-form-item>
-            <el-button type="primary" size="small" @click="editUserInfo">{{ isEditable ? '保存' : '修改' }}</el-button>
-          </el-form>
-        </el-card>
-  </div>
+  <el-card>
+    <template #header>
+      <el-row>
+        <el-col :span="2">
+          <div class="userInfoTitle">
+            <img src="@/resource/userInfo.png" class="userInfoPic">
+          </div>
+        </el-col>
+        <el-col :span="22">
+          <div class="userInfoName">用户信息</div>
+        </el-col>
+      </el-row>
+    </template>
+    <el-row>
+      <el-col :span="10">
+        <el-form ref="userInfoForm" label-width="100px" class="userInfoItem">
+          <el-form-item label="身份证号" class="userInfoItem">
+            <el-input v-model="userInfo.userID" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="姓名"  class="userInfoItem">
+            <el-input v-model="userInfo.userName" :disabled="!isEditable"></el-input>
+          </el-form-item>
+          <el-form-item label="电话号码" class="userInfoItem">
+            <el-input v-model="userInfo.userPhone" :disabled="!isEditable"></el-input>
+          </el-form-item>
+          <el-form-item label="密码"  class="userInfoItem">
+            <el-input v-model="userInfo.passWord" :disabled="!isEditable" type="password" @change="handlePasswordChange"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码" v-if="showConfirmPassword" >
+            <el-input v-model="confirmPassword" type="password"></el-input>
+          </el-form-item>
+          <el-form-item label="生日"  class="userInfoItem">
+            <el-date-picker v-model="userInfo.birth" type="date" :disabled="!isEditable"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="邮箱"  class="userInfoItem">
+            <el-input v-model="userInfo.email" :disabled="!isEditable"></el-input>
+          </el-form-item>
+          <el-form-item label="等级"  class="userInfoItem">
+            <el-input v-model="userInfo.level" :disabled="true"></el-input>
+          </el-form-item>
+          <el-button type="primary" size="small" @click="editUserInfo">{{ isEditable ? '保存' : '修改' }}</el-button>
+        </el-form>
+      </el-col>
+      <el-col :span="14">
+        <img src="@/resource/ChangeInfo%20.png" class="changeInfo">
+      </el-col>
+    </el-row>
+    <!-- User Information Section -->
+  </el-card>
 </template>
 
 <script>
@@ -158,6 +163,14 @@ export default {
   width:250px;
   height:60px;
   background-color: #fff;
+}
+.changeInfo{
+  height:500px;
+  margin-left:80px;
+  margin-bottom:20px;
+}
+.userInfoItem .el-form-item__label{
+  font-size: 18px;
 }
 </style>
 

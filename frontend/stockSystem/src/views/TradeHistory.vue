@@ -13,6 +13,7 @@
       </el-row>
     </template>
     <div>
+      <div class="tradeHistoryTableName">申购历史</div>
       <el-table
           v-if="currentPageOrdersType1.length > 0"
           :data="currentPageOrdersType1"
@@ -20,15 +21,15 @@
           border
           stripe
       >
-        <el-table-column prop="ordernumber" label="Order Number"></el-table-column>
-        <el-table-column prop="company" label="Company"></el-table-column>
-        <el-table-column prop="share" label="Share"></el-table-column>
-        <el-table-column prop="SubmissionAmount" label="Submission Amount"></el-table-column>
-        <el-table-column prop="SubmissionTime" label="Submission Time"></el-table-column>
-        <el-table-column prop="ConfirmTime" label="Confirm Time"></el-table-column>
+        <el-table-column prop="ordernumber" label="订单号"></el-table-column>
+        <el-table-column prop="company" label="基金代码"></el-table-column>
+        <el-table-column prop="share" label="申购份额"></el-table-column>
+        <el-table-column prop="SubmissionAmount" label="下单金额"></el-table-column>
+        <el-table-column prop="SubmissionTime" label="提交日期"></el-table-column>
+        <el-table-column prop="ConfirmTime" label="确认日期"></el-table-column>
         <el-table-column fixed="right" label="操作" >
           <template #default="scope">
-            <el-button @click="handleRevocationPurchase(scope.row)" type="text" size="small">撤销</el-button>
+            <el-button @click="handleRevocationPurchase(scope.row)" type="text" size="mini">撤销</el-button>
             <el-button @click="handleRedeem(scope.row)" type="text" size="small">赎回</el-button>
           </template>
         </el-table-column>
@@ -41,7 +42,8 @@
           :total="totalOrdersType1.length"
           layout="prev, pager, next"
       ></el-pagination>
-
+      <br>
+      <div  class="tradeHistoryTableName">赎回历史</div>
       <el-table
           v-if="currentPageOrdersType2.length > 0"
           :data="currentPageOrdersType2"
@@ -49,12 +51,12 @@
           border
           stripe
       >
-        <el-table-column prop="ordernumber" label="Order Number"></el-table-column>
-        <el-table-column prop="company" label="Company"></el-table-column>
-        <el-table-column prop="share" label="Share"></el-table-column>
-        <el-table-column prop="SubmissionAmount" label="Submission Amount"></el-table-column>
-        <el-table-column prop="SubmissionTime" label="Submission Time"></el-table-column>
-        <el-table-column prop="ConfirmTime" label="Confirm Time"></el-table-column>
+        <el-table-column prop="ordernumber" label="订单号"></el-table-column>
+        <el-table-column prop="company" label="基金代码"></el-table-column>
+        <el-table-column prop="share" label="赎回份额"></el-table-column>
+        <el-table-column prop="SubmissionAmount" label="赎回金额"></el-table-column>
+        <el-table-column prop="SubmissionTime" label="提交日期"></el-table-column>
+        <el-table-column prop="ConfirmTime" label="确认日期"></el-table-column>
         <el-table-column fixed="right" label="操作" >
           <template #default="scope">
             <el-button @click="handleRevocationRedeem(scope.row)" type="text" size="small">撤销</el-button>
@@ -230,5 +232,10 @@
   width:250px;
   height:60px;
   background-color: #fff;
+}
+.tradeHistoryTableName{
+  font-size:20px;
+  margin-left:15px;
+  margin-bottom:5px;
 }
 </style>

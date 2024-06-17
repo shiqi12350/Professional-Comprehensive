@@ -8,6 +8,7 @@ import loginVue from './components/login.vue';
 import {onMounted, ref} from 'vue'
 import {watch} from 'vue'
 import {User,Grid,View,Cellphone} from '@element-plus/icons'
+import Login from '@/components/login.vue'
 
 const router = useRouter()
 
@@ -27,48 +28,12 @@ user.$subscribe((args, state) => {
   loginIn.value = !loginIn.value
 })
 
-<<<<<<< HEAD
 const logout = () => {  
       user.reset();  
        //alert('您已成功退出登录！');  
-    };  
+    };
 
 
-function turnToInvestList() {
-  router.push('/investList')
-}
-function turnToClassificationList() {
-  router.push('/classificationList')
-}
-function turnToStockInfo() {
-  router.push('/stockInfo')
-}
-function turnToPurchasePage() {
-  router.push('/purchasePage')
-}
-function goBack() {
-  router.push('/')
-}
-function turnToUserInfo() {
-  router.push('/UserInfo')
-}
-function turnToTradeHistory() {
-  router.push('/TradeHistory')
-}
-function turnToAccountManage() {
-  router.push('/AccountManage')
-}
-function turnToPurchaseRate(){
-  router.push('/purchaseRate')
-}
-function turnToRedemptionRate(){
-  router.push('/redemptionRate')
-}
-function turnToComparison(){
-  router.push('/comparison')
-}
-=======
->>>>>>> 1b87634bb98133f625c1d830d2a01209a2926791
 async function changeTime(time) {
   const api_url = 'http://8.130.119.249:14103/api/v1/TradeManagement/Modification_time'
   const queryString = `?isoInstant=${time}`
@@ -88,6 +53,11 @@ async function changeTime(time) {
   this.getTime()
 }
 
+function closeLogin(data){
+  console.log("调用closeLogin")
+  loginIn.value = data
+}
+
 async function getTime(){
   const url = "http://8.130.119.249:14103/api/v1/TradeManagement/Get_time"
   const response = await axios.get(url)
@@ -102,41 +72,21 @@ onMounted(()=>{
 
 <template>
   <el-container>
-<<<<<<< HEAD
-    <el-header>
-      <el-row>
-        <el-col :span="8">
-          <el-page-header @click="goBack" content="基金交易系统"></el-page-header>
-        </el-col>
-        <el-col :span="4">
-          {{"userName"}}
-        </el-col>
-        <el-col :span="8">
-          <el-button v-if="userID === ''" @click="showLoginPage">登录</el-button>
-          <p v-else>
-            <el-button @click="logout">退出</el-button> {{userID}}
-          </p>
-          <div class="login" v-if="loginIn">
-            <login-vue></login-vue>
-          </div>
-        </el-col>
-        <el-col :span="2">
-          <el-button @click="changeTime(1)">修改至一天后</el-button>
-        </el-col>
-        <el-col :span="2">
-          <el-button @click="changeTime(31)">修改至一月后</el-button>
-        </el-col>
-      </el-row>
-    </el-header>
-    <el-container>
-      <el-aside>
-        <el-card class="UserFunc">
-          <template #header>
-            <div class="card-header">
-              <span>用户管理</span>
-            </div>
-=======
     <el-aside>
+      <el-card class="userInfo">
+        <el-row>
+          <el-col :span="6">
+            <img src="@/resource/randomUser.png" class="userImage" v-if="userID !== ''">
+            <img src="@/resource/unknownUser.png" class="userImage" v-if="userID === ''">
+          </el-col>
+          <el-col :span="18">
+            <div class="userName">用户{{userID}}</div>
+            <div class="userName" v-if="userID !== ''">欢迎使用本系统！</div>
+            <div class="userName" v-if="userID === ''">请先登录！</div>
+            <div class="showTime">{{systemTime}}</div>
+          </el-col>
+        </el-row>
+      </el-card>
       <el-menu
           class="main-menu"
           background-color="#5E7BFFFF"
@@ -149,7 +99,6 @@ onMounted(()=>{
           <template #title>
             <el-icon><User/></el-icon>
             <span class="menuHeader">用户管理</span>
->>>>>>> 1b87634bb98133f625c1d830d2a01209a2926791
           </template>
           <el-menu-item-group>
             <el-menu-item index="/userInfo">信息修改</el-menu-item>
@@ -193,23 +142,31 @@ onMounted(()=>{
       <el-container>
         <el-header class="stockWebHeader">
           <el-row>
-            <el-col :span="4">
-
+            <el-col :span="3">
+              <img src="@/resource/icon.png" class="icon">
             </el-col>
-            <el-col :span="8">
-              <div class="stockWebName">基金交易系统</div>
-            </el-col>
-
             <el-col :span="6">
-              <div class="showTime">当前系统时：{{systemTime}}</div>
+              <div class="stockWebName">TJ基金交易系统</div>
+            </el-col>
+            <el-col :span="9">
             </el-col>
             <el-col :span="2">
+<!--              <el-button v-if="userID === ''" @click="showLoginPage" class="loginIcon">-->
+<!--                <img src="@/resource/login.png" class="loginPic">-->
+<!--              </el-button>-->
+<!--              <p v-else>{{userID}}</p>-->
+<!--              <div class="login" v-if="loginIn">-->
+<!--                <login-vue></login-vue>-->
+<!--              </div>-->
               <el-button v-if="userID === ''" @click="showLoginPage" class="loginIcon">
                 <img src="@/resource/login.png" class="loginPic">
               </el-button>
-              <p v-else>{{userID}}</p>
+              <p v-else><el-button @click="logout" class="logoutIcon">
+                <img src="@/resource/logout.png" class="logoutPic">
+              </el-button>
+              </p>
               <div class="login" v-if="loginIn">
-                <login-vue></login-vue>
+                <Login @close="closeLogin"/>
               </div>
             </el-col>
             <el-col :span="2">
@@ -237,10 +194,10 @@ onMounted(()=>{
 .login{
   z-index: 10;
   position: absolute;
-  left: calc(50vw - 300px);
+  left: calc(50vw - 600px);
   top: calc(50vh - 250px);
-  width: 450px;
-  height: 400px;
+  width: 800px;
+  height: 500px;
   padding: 10px;
   background-color: white;
   box-shadow: 1px 1px 7px 1px #ccc;
@@ -271,8 +228,13 @@ body {
   font-family:"AlimamaFangYuan",serif;
   font-size:38px;
 }
+.userName{
+  font-size:20px;
+  margin-top:5px;
+}
 .showTime{
-  margin-top:15px;
+  font-size:15px;
+  margin-top:2px;
 }
 .loginIcon{
   margin-top:10px
@@ -280,10 +242,39 @@ body {
 .loginPic{
   height:20px;
 }
+.logoutIcon{
+  margin-top:-5px;
+}
+.logoutPic{
+  height:20px;
+}
 .changeDate{
   height:20px;
 }
 .changeDateButton{
   margin-top:10px
+}
+.icon{
+  height:60px;
+  margin-left:60px;
+}
+.userInfo{
+  border-color: #333333;
+  border-radius: 10px;
+  margin-bottom:10px;
+  color:white;
+  background-color: #5E7BFFFF;
+}
+.userImage{
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.el-button{
+  background-color: white;
+  color: #8197fd;
+  font-size:18px;
+  border-width:2px;
 }
 </style>

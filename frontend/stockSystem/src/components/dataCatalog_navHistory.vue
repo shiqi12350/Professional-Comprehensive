@@ -157,72 +157,100 @@ export default {
 </script>
 
 <template>
-  <el-header>
-    <el-menu
-        :default-active="activeIndex"
-        class="stockInfoMenu"
-        mode="horizontal"
-        background-color="#545c64"
-        text-color="#fff"
-        active-text-color="#ffd04b"
-        router
-    >
-      <el-sub-menu index="1">
-        <template #title>数据目录</template>
+  <el-card>
+    <template #header>
+      <el-row>
+        <el-col :span="2">
+          <div class="stockInfoTitle">
+            <img src="@/resource/stockInfo.png" class="stockInfoPic">
+          </div>
+        </el-col>
+        <el-col :span="22">
+          <div class="stockInfoName">深度资料</div>
+        </el-col>
+      </el-row>
+    </template>
+    <el-header>
+      <el-menu
+          :default-active="activeIndex"
+          class="stockInfoMenu"
+          mode="horizontal"
+          background-color="#545c64"
+          text-color="#fff"
+          active-text-color="#ffd04b"
+          router
+      >
+        <el-sub-menu index="1">
+          <template #title>数据目录</template>
+          <el-menu-item
+              index="/StockInfo/dataCatalog_basicInfo"
+              :params="{stockId: StockID}"
+          >基本信息</el-menu-item>
+          <el-menu-item
+              index="/StockInfo/dataCatalog_navHistory"
+              :params="{stockId: StockID}"
+          >净值记录</el-menu-item>
+        </el-sub-menu>
         <el-menu-item
-            index="/StockInfo/dataCatalog_basicInfo"
+            index="/StockInfo/RankInfo"
             :params="{stockId: StockID}"
-        >基本信息</el-menu-item>
+        >排名信息</el-menu-item>
         <el-menu-item
-            index="/StockInfo/dataCatalog_navHistory"
+            index="/StockInfo/AI_analysis"
             :params="{stockId: StockID}"
-        >净值记录</el-menu-item>
-      </el-sub-menu>
-      <el-menu-item
-          index="/StockInfo/RankInfo"
-          :params="{stockId: StockID}"
-      >排名信息</el-menu-item>
-      <el-menu-item
-          index="/StockInfo/AI_analysis"
-          :params="{stockId: StockID}"
-      >AI分析</el-menu-item>
-      <el-menu-item
-          index="/StockInfo/UserFeedback"
-          :params="{stockId: StockID}"
-      >用户反馈</el-menu-item>
-    </el-menu>
-  </el-header>
-  <el-main>
-    <el-row>
-      <el-col :span="6">
-        <el-table
-          :data="tableData"
-          :size="small"
-          v-loading="listLoading"
-        >
-          <el-table-column prop="nav_date" label="日期"  ></el-table-column>
-          <el-table-column prop="total_netasset" label="净值"></el-table-column>
-        </el-table>
-        <el-pagination
-            small
-            layout="prev, pager, next"
-            :current-page="currentPage"
-            :page-size="pageSize"
-            :total="25"
-            @current-change="handleCurrentChange">
+        >AI分析</el-menu-item>
+        <el-menu-item
+            index="/StockInfo/UserFeedback"
+            :params="{stockId: StockID}"
+        >用户反馈</el-menu-item>
+      </el-menu>
+    </el-header>
+    <el-main>
+      <el-row>
+        <el-col :span="6">
+          <el-table
+              :data="tableData"
+              :size="small"
+              v-loading="listLoading"
+          >
+            <el-table-column prop="nav_date" label="日期"  ></el-table-column>
+            <el-table-column prop="total_netasset" label="净值"></el-table-column>
+          </el-table>
+          <el-pagination
+              small
+              layout="prev, pager, next"
+              :current-page="currentPage"
+              :page-size="pageSize"
+              :total="25"
+              @current-change="handleCurrentChange">
 
-        </el-pagination>
-      </el-col>
-      <el-col :span="18">
-        <div ref="stockNavChart" id="stockNavChart"></div>
-      </el-col>
-    </el-row>
-  </el-main>
+          </el-pagination>
+        </el-col>
+        <el-col :span="18">
+          <div ref="stockNavChart" id="stockNavChart"></div>
+        </el-col>
+      </el-row>
+    </el-main>
+  </el-card>
 </template>
 
 <style>
 #stockNavChart{
   width:900px;
   height:550px;
+}
+.stockInfoPic{
+  width:40px;
+  margin-top:10px;
+  margin-left:10px;
+}
+.stockInfoName{
+  margin-top:15px;
+  font-size:30px;
+}
+.stockInfoTitle{
+  width:250px;
+  height:60px;
+  background-color: #fff;
 }
 </style>

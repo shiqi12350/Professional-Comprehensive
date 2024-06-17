@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card class="purchaseRateCard">
     <template #header>
       <el-row>
         <el-col :span="2">
@@ -20,7 +20,9 @@
           <!--基金ID查询-->
           <el-form-item label="基金代码">
             <el-input v-model="fundId" placeholder="申购基金编号"></el-input>
-            <el-button size="small" @click="getFundNetValue">查询</el-button>
+            <el-button size="small" @click="getFundNetValue">
+              <img src="@/resource/搜索.png" class="searchButton">
+            </el-button>
           </el-form-item>
 
           <el-form-item label="申购金额">
@@ -230,5 +232,13 @@ export default {
   width:250px;
   height:60px;
   background-color: #fff;
+}
+.searchButton{
+  height:20px;
+}
+.purchaseRateCard{
+  background-image: url('@/resource/bg1.png');
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 </style>
