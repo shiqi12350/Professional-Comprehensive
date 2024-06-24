@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: com.example.trademanagementmicroservice.TradeManagementTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 8.879 s <<< FAILURE! - in com.example.trademanagementmicroservice.TradeManagementTest
+UT_TC_002_001_001_001  Time elapsed: 2.091 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <fundID cannot be empty> but was: <fundID must be at least 6 characters long>
+	at com.example.trademanagementmicroservice.TradeManagementTest.UT_TC_002_001_001_001(TradeManagementTest.java:47)
+

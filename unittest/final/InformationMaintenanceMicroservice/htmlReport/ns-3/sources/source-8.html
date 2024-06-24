@@ -1,0 +1,170 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > SubscriptionFee</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.informationmaintenancemicroservice.entites</a>
+</div>
+
+<h1>Coverage Summary for Class: SubscriptionFee (com.example.informationmaintenancemicroservice.entites)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SubscriptionFee</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (4/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    40.9%
+  </span>
+  <span class="absValue">
+    (9/22)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.informationmaintenancemicroservice.entites;
+&nbsp;
+&nbsp;public class SubscriptionFee {
+&nbsp;    public String getFundCode() {
+<b class="fc">&nbsp;        return fundCode;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setFundCode(String fundCode) {
+<b class="fc">&nbsp;        this.fundCode = fundCode;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public double getLowLine() {
+<b class="nc">&nbsp;        return lowLine;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setLowLine(double lowLine) {
+<b class="nc">&nbsp;        this.lowLine = lowLine;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public double getHighLine() {
+<b class="nc">&nbsp;        return highLine;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setHighLine(double highLine) {
+<b class="nc">&nbsp;        this.highLine = highLine;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getValueType() {
+<b class="nc">&nbsp;        return valueType;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setValueType(int valueType) {
+<b class="nc">&nbsp;        this.valueType = valueType;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public double getValue() {
+<b class="nc">&nbsp;        return value;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setValue(double value) {
+<b class="fc">&nbsp;        this.value = value;</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public SubscriptionFee(String fundCode, double lowLine, double highLine, int valueType, double value) {</b>
+<b class="nc">&nbsp;        this.fundCode = fundCode;</b>
+<b class="nc">&nbsp;        this.lowLine = lowLine;</b>
+<b class="nc">&nbsp;        this.highLine = highLine;</b>
+<b class="nc">&nbsp;        this.valueType = valueType;</b>
+<b class="nc">&nbsp;        this.value = value;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;    public SubscriptionFee() {</b>
+<b class="fc">&nbsp;        this.fundCode = null;</b>
+<b class="fc">&nbsp;        this.lowLine = 0;</b>
+<b class="fc">&nbsp;        this.highLine = 0;</b>
+<b class="fc">&nbsp;        this.valueType = 0;</b>
+<b class="fc">&nbsp;        this.value = 0;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    String fundCode;
+&nbsp;    double lowLine;
+&nbsp;    double highLine;
+&nbsp;    int valueType;
+&nbsp;    double value;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-23 21:54</div>
+</div>
+</body>
+</html>

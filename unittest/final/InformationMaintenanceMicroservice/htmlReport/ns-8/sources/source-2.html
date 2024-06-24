@@ -1,0 +1,156 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=GBK"> 
+  <title>Coverage Report > AccountManagementFeignClient</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.example.informationmaintenancemicroservice.feign</a>
+</div>
+
+<h1>Coverage Summary for Class: AccountManagementFeignClient (com.example.informationmaintenancemicroservice.feign)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">AccountManagementFeignClient</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.example.informationmaintenancemicroservice.feign;
+&nbsp;
+&nbsp;import com.example.informationmaintenancemicroservice.entites.feignReturnValue.*;
+&nbsp;import org.springframework.cloud.openfeign.FeignClient;
+&nbsp;import org.springframework.web.bind.annotation.GetMapping;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestParam;
+&nbsp;
+&nbsp;@FeignClient(name = &quot;AccountManagementMicroservice&quot;, path = &quot;/api/v1/accountManagement&quot;)
+&nbsp;public interface AccountManagementFeignClient {
+&nbsp;
+&nbsp;    @GetMapping(&quot;/test&quot;)
+&nbsp;    String test();
+&nbsp;
+&nbsp;    @GetMapping(&quot;/testFeign&quot;)
+&nbsp;    String testFeign();
+&nbsp;
+&nbsp;    @PostMapping(&quot;/Register&quot;)
+&nbsp;    AMMResultCode register(
+&nbsp;            @RequestParam(&quot;userID&quot;) String userID,
+&nbsp;            @RequestParam(&quot;userName&quot;) String userName,
+&nbsp;            @RequestParam(&quot;userPhone&quot;) String userPhone,
+&nbsp;            @RequestParam(&quot;password&quot;) String password,
+&nbsp;            @RequestParam(&quot;birth&quot;) String birth,
+&nbsp;            @RequestParam(&quot;email&quot;) String email
+&nbsp;    );
+&nbsp;
+&nbsp;    @GetMapping(&quot;/Login&quot;)
+&nbsp;    AMMReturnUserID login(
+&nbsp;            @RequestParam(&quot;userPhone&quot;) String userPhone,
+&nbsp;            @RequestParam(&quot;password&quot;) String password
+&nbsp;    );
+&nbsp;
+&nbsp;    @GetMapping(&quot;/GetUserInfo&quot;)
+&nbsp;    AMMReturnUserInfo getUserInfo(
+&nbsp;            @RequestParam(&quot;userID&quot;) String userID
+&nbsp;    );
+&nbsp;
+&nbsp;    @GetMapping(&quot;/ModifyUserInfo&quot;)
+&nbsp;    AMMResultCode modifyUserInfo(
+&nbsp;            @RequestParam(&quot;userID&quot;) String userID,
+&nbsp;            @RequestParam(&quot;userName&quot;) String userName,
+&nbsp;            @RequestParam(&quot;userPhone&quot;) String userPhone,
+&nbsp;            @RequestParam(&quot;password&quot;) String password,
+&nbsp;            @RequestParam(&quot;birth&quot;) String birth,
+&nbsp;            @RequestParam(&quot;email&quot;) String email
+&nbsp;    );
+&nbsp;
+&nbsp;    @GetMapping(&quot;/getUserEmail&quot;)
+&nbsp;    AMMReturnUserEmail getUserEmail(
+&nbsp;            @RequestParam(&quot;userID&quot;) String userID
+&nbsp;    );
+&nbsp;
+&nbsp;    @GetMapping(&quot;/bindBankCard&quot;)
+&nbsp;    AMMResultCode bindBankCard(
+&nbsp;            @RequestParam(&quot;userID&quot;) String userID,
+&nbsp;            @RequestParam(&quot;cardID&quot;) String cardID,
+&nbsp;            @RequestParam(&quot;SPK&quot;) String SPK
+&nbsp;    );
+&nbsp;
+&nbsp;    @GetMapping(&quot;/dismissBankCard&quot;)
+&nbsp;    AMMResultCode dismissBankCard(
+&nbsp;            @RequestParam(&quot;userID&quot;) String userID,
+&nbsp;            @RequestParam(&quot;cardID&quot;) String cardID
+&nbsp;    );
+&nbsp;
+&nbsp;    @GetMapping(&quot;/getBankCardList&quot;)
+&nbsp;    AMMReturnBankCardList getBankCardList(
+&nbsp;            @RequestParam(&quot;userID&quot;) String userID
+&nbsp;    );
+&nbsp;
+&nbsp;    @GetMapping(&quot;/modifyPortion&quot;)
+&nbsp;    AMMResultCode modifyPortion(
+&nbsp;            @RequestParam(&quot;cardID&quot;) String cardID,
+&nbsp;            @RequestParam(&quot;fundID&quot;) String fundID,
+&nbsp;            @RequestParam(&quot;amount&quot;) double amount
+&nbsp;    );
+&nbsp;
+&nbsp;    @GetMapping(&quot;/getEmailFromCardID&quot;)
+&nbsp;    AMMReturnUserEmail getEmailFromCardID(
+&nbsp;            @RequestParam(&quot;cardID&quot;) String cardID
+&nbsp;    );
+&nbsp;
+&nbsp;    @GetMapping(&quot;/getAllPortion&quot;)
+&nbsp;    AMMReturnFundAccount getAllPortion(
+&nbsp;            @RequestParam(&quot;cardID&quot;) String cardID
+&nbsp;    );
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-06-23 21:54</div>
+</div>
+</body>
+</html>
